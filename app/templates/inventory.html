@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Inventory</h2>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
+
+
+    <input type="text" id="search" placeholder="Type to filter">
+    <table id="table">
+       <th>PR</th>
+       <th>PO</th>
+       <th>Part</th>
+       <th>Project</th>
+       <th>Requester</th>
+       <th>Supplier</th>
+       <th>Supplier Contact</th>
+       <th>Item Description</th>
+       <th>CPN</th>
+       <th>PID</th>
+       <th>MFG Part#</th>
+       <th>Submit Date</th>
+       <th>Tracking</th>
+       <th>Qty</th>
+       <th>Status</th>
+
+       {% for part in parts %}
+        <tr>
+            <td> {{part.PR}} </td>
+            <td> {{part.PO}} </td>
+            <td> {{part.part}} </td>
+            <td> {{part.project_name}} </td>
+            <td> {{part.requestor}} </td>
+            <td> {{part.supplier}} </td>
+            <td> {{part.supplier_contact}} </td>
+            <td> {{part.item_description}} </td>
+            <td> {{part.CPN}} </td>
+            <td> {{part.PID}} </td>
+            <td> {{part.manufacturer_part_num}} </td>
+            <td> {{part.submit_date}} </td>
+            <td> {{part.tracking}} </td>
+            <td> {{part.qty}}</td>
+            <td> {{part.status}} </td>
+        </tr>
+   {% else %}
+     <em>Database is empty</em>
+   {% endfor %}
+
+   </table>
+{% endblock %}
+

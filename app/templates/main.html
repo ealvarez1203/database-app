@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Main</h2>
+    <div class="metanav2">
+        <a href="{{ url_for('return_part') }}"><input type="button" class="btn btn-primary" value="Return"></a>
+        <a href="{{ url_for('checkout_part') }}"><input type="button" class="btn btn-default" value="Check out"></a>
+    </div>
+{% endblock %}
