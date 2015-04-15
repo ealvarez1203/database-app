@@ -73,7 +73,8 @@ class Parts(db.Model):
 		PID,
 		manufacturer_part_num,
 		submit_date,
-		tracking
+		tracking,
+		status
 		):
 		self.PO = PO
 		self.PR = PR
@@ -88,23 +89,24 @@ class Parts(db.Model):
 		self.manufacturer_part_num = manufacturer_part_num
 		self.submit_date = submit_date
 		self.tracking = tracking
-		self.status = "Available"
+		self.status = status
 		self.times_used = 0
 
 	def __repr__(self):
-		return '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}'.format(
-			self.PO, 
-			self.PR, 
-			self.part, 
-			self.project_name, 
-			self.requestor, 
-			self.supplier, 
-			self.supplier_contact,
-			self.item_description,
-			self.CPN,
-			self.PID,
-			self.manufacturer_part_num,
-			self.submit_date,
-			self.tracking, 
-			self.status
+		return '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}'.format(
+			self.PO.encode('utf-8'), 
+			self.PR.encode('utf-8'), 
+			self.part.encode('utf-8'), 
+			self.project_name.encode('utf-8'), 
+			self.requestor.encode('utf-8'), 
+			self.supplier.encode('utf-8'), 
+			self.supplier_contact.encode('utf-8'),
+			self.item_description.encode('utf-8'),
+			self.CPN.encode('utf-8'),
+			self.PID.encode('utf-8'),
+			self.manufacturer_part_num.encode('utf-8'),
+			self.submit_date.encode('utf-8'),
+			self.tracking.encode('utf-8'), 
+			self.status.encode('utf-8'),
+			self.times_used.encode('utf-8')
 			)	

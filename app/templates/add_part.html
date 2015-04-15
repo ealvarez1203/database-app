@@ -1,0 +1,175 @@
+{% extends "layout.html" %}
+{% block body %}
+<script>
+$(document).ready(function(){
+    var options_parts = {{ parts|safe }}
+    $("#parts").autocomplete({
+        source: options_parts
+    });
+    var options_project_names = {{ project_names|safe }}
+    $("#project_names").autocomplete({
+        source: options_project_names
+    });
+    var options_requestors = {{ requestors|safe }}
+    $("#requestors").autocomplete({
+        source: options_requestors
+    });
+    var options_suppliers = {{ suppliers|safe }}
+    $("#suppliers").autocomplete({
+        source: options_suppliers
+    });
+    var options_supplier_contacts = {{ supplier_contacts|safe }}
+    $("#supplier_contacts").autocomplete({
+        source: options_supplier_contacts
+    });
+    var options_item_descriptions = {{ item_descriptions|safe }}
+    $("#item_descriptions").autocomplete({
+        source: options_item_descriptions
+    });
+    $(function() {
+    $( "#submit_date" ).datepicker();
+  });
+});
+</script>
+
+<h2>Add New Part</h2>
+
+<form class="form-horizontal" role="form" method="post" action="">
+  {{ form.csrf_token }}
+  <p>
+    {{ form.PR(placeholder="PR#") }}
+    <span class="error">
+      {% if form.PR.errors %}
+        {% for error in form.PR.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.PO(placeholder="PO#") }}
+    <span class="error">
+      {% if form.PO.errors %}
+        {% for error in form.PO.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.part(placeholder="Part") }}
+    <span class="error">
+      {% if form.part.errors %}
+        {% for error in form.part.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.project_name(placeholder="Project Name") }}
+    <span class="error">
+      {% if form.project_name.errors %}
+        {% for error in form.project_name.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.requestor(placeholder="Requester") }}
+    <span class="error">
+      {% if form.requestor.errors %}
+        {% for error in form.requestor.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.supplier(placeholder="Supplier") }}
+    <span class="error">
+      {% if form.supplier.errors %}
+        {% for error in form.supplier.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.supplier_contact(placeholder="Supplier Contact") }}
+    <span class="error">
+      {% if form.supplier_contact.errors %}
+        {% for error in form.supplier_contact.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.item_description(placeholder="Item Description") }}
+    <span class="error">
+      {% if form.item_description.errors %}
+        {% for error in form.item_description.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.CPN(placeholder="CPN") }}
+    <span class="error">
+      {% if form.CPN.errors %}
+        {% for error in form.CPN.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.PID(placeholder="PID") }}
+    <span class="error">
+      {% if form.PID.errors %}
+        {% for error in form.PID.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.manufacturer_part_num(placeholder="MFG Part#") }}
+    <span class="error">
+      {% if form.manufacturer_part_num.errors %}
+        {% for error in form.manufacturer_part_num.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p>
+    {{ form.tracking(placeholder="Tracking Info") }}
+    <span class="error">
+      {% if form.tracking.errors %}
+        {% for error in form.tracking.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+  <p> Status: 
+    {{ form.status }}
+  </p>
+  <p>
+    {{ form.qty(placeholder="Qty") }}
+    <span class="error">
+      {% if form.qty.errors %}
+        {% for error in form.qty.errors %}
+          {{ error }}
+        {% endfor %}
+      {% endif %}
+    </span>
+  </p>
+
+  <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+{% endblock %}

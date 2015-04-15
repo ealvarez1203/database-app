@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager, bcrypt
-from forms import LoginForm, CreateUserForm
-from models import User
+from forms import LoginForm, CreateUserForm, AddPart 
+from models import User, Parts
+import time
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -81,7 +82,45 @@ def inventory():
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
 def add_part():
-	return "add_part"
+	parts = ["%s" %i for i in db.session.query(Parts.part).group_by(Parts.part).all()]
+	parts = [x.encode('utf-8') for x in parts]
+	project_names = ["%s" %i for i in db.session.query(Parts.project_name).group_by(Parts.project_name).all()]
+	project_names = [x.encode('utf-8') for x in project_names]
+	requestors = ["%s" %i for i in db.session.query(Parts.requestor).group_by(Parts.requestor).all()]
+	requestors = [x.encode('utf-8') for x in requestors]
+	suppliers = ["%s" %i for i in db.session.query(Parts.supplier).group_by(Parts.supplier).all()]
+	suppliers = [x.encode('utf-8') for x in suppliers]
+	supplier_contacts = ["%s" %i for i in db.session.query(Parts.supplier_contact).group_by(Parts.supplier_contact).all()]
+	supplier_contacts = [x.encode('utf-8') for x in supplier_contacts]
+	item_descriptions = ["%s" %i for i in db.session.query(Parts.item_description).group_by(Parts.item_description).all()]
+	item_descriptions = [x.encode('utf-8') for x in item_descriptions]
+
+	form = AddPart()
+	form.status.choices = [(1, 'Available'), (2, 'Unavailable')]
+	if form.validate_on_submit():
+		for i in range(0, int(form.qty.data)):
+			part = Parts(
+				PO = form.PR.data,
+				PR = form.PO.data,
+				part = form.part.data,
+				project_name = form.project_name.data,
+				requestor = form.requestor.data,
+				supplier = form.supplier.data,
+				supplier_contact = form.supplier_contact.data,
+				item_description = form.item_description.data,
+				CPN = form.CPN.data,
+				PID = form.PID.data,
+				manufacturer_part_num = form.manufacturer_part_num.data,
+				submit_date = time.strftime("%m/%d/%Y"),
+				tracking = form.tracking.data,
+				status = form.status.data
+				)
+			db.session.add(part)
+		db.session.commit()
+		flash("Part was added to the database")
+		return redirect(url_for('home'))
+	return render_template('add_part.html', form=form, parts=parts, project_names=project_names, requestors=requestors,
+		suppliers=suppliers, supplier_contacts=supplier_contacts, item_descriptions=item_descriptions)
 
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
