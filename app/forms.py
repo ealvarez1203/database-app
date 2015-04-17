@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms import TextField, PasswordField, BooleanField, IntegerField, SelectField, DateField
+from wtforms import TextField, PasswordField, BooleanField, IntegerField, SelectField, DateField, validators
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 class LoginForm(Form):
@@ -39,7 +39,7 @@ class AddPart(Form):
 	CPN = TextField('CPN')
 	PID = TextField('PID')
 	manufacturer_part_num = TextField('manufacturer_part_num', validators=[DataRequired()])
-	submit_date = DateField('submit_date', format="%m/%d/%Y", id="submit_date")
+	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date')
 	tracking = TextField('tracking', validators=[DataRequired()])
-	status = SelectField('status', validators=[DataRequired()])
+	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
 	qty = IntegerField('qty', validators=[DataRequired()])

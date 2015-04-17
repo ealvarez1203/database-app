@@ -26,150 +26,174 @@ $(document).ready(function(){
     $("#item_descriptions").autocomplete({
         source: options_item_descriptions
     });
-    $(function() {
+    
     $( "#submit_date" ).datepicker();
-  });
 });
 </script>
 
 <h2>Add New Part</h2>
-
-<form class="form-horizontal" role="form" method="post" action="">
-  {{ form.csrf_token }}
-  <p>
-    {{ form.PR(placeholder="PR#") }}
-    <span class="error">
-      {% if form.PR.errors %}
-        {% for error in form.PR.errors %}
-          {{ error }}
-        {% endfor %}
-      {% endif %}
-    </span>
-  </p>
-  <p>
+<br>
+<form class="form-horizontal" role="form" method=post action="/add_part">
+    {{ form.csrf_token }}
+    
+    <p>
     {{ form.PO(placeholder="PO#") }}
     <span class="error">
-      {% if form.PO.errors %}
+    {% if form.PO.errors %}
         {% for error in form.PO.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+    
+    <p>
+    {{ form.PR(placeholder="PR#") }}
+    <span class="error">
+    {% if form.PR.errors %}
+        {% for error in form.PR.errors %}
+            {{ error }}
+        {% endfor %}
+    {% endif %}
+    </span>
+    </p>
+    
+    <p>
     {{ form.part(placeholder="Part") }}
     <span class="error">
-      {% if form.part.errors %}
+    {% if form.part.errors %}
         {% for error in form.part.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+
+    <p>
     {{ form.project_name(placeholder="Project Name") }}
     <span class="error">
-      {% if form.project_name.errors %}
+    {% if form.project_name.errors %}
         {% for error in form.project_name.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+    
+    <p>
     {{ form.requestor(placeholder="Requester") }}
     <span class="error">
-      {% if form.requestor.errors %}
+    {% if form.requestor.errors %}
         {% for error in form.requestor.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+  
+    <p>
     {{ form.supplier(placeholder="Supplier") }}
     <span class="error">
-      {% if form.supplier.errors %}
+    {% if form.supplier.errors %}
         {% for error in form.supplier.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+  
+    <p>
     {{ form.supplier_contact(placeholder="Supplier Contact") }}
     <span class="error">
-      {% if form.supplier_contact.errors %}
+    {% if form.supplier_contact.errors %}
         {% for error in form.supplier_contact.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+  
+    <p>
     {{ form.item_description(placeholder="Item Description") }}
     <span class="error">
-      {% if form.item_description.errors %}
+    {% if form.item_description.errors %}
         {% for error in form.item_description.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+  
+    <p>
     {{ form.CPN(placeholder="CPN") }}
     <span class="error">
-      {% if form.CPN.errors %}
+    {% if form.CPN.errors %}
         {% for error in form.CPN.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+    
+    <p>
     {{ form.PID(placeholder="PID") }}
     <span class="error">
-      {% if form.PID.errors %}
+    {% if form.PID.errors %}
         {% for error in form.PID.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+  
+    <p>
     {{ form.manufacturer_part_num(placeholder="MFG Part#") }}
     <span class="error">
-      {% if form.manufacturer_part_num.errors %}
+    {% if form.manufacturer_part_num.errors %}
         {% for error in form.manufacturer_part_num.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p>
+    </p>
+  
+    <p>
     {{ form.tracking(placeholder="Tracking Info") }}
     <span class="error">
-      {% if form.tracking.errors %}
+    {% if form.tracking.errors %}
         {% for error in form.tracking.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
-  <p> Status: 
+    </p>
+
+    <p>
     {{ form.status }}
-  </p>
-  <p>
+    </p>
+
+    <p>
+    {{ form.submit_date(placeholder="Submit Date") }}
+    <span class="error">
+    {% if form.submit_date.errors %}
+        {% for error in form.submit_date.errors %}
+            {{ error }}
+        {% endfor %}
+    {% endif %}
+    </span>
+    </p>
+
+    <p>
     {{ form.qty(placeholder="Qty") }}
     <span class="error">
-      {% if form.qty.errors %}
+    {% if form.qty.errors %}
         {% for error in form.qty.errors %}
-          {{ error }}
+            {{ error }}
         {% endfor %}
-      {% endif %}
+    {% endif %}
     </span>
-  </p>
+    </p>
 
-  <button class="btn btn-primary" type="submit">Submit</button>
+<button class="btn btn-primary" type="submit">Submit</button>
 </form>
 {% endblock %}

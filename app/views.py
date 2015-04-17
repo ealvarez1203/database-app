@@ -95,13 +95,13 @@ def add_part():
 	item_descriptions = ["%s" %i for i in db.session.query(Parts.item_description).group_by(Parts.item_description).all()]
 	item_descriptions = [x.encode('utf-8') for x in item_descriptions]
 
-	form = AddPart()
-	form.status.choices = [(1, 'Available'), (2, 'Unavailable')]
-	if form.validate_on_submit():
+	form = AddPart(request.form)
+	form.status.choices = [('Available', 'Available'), ('Unavailable', 'Unavailable')]
+	if request.method == 'POST' and form.validate():
 		for i in range(0, int(form.qty.data)):
 			part = Parts(
-				PO = form.PR.data,
-				PR = form.PO.data,
+				PO = form.PO.data,
+				PR = form.PR.data,
 				part = form.part.data,
 				project_name = form.project_name.data,
 				requestor = form.requestor.data,
@@ -111,11 +111,13 @@ def add_part():
 				CPN = form.CPN.data,
 				PID = form.PID.data,
 				manufacturer_part_num = form.manufacturer_part_num.data,
-				submit_date = time.strftime("%m/%d/%Y"),
+				submit_date = form.submit_date.raw_data[0],
 				tracking = form.tracking.data,
 				status = form.status.data
 				)
 			db.session.add(part)
+		print form.submit_date.data
+		print form.submit_date
 		db.session.commit()
 		flash("Part was added to the database")
 		return redirect(url_for('home'))
