@@ -73,9 +73,22 @@ def inventory():
 							 CPN, PID, manufacturer_part_num, submit_date, tracking, status, count(*) from parts group by PR, PO,\
 							 part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							 manufacturer_part_num, submit_date, tracking, status')
-	parts = [dict(PR=row[0], PO=row[1], part=row[2], project_name=row[3], requestor=row[4], supplier=row[5],
-				supplier_contact=row[6], item_description=row[7], CPN=row[8], PID=row[9], manufacturer_part_num=row[10],
-				submit_date=row[11], tracking=row[12], status=row[13], qty=row[14]) for row in cur.fetchall()]
+	parts = [dict(PR=row[0], 
+				PO=row[1], 
+				part=row[2], 
+				project_name=row[3], 
+				requestor=row[4], 
+				supplier=row[5],
+				supplier_contact=row[6], 
+				item_description=row[7], 
+				CPN=row[8], 
+				PID=row[9], 
+				manufacturer_part_num=row[10],
+				submit_date=row[11], 
+				tracking=row[12], 
+				status=row[13], 
+				qty=row[14]
+			) for row in cur.fetchall()]
 	return render_template('inventory.html', parts=parts)
 
 @app.route('/add_part', methods=['GET', 'POST'])
@@ -124,14 +137,28 @@ def add_part():
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
 def delete_part():
+	#query parts by quantities
 	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description,\
 							 CPN, PID, manufacturer_part_num, submit_date, tracking, status, count(*) from parts group by PR, PO,\
 							 part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							 manufacturer_part_num, submit_date, tracking, status')
-	
-	parts = [dict(id=row[0], PR=row[1], PO=row[2], part=row[3], project_name=row[4], requestor=row[5], supplier=row[6],
-				supplier_contact=row[7], item_description=row[8], CPN=row[9], PID=row[10], manufacturer_part_num=row[11],
-				submit_date=row[12], tracking=row[13], status=row[14], qty=row[15]) for row in cur.fetchall()]
+	parts = [dict(id=row[0], 
+				PR=row[1], 
+				PO=row[2], 
+				part=row[3], 
+				project_name=row[4], 
+				requestor=row[5], 
+				supplier=row[6],
+				supplier_contact=row[7], 
+				item_description=row[8], 
+				CPN=row[9], 
+				PID=row[10], 
+				manufacturer_part_num=row[11],
+				submit_date=row[12], 
+				tracking=row[13], 
+				status=row[14], 
+				qty=row[15]
+			) for row in cur.fetchall()]
 	
 	if request.method == 'POST':
 		delete_ids = request.form.getlist("do_delete")
@@ -147,10 +174,22 @@ def confirm_delete():
 	#"""Obtain ids from args"""
 	delete_ids = [i.encode('utf-8') for i in request.args.getlist('delete_ids')]
 	delete_parts = Parts.query.filter(Parts.id.in_(delete_ids)).all()
-	delete_parts = [dict(id=delete.id, PR=delete.PR, PO=delete.PO, part=delete.part, requestor=delete.requestor, supplier=delete.supplier, 
-					supplier_contact=delete.supplier_contact, item_description=delete.item_description, CPN=delete.CPN, PID=delete.PID, 
-					manufacturer_part_num=delete.manufacturer_part_num, submit_date=delete.submit_date, tracking=delete.tracking, 
-					status=delete.status, project_name=delete.project_name) for delete in delete_parts]
+	delete_parts = [dict(id=delete.id, 
+						PR=delete.PR, 
+						PO=delete.PO, 
+						part=delete.part, 
+						requestor=delete.requestor, 
+						supplier=delete.supplier, 
+						supplier_contact=delete.supplier_contact, 
+						item_description=delete.item_description, 
+						CPN=delete.CPN, 
+						PID=delete.PID, 
+						manufacturer_part_num=delete.manufacturer_part_num, 
+						submit_date=delete.submit_date, 
+						tracking=delete.tracking, 
+						status=delete.status, 
+						project_name=delete.project_name
+					) for delete in delete_parts]
 	#"""Add quantity variable to each delete_parts"""
 	for i in delete_parts:
 		kwargs = {'PR':i['PR'], 'PO':i['PO'], 'part':i['part'], 'requestor':i['requestor'], 'supplier':i['supplier'], 'supplier_contact':i['supplier_contact'],
@@ -178,16 +217,46 @@ def confirm_delete():
 				Parts.query.filter(Parts.id == ids[quantities[i]-1]).delete()	
 				quantities[i] -= 1
 			db.session.commit()
-		flash('The parts were returned')
+		flash('The parts were deleted')
 		return redirect(url_for('home'))
-
-
 	return render_template('confirm_delete.html', delete_parts=delete_parts, delete_ids=delete_ids)
 
 @app.route('/return_part', methods=['GET', 'POST'])
 @login_required
 def return_part():
-	return "return_part"
+	#retrieve data where current_user=currentuser and status=unavailable
+	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, count(*)\
+							from parts where current_user=:user and status=:s group by part, supplier, item_description, CPN, PID, \
+							manufacturer_part_num', user=current_user.name, s="Unavailable")
+	parts = [dict(id=row[0], 
+				PR=row[1], 
+				PO=row[2], 
+				part=row[3], 
+				project_name=row[4], 
+				requestor=row[5], 
+				supplier=row[6],
+				supplier_contact=row[7], 
+				item_description=row[8], 
+				CPN=row[9], 
+				PID=row[10], 
+				manufacturer_part_num=row[11],
+				submit_date=row[12],
+				current_project=row[13], 
+				tracking=row[14], 
+				status=row[15],
+				checkout_date=row[16],
+				return_date=row[17], 
+				qty=row[18]
+			) for row in cur.fetchall()]  #store them in a list of dictionaries
+
+	if request.method == 'POST':
+		return_ids = request.form.getlist("do_return")
+		if return_ids:
+			return redirect(url_for('confirm_return', return_ids=return_ids))
+		else:
+			flash('No Part was selected')
+	return render_template('return_part.html', parts=parts)
 
 @app.route('/return_part/confirm', methods=['GET', 'POST'])
 @login_required
@@ -197,9 +266,18 @@ def confirm_return():
 @app.route('/checkout_part', methods=['GET', 'POST'])
 @login_required
 def checkout_part():
-	return "checkout_part"
+	return render_template('checkout_part.html')
 
 @app.route('/checkout_part/confirm', methods=['GET', 'POST'])
 @login_required
 def confirm_checkout():
 	return "confirm_checkout"
+
+@app.route('/search/<type>', methods= ['GET', 'POST'])
+@login_required
+def part_search(type):
+	kwargs = {'part':type, 'status':'Available'}
+	part_available = Parts.query.filter_by(**kwargs).all()
+	kwargs = {'part':type, 'status':'Unvailable'}
+	part_unavailable = Parts.query.filter_by(**kwargs).all()
+	return render_template('part_search.html', type=type, part_available=part_available, part_unavailable=part_unavailable)

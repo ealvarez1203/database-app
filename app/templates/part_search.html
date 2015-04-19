@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block body %}
+    <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
+    <h1>{{type}}</h1>
+    <h2>Check out a Part</h2><br>
+    <em>Select part(s) to delete: </em>
+    {% if part_available %}
+        <input type="text" id="search" placeholder="Type to filter">
+        <table id="table">
+           <th></th>
+           <th>PR</th>
+           <th>PO</th>
+           <th>part</th>
+           <th>Project</th>
+           <th>Supplier</th>
+           <th>Item Description</th>
+           <th>CPN</th>
+           <th>PID</th>
+           <th>MFG Part#</th>
+           <th>Tracking</th>
+           <th>Qty</th>
+
+        	{% for part in part_available %}
+            <tr>
+              <td><input type=checkbox name=do_return value="{{part.id}}"></td>
+              <td> {{part.part}} </td>
+              <td> {{part.supplier}} </td>
+              <td> {{part.item_description}} </td>
+              <td> {{part.CPN}} </td>
+              <td> {{part.PID}} </td>
+              <td> {{part.manufacturer_part_num}} </td>
+              <td> {{part.current_project}} </td>
+              <td> {{part.qty}}</td>
+              <th> {{part.checkout_date}}
+              <td> {{part.return_date}} </td>
+            </tr>
+           {% endfor %}
+   	{% else %}
+      <em> No Parts Available </em>
+    {% endif %}
+
+{% endblock %}

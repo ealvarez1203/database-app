@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+
+   <h2>Return Parts</h2>
+   {% if parts %}
+      Parts you have checked out:
+       <form action="{{ url_for('return_part') }}" method=post class=add_entry>
+        <table>
+               <th></th>
+               <th>part</th>
+               <th>Supplier</th>
+               <th>Item Description</th>
+               <th>CPN</th>
+               <th>PID</th>
+               <th>MFG Part#</th>
+               <th>Project</th>
+               <th>Qty</th>
+               <th>Checked out on</th>
+               <th>Return Date</th>
+               
+           {% for part in parts %}
+            <tr>
+              <td><input type=checkbox name=do_return value="{{part.id}}"></td>
+              <td> {{part.part}} </td>
+              <td> {{part.supplier}} </td>
+              <td> {{part.item_description}} </td>
+              <td> {{part.CPN}} </td>
+              <td> {{part.PID}} </td>
+              <td> {{part.manufacturer_part_num}} </td>
+              <td> {{part.current_project}} </td>
+              <td> {{part.qty}}</td>
+              <th> {{part.checkout_date}}
+              <td> {{part.return_date}} </td>
+            </tr>
+           {% endfor %}
+        </table>
+        <div class="metanav2">
+            <input type=submit class="btn btn-primary" value="return">
+        </div>
+        </form><br>
+    {% else %}
+      <em> Currently you don't have any parts </em>
+    {% endif %}
+{% endblock %}

@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h2>Inventory</h2>
+    <h2>Inventory</h2><br>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
 
 
-    <input type="text" id="search" placeholder="Type to filter">
+    <em> Type to Filter:  </em> <input type="text" id="search" placeholder="keywords">
     <table id="table">
        <th>PR</th>
        <th>PO</th>
