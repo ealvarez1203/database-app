@@ -69,7 +69,6 @@ def show_history(serialNumber):
 @app.route('/inventory')
 @login_required
 def inventory():
-	"""Displays all parts in database"""
 	cur = db.engine.execute('select PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description,\
 							 CPN, PID, manufacturer_part_num, submit_date, tracking, status, count(*) from parts group by PR, PO,\
 							 part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
@@ -116,8 +115,6 @@ def add_part():
 				status = form.status.data
 				)
 			db.session.add(part)
-		print form.submit_date.data
-		print form.submit_date
 		db.session.commit()
 		flash("Part was added to the database")
 		return redirect(url_for('home'))
@@ -127,7 +124,65 @@ def add_part():
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
 def delete_part():
-	return "delete_part"
+	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description,\
+							 CPN, PID, manufacturer_part_num, submit_date, tracking, status, count(*) from parts group by PR, PO,\
+							 part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							 manufacturer_part_num, submit_date, tracking, status')
+	
+	parts = [dict(id=row[0], PR=row[1], PO=row[2], part=row[3], project_name=row[4], requestor=row[5], supplier=row[6],
+				supplier_contact=row[7], item_description=row[8], CPN=row[9], PID=row[10], manufacturer_part_num=row[11],
+				submit_date=row[12], tracking=row[13], status=row[14], qty=row[15]) for row in cur.fetchall()]
+	
+	if request.method == 'POST':
+		delete_ids = request.form.getlist("do_delete")
+		if delete_ids:
+			return redirect(url_for('confirm_delete', delete_ids=delete_ids))
+		else:
+			flash('No Part was selected')
+	return render_template('delete_part.html', parts=parts)
+
+@app.route('/delete_part/confirm', methods=['GET', 'POST'])
+@login_required
+def confirm_delete():
+	#"""Obtain ids from args"""
+	delete_ids = [i.encode('utf-8') for i in request.args.getlist('delete_ids')]
+	delete_parts = Parts.query.filter(Parts.id.in_(delete_ids)).all()
+	delete_parts = [dict(id=delete.id, PR=delete.PR, PO=delete.PO, part=delete.part, requestor=delete.requestor, supplier=delete.supplier, 
+					supplier_contact=delete.supplier_contact, item_description=delete.item_description, CPN=delete.CPN, PID=delete.PID, 
+					manufacturer_part_num=delete.manufacturer_part_num, submit_date=delete.submit_date, tracking=delete.tracking, 
+					status=delete.status, project_name=delete.project_name) for delete in delete_parts]
+	#"""Add quantity variable to each delete_parts"""
+	for i in delete_parts:
+		kwargs = {'PR':i['PR'], 'PO':i['PO'], 'part':i['part'], 'requestor':i['requestor'], 'supplier':i['supplier'], 'supplier_contact':i['supplier_contact'],
+				'item_description':i['item_description'], 'CPN':i['CPN'], 'PID':i['PID'], 'manufacturer_part_num':i['manufacturer_part_num'], 
+				 'submit_date':i['submit_date'], 'tracking':i['tracking'], 'status':i['status'], 'project_name':i['project_name']}
+		qty = Parts.query.filter_by(**kwargs).count()
+		i['qty'] = qty 
+
+	if request.method == 'POST':
+		delete_ids = sorted([int(i) for i in request.form.getlist("delete_ids")])
+		quantities = [int(i) for i in request.form.getlist('qty')]
+		print quantities
+
+		for i in range(len(delete_ids)):
+			#	get all attributes of part
+			Part = Parts.query.filter_by(id=delete_ids[i]).first()
+			#	get ids of rows that match these attributes
+			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
+				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
+				'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name}
+			ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
+			
+			#	iterate through these parts only for specified quantities
+			while quantities[i] > 0:
+				Parts.query.filter(Parts.id == ids[quantities[i]-1]).delete()	
+				quantities[i] -= 1
+			db.session.commit()
+		flash('The parts were returned')
+		return redirect(url_for('home'))
+
+
+	return render_template('confirm_delete.html', delete_parts=delete_parts, delete_ids=delete_ids)
 
 @app.route('/return_part', methods=['GET', 'POST'])
 @login_required

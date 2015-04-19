@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Confirm Delete</h2><br>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script>
+        $( document ).ready(function() {
+            $(".select").each(function() {
+                    var select = $('<select>', {name: "qty"});
+                    for (var i = this.id; i >= 1; i--) {
+                        $('<option>', {value: i, text: i}).appendTo(select);
+                    }
+                    select.appendTo(this);
+            });
+        });
+    </script>
+
+    <form action="{{ url_for('confirm_delete') }}" method=post class=add_entry>
+
+        <em>Parts to Delete: </em>
+        <table>
+           <th>PR</th>
+           <th>PO</th>
+           <th>part</th>
+           <th>Project</th>
+           <th>Supplier</th>
+           <th>Item Description</th>
+           <th>CPN</th>
+           <th>PID</th>
+           <th>MFG Part#</th>
+           <th>Tracking</th>
+           <th>Qty</th>
+           <th>Status</th>
+
+            {% for part in delete_parts %}
+            <tr>
+              <td> {{part.PR}} </td>
+              <td> {{part.PO}} </td>
+              <td> {{part.part}} </td>
+              <td> {{part.project_name}} </td>
+              <td> {{part.supplier}} </td>
+              <td> {{part.item_description}} </td>
+              <td> {{part.CPN}} </td>
+              <td> {{part.PID}} </td>
+              <td> {{part.manufacturer_part_num}} </td>
+              <td> {{part.tracking}} </td>
+              {% if part.qty == '1' %}
+                  <td> {{part.qty}} </qty>
+              {% else %}
+                  <td class="select" id="{{part.qty}}"></td>
+              {% endif %}
+              <td> {{part.status}} </td>
+            </tr>
+            {% endfor %}
+
+        {% for ids in delete_ids %}
+           <input type="hidden" value="{{ids}}" name="delete_ids">
+        {% endfor %}
+        </table>
+        <div class="metanav2">
+            <input type=submit class="btn btn-primary" value="Confirm delete">
+        </div>
+   </form><br>
+{% endblock %}
