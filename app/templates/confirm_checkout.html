@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block body %}
+<script>
+    $(document).ready(function(){
+        $("#return_date").datepicker();
+	    var options_projects = {{ project_names|safe }}
+	    $("#project").autocomplete({
+	        source: options_projects
+	    });
+	    $( document ).ready(function() {
+	        $(".select").each(function() {
+	                var select = $('<select>', {name: "qty"});
+	                for (var i = this.id; i >= 1; i--) {
+	                    $('<option>', {value: i, text: i}).appendTo(select);
+	                }
+	                select.appendTo(this);
+	        });
+	    });
+	});
+</script>
+
+<h2>Check out a Part</h2><br>
+
+Parts to be Checked out:
+<form class="form-signin" role="form" method="post" action="">
+	{{ form.csrf_token }}
+    <table>
+
+    	<th>Part</th>
+    	<th>Item Description</th>
+    	<th>Supplier</th>
+    	<th>CPN</th>
+    	<th>PID</th>
+    	<th>MFG Part#</th>
+    	<th>Qty</th>
+
+        {% for part in checkout_parts %}
+        <tr>
+            <td> {{part.part}} </td>
+            <td> {{part.item_description}} </td>
+            <td> {{part.supplier}} </td>
+            <td> {{part.CPN}} </td>
+            <td> {{part.PID}} </td>
+            <td> {{part.manufacturer_part_num}} </td>
+            {% if part.qty == '1' %}
+                <td> {{part.qty}} </td>
+            {% else %}
+                <td class="select" id="{{part.qty}}"></td>
+            {% endif %}
+
+        </tr>
+        {% endfor %}
+
+    </table>
+
+    {% for ids in checkout_ids %}
+       <input type="hidden" value="{{ids}}" name="checkout_ids">
+    {% endfor %}
+ 	<br> 
+	<p>
+	{{ form.project(placeholder="Project name") }}
+	<span class="error">
+	{% if form.project.errors %}
+		{% for error in form.project.errors %}
+			{{ error }}
+		{% endfor %}
+	{% endif %}
+	</span>
+	</p>
+
+	<p>
+	{{ form.return_date(placeholder="Return Date") }}
+	<span class="error">
+	{% if form.return_date.errors %}
+		{% for error in form.return_date.errors %}
+			{{ error }}
+		{% endfor %}
+	{% endif %}
+	</span>
+	</p>    
+<button class="btn btn-primary" type="submit">Confirm Checkout</button>
+</form>
+
+{% endblock %}

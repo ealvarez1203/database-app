@@ -3,11 +3,9 @@
   <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
-
-  <h1>{{type}}</h1><br>
-  <h2>Check out a Part</h2>
-  <em>Select part(s) to delete: </em>
-    
+  <h1>Keyword Search</h1>
+  <br>
+  <h2>Results for '{{keyword}}':</h2><br>
   <div>
 
     <ul class="nav nav-tabs" role="tablist">
@@ -23,7 +21,7 @@
 
           {% if part_available %}
 
-            <em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter">
+            <em>Parts Available:  </em><input type="text" id="search" placeholder="Type to filter">
             <table id="table">
               <th></th>
               <th>Part</th>
@@ -34,6 +32,8 @@
               <th>MFG Part#</th>
               <th>Qty</th>
               <th>Times Used</th>
+              <th>status</th>
+
 
               {% for part in part_available %}
               <tr>
@@ -46,6 +46,7 @@
                 <td> {{part.manufacturer_part_num}} </td>
                 <td> {{part.qty}} </td>
                 <td> {{part.times_used}} </td>
+                <td> {{part.status}} </td>
               </tr>
               {% endfor %}
             </table>
@@ -60,7 +61,7 @@
         <div class="tab-pane fade" id="unavailable">
           {% if part_unavailable %}
 
-            <em>{{type}}s Unvailable:  </em><input type="text" id="search2" placeholder="Type to filter">
+            <em>Parts Unvailable:  </em><input type="text" id="search2" placeholder="Type to filter">
             <table id="table2">
               <th>part</th>
               <th>Supplier</th>
@@ -97,5 +98,7 @@
       </div>
     </form>
   </div>
+
+
 
 {% endblock %}

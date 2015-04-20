@@ -43,3 +43,8 @@ class AddPart(Form):
 	tracking = TextField('tracking', validators=[DataRequired()])
 	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
 	qty = IntegerField('qty', validators=[DataRequired()])
+
+
+class CheckoutPart(Form):
+	project = TextField('project', validators=[DataRequired()], id='project')
+	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date')

@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager, bcrypt
-from forms import LoginForm, CreateUserForm, AddPart 
+from forms import LoginForm, CreateUserForm, AddPart, CheckoutPart 
 from models import User, Parts
 import time
 
@@ -201,7 +201,6 @@ def confirm_delete():
 	if request.method == 'POST':
 		delete_ids = sorted([int(i) for i in request.form.getlist("delete_ids")])
 		quantities = [int(i) for i in request.form.getlist('qty')]
-		print quantities
 
 		for i in range(len(delete_ids)):
 			#	get all attributes of part
@@ -266,18 +265,201 @@ def confirm_return():
 @app.route('/checkout_part', methods=['GET', 'POST'])
 @login_required
 def checkout_part():
+	if request.method == 'POST':
+		keyword = request.form['keyword']
+		if keyword:
+			return redirect(url_for('keyword_search', keyword=keyword))
+		else:
+			flash('Please enter a keyword!')	
 	return render_template('checkout_part.html')
-
-@app.route('/checkout_part/confirm', methods=['GET', 'POST'])
-@login_required
-def confirm_checkout():
-	return "confirm_checkout"
 
 @app.route('/search/<type>', methods= ['GET', 'POST'])
 @login_required
 def part_search(type):
-	kwargs = {'part':type, 'status':'Available'}
-	part_available = Parts.query.filter_by(**kwargs).all()
-	kwargs = {'part':type, 'status':'Unvailable'}
-	part_unavailable = Parts.query.filter_by(**kwargs).all()
+	#retrieve parts where part=type and status=Available
+	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+							count(*) from parts where part=:p and status=:s group by part, supplier, item_description, CPN, PID, \
+							manufacturer_part_num', p=type, s="Available")
+	part_available = [dict(id=row[0], 
+						PR=row[1], 
+						PO=row[2], 
+						part=row[3], 
+						project_name=row[4], 
+						requestor=row[5], 
+						supplier=row[6],
+						supplier_contact=row[7], 
+						item_description=row[8], 
+						CPN=row[9], 
+						PID=row[10], 
+						manufacturer_part_num=row[11],
+						submit_date=row[12],
+						current_project=row[13], 
+						tracking=row[14], 
+						status=row[15],
+						checkout_date=row[16],
+						return_date=row[17], 
+						times_used=row[18],
+						qty=row[19]
+			) for row in cur.fetchall()]  #store them in a list of dictionaries
+	#retrieve parts where part=type and status=Available
+	cur2 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+							current_user, count(*) from parts where part=:p and status=:s group by part, supplier, item_description, CPN, PID, \
+							manufacturer_part_num', p=type, s="Unavailable")
+	part_unavailable = [dict(id=row[0], 
+						PR=row[1], 
+						PO=row[2], 
+						part=row[3], 
+						project_name=row[4], 
+						requestor=row[5], 
+						supplier=row[6],
+						supplier_contact=row[7], 
+						item_description=row[8], 
+						CPN=row[9], 
+						PID=row[10], 
+						manufacturer_part_num=row[11],
+						submit_date=row[12],
+						current_project=row[13], 
+						tracking=row[14], 
+						status=row[15],
+						checkout_date=row[16],
+						return_date=row[17], 
+						times_used=row[18],
+						current_user=row[19],
+						qty=row[20]
+			) for row in cur2.fetchall()]  #store them in a list of dictionaries
+	if request.method == 'POST':
+		checkout_ids = request.form.getlist("do_checkout")
+		if checkout_ids:
+			return redirect(url_for('confirm_checkout', checkout_ids=checkout_ids))
+		else:
+			flash('No part was selected')
 	return render_template('part_search.html', type=type, part_available=part_available, part_unavailable=part_unavailable)
+
+@app.route('/keyword_search/<keyword>', methods= ['GET', 'POST'])
+@login_required
+def keyword_search(keyword):
+	cur1 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+							current_user, count(*) from parts where status=:s and (part like :k or project_name like :k or supplier\
+							like :k or item_description like :k or CPN like :k or PID like :k or manufacturer_part_num like :k or current_project\
+							like :k or current_user like :k) group by part, supplier, item_description, CPN, PID,\
+							manufacturer_part_num', k='%' + keyword + '%', s="Available")
+	part_available = [dict(id=row[0], 
+						PR=row[1], 
+						PO=row[2], 
+						part=row[3], 
+						project_name=row[4], 
+						requestor=row[5], 
+						supplier=row[6],
+						supplier_contact=row[7], 
+						item_description=row[8], 
+						CPN=row[9], 
+						PID=row[10], 
+						manufacturer_part_num=row[11],
+						submit_date=row[12],
+						current_project=row[13], 
+						tracking=row[14], 
+						status=row[15],
+						checkout_date=row[16],
+						return_date=row[17], 
+						times_used=row[18],
+						current_user=row[19],
+						qty=row[20]
+			) for row in cur1.fetchall()]  #store them in a list of dictionaries
+	print part_available
+	cur2 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+							current_user, count(*) from parts where status==:s and (part like :k or project_name like :k or supplier\
+							like :k or item_description like :k or CPN like :k or PID like :k or manufacturer_part_num like :k or current_project\
+							like :k or current_user like :k) group by part, supplier, item_description, CPN, PID,\
+							manufacturer_part_num', k='%' + keyword + '%', s="Unavailable")
+	part_unavailable = [dict(id=row[0], 
+						PR=row[1], 
+						PO=row[2], 
+						part=row[3], 
+						project_name=row[4], 
+						requestor=row[5], 
+						supplier=row[6],
+						supplier_contact=row[7], 
+						item_description=row[8], 
+						CPN=row[9], 
+						PID=row[10], 
+						manufacturer_part_num=row[11],
+						submit_date=row[12],
+						current_project=row[13], 
+						tracking=row[14], 
+						status=row[15],
+						checkout_date=row[16],
+						return_date=row[17], 
+						times_used=row[18],
+						current_user=row[19],
+						qty=row[20]
+			) for row in cur2.fetchall()]  #store them in a list of dictionaries
+	if request.method == 'POST':
+		checkout_ids = request.form.getlist("do_checkout")
+		if checkout_ids:
+			return redirect(url_for('confirm_checkout', checkout_ids=checkout_ids))
+		else:
+			flash('No part was selected')
+	return render_template('keyword_search.html', keyword=keyword, part_available=part_available, part_unavailable=part_unavailable)
+
+@app.route('/checkout_part/confirm', methods=['GET', 'POST'])
+@login_required
+def confirm_checkout():
+	# project names options for autocomplete field
+	project_names = ["%s" %i for i in db.session.query(Parts.project_name).group_by(Parts.project_name).all()]
+	project_names = [x.encode('utf-8') for x in project_names]
+	#   obtain ids from arg list
+	checkout_ids = [i.encode('utf-8') for i in request.args.getlist('checkout_ids')]
+	checkout_parts = Parts.query.filter(Parts.id.in_(checkout_ids)).all()
+	checkout_parts = [dict(id=part.id, 
+						PR=part.PR, 
+						PO=part.PO, 
+						part=part.part, 
+						requestor=part.requestor, 
+						supplier=part.supplier, 
+						supplier_contact=part.supplier_contact, 
+						item_description=part.item_description, 
+						CPN=part.CPN, 
+						PID=part.PID, 
+						manufacturer_part_num=part.manufacturer_part_num, 
+						submit_date=part.submit_date, 
+						tracking=part.tracking, 
+						status=part.status, 
+						project_name=part.project_name
+					) for part in checkout_parts]
+	#   add quantity variable to each checkout_parts
+	for i in checkout_parts:
+		kwargs = {'PR':i['PR'], 'PO':i['PO'], 'part':i['part'], 'requestor':i['requestor'], 'supplier':i['supplier'], 'supplier_contact':i['supplier_contact'],
+				'item_description':i['item_description'], 'CPN':i['CPN'], 'PID':i['PID'], 'manufacturer_part_num':i['manufacturer_part_num'], 
+				 'submit_date':i['submit_date'], 'tracking':i['tracking'], 'status':i['status'], 'project_name':i['project_name']}
+		qty = Parts.query.filter_by(**kwargs).count()
+		i['qty'] = qty 
+
+	form = CheckoutPart(request.form)
+	if request.method == 'POST' and form.validate():
+		date = time.strftime("%m/%d/%Y")
+		checkout_ids = sorted([int(i) for i in request.form.getlist('checkout_ids')])
+		quantities = [int(i) for i in request.form.getlist('qty')]
+
+		for i in range(len(checkout_ids)):
+			#	get all attributes of part
+			Part = Parts.query.filter_by(id=checkout_ids[i]).first()
+			#	get ids of rows that match these attributes
+			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
+				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
+				'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name}
+			ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
+			
+			#	iterate through these parts only for specified quantities
+			while quantities[i] > 0:
+				db.engine.execute('update parts set status = :s, checkout_date = :d, return_date = :r, times_used=times_used+1,\
+							current_user=:u, current_project=:p where id=:i', s='Unavailable', d=date, r=form.return_date.raw_data[0],
+							u=current_user.name, p=form.project.data, i=ids[quantities[i]-1])	
+				quantities[i] -= 1
+			db.session.commit()
+		flash('The parts were checked out!')
+		return redirect(url_for('home'))
+	return render_template('confirm_checkout.html', checkout_parts=checkout_parts, checkout_ids=checkout_ids, form=form, project_names=project_names)
