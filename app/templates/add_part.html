@@ -2,11 +2,11 @@
 {% block body %}
 <script>
 $(document).ready(function(){
-    var options_parts = {{ parts|safe }}
+    var options_parts = {{ parts|safe }} 
     $("#parts").autocomplete({
         source: options_parts
     });
-    var options_project_names = {{ project_names|safe }}
+    var options_project_names = {{ project_names|safe }} 
     $("#project_names").autocomplete({
         source: options_project_names
     });

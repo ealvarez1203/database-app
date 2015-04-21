@@ -1,7 +1,5 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h2>Confirm Delete</h2><br>
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script>
         $( document ).ready(function() {
             $(".select").each(function() {
@@ -13,10 +11,11 @@
             });
         });
     </script>
+    <h2>Confirm Return</h2><br>
 
-    <form action="{{ url_for('confirm_delete') }}" method=post class=add_entry>
+    <form action="{{ url_for('confirm_return') }}" method=post class=add_entry>
 
-        <em>Parts to Delete: </em>
+        <em>Parts to Return: </em>
         <table>
            <th>PR</th>
            <th>PO</th>
@@ -27,11 +26,9 @@
            <th>CPN</th>
            <th>PID</th>
            <th>MFG Part#</th>
-           <th>Tracking</th>
            <th>Qty</th>
-           <th>Status</th>
 
-            {% for part in delete_parts %}
+            {% for part in return_parts %}
             <tr>
               <td> {{part.PR}} </td>
               <td> {{part.PO}} </td>
@@ -42,22 +39,20 @@
               <td> {{part.CPN}} </td>
               <td> {{part.PID}} </td>
               <td> {{part.manufacturer_part_num}} </td>
-              <td> {{part.tracking}} </td>
               {% if part.qty == '1' %}
                   <td> {{part.qty}} </td>
               {% else %}
                   <td class="select" id="{{part.qty}}"></td>
               {% endif %}
-              <td> {{part.status}} </td>
             </tr>
             {% endfor %}
 
-        {% for ids in delete_ids %}
-           <input type="hidden" value="{{ids}}" name="delete_ids">
+        {% for ids in return_ids %}
+           <input type="hidden" value="{{ids}}" name="return_ids">
         {% endfor %}
         </table>
         <div class="metanav2">
-            <input type=submit class="btn btn-primary" value="Confirm delete">
+            <input type=submit class="btn btn-primary" value="Confirm Return">
         </div>
    </form><br>
 {% endblock %}

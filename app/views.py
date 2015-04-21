@@ -98,6 +98,8 @@ def add_part():
 	parts = [x.encode('utf-8') for x in parts]
 	project_names = ["%s" %i for i in db.session.query(Parts.project_name).group_by(Parts.project_name).all()]
 	project_names = [x.encode('utf-8') for x in project_names]
+	current_projects = ["%s" %i for i in db.session.query(Parts.current_project).group_by(Parts.current_project).all()]
+	current_projects = [x.encode('utf-8') for x in current_projects]
 	requestors = ["%s" %i for i in db.session.query(Parts.requestor).group_by(Parts.requestor).all()]
 	requestors = [x.encode('utf-8') for x in requestors]
 	suppliers = ["%s" %i for i in db.session.query(Parts.supplier).group_by(Parts.supplier).all()]
@@ -106,6 +108,7 @@ def add_part():
 	supplier_contacts = [x.encode('utf-8') for x in supplier_contacts]
 	item_descriptions = ["%s" %i for i in db.session.query(Parts.item_description).group_by(Parts.item_description).all()]
 	item_descriptions = [x.encode('utf-8') for x in item_descriptions]
+	project_names = project_names + current_projects # merge these two lists
 
 	form = AddPart(request.form)
 	form.status.choices = [('Available', 'Available'), ('Unavailable', 'Unavailable')]
@@ -260,7 +263,58 @@ def return_part():
 @app.route('/return_part/confirm', methods=['GET', 'POST'])
 @login_required
 def confirm_return():
-	return "confirm_return"
+	#   obtain ids from arg list
+	return_ids = [i.encode('utf-8') for i in request.args.getlist('return_ids')]
+	return_parts = Parts.query.filter(Parts.id.in_(return_ids)).all()
+	return_parts = [dict(id=part.id, 
+						PR=part.PR, 
+						PO=part.PO, 
+						part=part.part, 
+						requestor=part.requestor, 
+						supplier=part.supplier, 
+						supplier_contact=part.supplier_contact, 
+						item_description=part.item_description, 
+						CPN=part.CPN, 
+						PID=part.PID, 
+						manufacturer_part_num=part.manufacturer_part_num, 
+						submit_date=part.submit_date, 
+						tracking=part.tracking, 
+						status=part.status, 
+						project_name=part.project_name
+					) for part in return_parts]
+	#   add quantity variable to each checkout_parts
+	for i in return_parts:
+		kwargs = {'PR':i['PR'], 'PO':i['PO'], 'part':i['part'], 'requestor':i['requestor'], 'supplier':i['supplier'], 'supplier_contact':i['supplier_contact'],
+				'item_description':i['item_description'], 'CPN':i['CPN'], 'PID':i['PID'], 'manufacturer_part_num':i['manufacturer_part_num'], 
+				 'submit_date':i['submit_date'], 'tracking':i['tracking'], 'status':i['status'], 'project_name':i['project_name']}
+		qty = Parts.query.filter_by(**kwargs).count()
+		i['qty'] = qty 
+
+	if request.method == 'POST':
+		date = time.strftime("%m/%d/%Y")
+		#	get ids and quentities from form
+		return_ids = sorted([int(i) for i in request.form.getlist('return_ids')])
+		quantities = [int(i) for i in request.form.getlist('qty')]
+
+		for i in range(len(return_ids)):
+			#	get all attributes of part
+			Part = Parts.query.filter_by(id=return_ids[i]).first()
+			#	get ids of rows that match these attributes
+			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
+				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
+				'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name}
+			ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
+			
+			#	iterate through these parts only for specified quantities
+			while quantities[i] > 0:
+				db.engine.execute('update parts set status = :s, return_date = :r,\
+							current_user=:u, current_project=:p where id=:i', s='Available', r=date,
+							u=None, p=None, i=ids[quantities[i]-1])	
+				quantities[i] -= 1
+			db.session.commit()
+		flash('The parts were checked out!')
+		return redirect(url_for('home'))
+	return render_template('confirm_return.html', return_parts=return_parts, return_ids=return_ids)
 
 @app.route('/checkout_part', methods=['GET', 'POST'])
 @login_required

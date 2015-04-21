@@ -73,8 +73,7 @@ class Parts(db.Model):
 		PID,
 		manufacturer_part_num,
 		submit_date,
-		tracking,
-		status
+		tracking
 		):
 		self.PO = PO
 		self.PR = PR
@@ -89,7 +88,7 @@ class Parts(db.Model):
 		self.manufacturer_part_num = manufacturer_part_num
 		self.submit_date = submit_date
 		self.tracking = tracking
-		self.status = status
+		self.status = 'Available'
 		self.times_used = 0
 
 	def __repr__(self):
