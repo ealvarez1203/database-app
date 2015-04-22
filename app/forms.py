@@ -48,3 +48,20 @@ class AddPart(Form):
 class CheckoutPart(Form):
 	project = TextField('project', validators=[DataRequired()], id='project')
 	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date')
+
+class UpdatePart(Form):
+	PO = TextField('PO', validators=[DataRequired()], id='PO')
+	PR = TextField('PR', validators=[DataRequired()], id='PR')
+	part = TextField('part', validators=[DataRequired()], id="parts")
+	project_name = TextField('project_name', validators=[DataRequired()], id="project_names")
+	requestor = TextField('requestor', validators=[DataRequired()], id="requestors")
+	supplier = TextField('supplier', validators=[DataRequired()], id="suppliers")
+	supplier_contact = TextField('supplier_contact', validators=[DataRequired()], id="supplier_contacts")
+	item_description = TextField('item_description', validators=[DataRequired()], id="item_descriptions")
+	CPN = TextField('CPN', id='CPN')
+	PID = TextField('PID', id='PID')
+	manufacturer_part_num = TextField('manufacturer_part_num', validators=[DataRequired()], id='manufacturer_part_num')
+	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date')
+	tracking = TextField('tracking', validators=[DataRequired()], id='tracking')
+	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
+

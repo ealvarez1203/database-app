@@ -17,6 +17,8 @@ table, td, th   { border: 1px solid #ccc; font-size:0.873em;}
                   margin-bottom: 1em; background: #fafafa; }
 .metanav2        { text-align: center; font-size: 0.8em; padding: 0.3em;
                   margin-bottom: 1em;}
+.metanav3        { text-align: center;
+					right:0; left:0;}
 .flash          { text-align: center; background: #cee5F5; padding: 0.5em;
                   border: 1px solid #aacbe2; }
 .error          { background: #f0d6d6; padding: 0.5em; }

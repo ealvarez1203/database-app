@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager, bcrypt
-from forms import LoginForm, CreateUserForm, AddPart, CheckoutPart 
+from forms import LoginForm, CreateUserForm, AddPart, CheckoutPart, UpdatePart 
 from models import User, Parts
 import time
 
@@ -223,10 +223,142 @@ def confirm_delete():
 		return redirect(url_for('home'))
 	return render_template('confirm_delete.html', delete_parts=delete_parts, delete_ids=delete_ids)
 
+@app.route('/update', methods=['GET', 'POST'])
+@login_required
+def update_part():
+	if request.method == 'POST':
+		keyword = request.form['keyword']
+		if keyword:
+			return redirect(url_for('update_keyword_search', keyword=keyword))
+		else:
+			flash('Please enter a keyword!')
+	return render_template('update_part.html')
+
+@app.route('/update_part_search/<type>', methods= ['GET', 'POST'])
+@login_required
+def update_part_search(type):
+	#retrieve parts where part=type and status=Available
+	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+							count(*) from parts where part=:p group by part, supplier, item_description, CPN, PID, \
+							manufacturer_part_num', p=type)
+	part = [dict(id=row[0], 
+					PR=row[1], 
+					PO=row[2], 
+					part=row[3], 
+					project_name=row[4], 
+					requestor=row[5], 
+					supplier=row[6],
+					supplier_contact=row[7], 
+					item_description=row[8], 
+					CPN=row[9], 
+					PID=row[10], 
+					manufacturer_part_num=row[11],
+					submit_date=row[12],
+					current_project=row[13], 
+					tracking=row[14], 
+					status=row[15],
+					checkout_date=row[16],
+					return_date=row[17], 
+					times_used=row[18],
+					qty=row[19]
+			) for row in cur.fetchall()]  #store them in a list of dictionaries
+	if request.method == 'POST':
+		update_id = request.form.getlist("do_update")
+		if update_id:
+			return redirect(url_for('confirm_update', update_id=update_id))
+		else:
+			flash('No part was selected')
+	return render_template('update_part_search.html', type=type, part=part)
+
+@app.route('/update_keyword_search/<keyword>', methods=['GET', 'POST'])
+@login_required
+def update_keyword_search(keyword):
+	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+							current_user, count(*) from parts where part like :k or project_name like :k or supplier\
+							like :k or item_description like :k or CPN like :k or PID like :k or manufacturer_part_num like :k or current_project\
+							like :k or current_user like :k group by part, supplier, item_description, CPN, PID,\
+							manufacturer_part_num', k='%' + keyword + '%')
+	part = [dict(id=row[0], 
+				PR=row[1], 
+				PO=row[2], 
+				part=row[3], 
+				project_name=row[4], 
+				requestor=row[5], 
+				supplier=row[6],
+				supplier_contact=row[7], 
+				item_description=row[8], 
+				CPN=row[9], 
+				PID=row[10], 
+				manufacturer_part_num=row[11],
+				submit_date=row[12],
+				current_project=row[13], 
+				tracking=row[14], 
+				status=row[15],
+				checkout_date=row[16],
+				return_date=row[17], 
+				times_used=row[18],
+				current_user=row[19],
+				qty=row[20]
+			) for row in cur.fetchall()]  #store them in a list of dictionaries
+	if request.method == 'POST':
+		update_id = request.form.getlist("do_update")
+		if update_id:
+			return redirect(url_for('confirm_update', update_id=update_id))
+		else:
+			flash('No part was selected')
+	return render_template('update_keyword_search.html', keyword=keyword, part=part)
+
+@app.route('/update_part/confirm', methods=['GET', 'POST'])
+@login_required
+def confirm_update():
+	# project names options for autocomplete field
+	project_names = ["%s" %i for i in db.session.query(Parts.project_name).group_by(Parts.project_name).all()]
+	project_names = [x.encode('utf-8') for x in project_names]
+	#   obtain ids from arg list
+	update_id = request.args.get('update_id').encode('utf-8')
+	update_part = Parts.query.get(update_id)
+	update_part = dict(id=update_part.id, 
+						PR=update_part.PR, 
+						PO=update_part.PO, 
+						part=update_part.part, 
+						requestor=update_part.requestor, 
+						supplier=update_part.supplier, 
+						supplier_contact=update_part.supplier_contact, 
+						item_description=update_part.item_description, 
+						CPN=update_part.CPN, 
+						PID=update_part.PID, 
+						manufacturer_part_num=update_part.manufacturer_part_num, 
+						submit_date=update_part.submit_date, 
+						tracking=update_part.tracking, 
+						status=update_part.status, 
+						project_name=update_part.project_name
+					) 
+	#   add quantity variable to each checkout_part
+
+	kwargs = {'PR':update_part['PR'], 'PO':update_part['PO'], 'part':update_part['part'], 'requestor':update_part['requestor'], 'supplier':update_part['supplier'], 'supplier_contact':update_part['supplier_contact'],
+			'item_description':update_part['item_description'], 'CPN':update_part['CPN'], 'PID':update_part['PID'], 'manufacturer_part_num':update_part['manufacturer_part_num'], 
+			 'submit_date':update_part['submit_date'], 'tracking':update_part['tracking'], 'status':update_part['status'], 'project_name':update_part['project_name']}
+	qty = Parts.query.filter_by(**kwargs).count()
+	update_part['qty'] = qty 
+
+	form = UpdatePart(request.form)
+	form.status.choices = [('Available', 'Available'), ('Unavailable', 'Unavailable')]
+	if request.method == 'POST' and form.validate():
+		update_id = int(request.form.get('update_id'))
+		quantity = int(request.form.get('qty'))
+
+#		for i in range(len(quantity)):
+
+#		flash('The part has been updated!')
+#		return redirect(url_for('home'))
+	return render_template('confirm_update.html', part=update_part, update_id=update_id, form=form, project_names=project_names)
+
 @app.route('/return_part', methods=['GET', 'POST'])
 @login_required
 def return_part():
-	#retrieve data where current_user=currentuser and status=unavailable
+	#	retrieve data where current_user=currentuser and status=unavailable
 	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, count(*)\
 							from parts where current_user=:user and status=:s group by part, supplier, item_description, CPN, PID, \
@@ -391,7 +523,7 @@ def part_search(type):
 			flash('No part was selected')
 	return render_template('part_search.html', type=type, part_available=part_available, part_unavailable=part_unavailable)
 
-@app.route('/keyword_search/<keyword>', methods= ['GET', 'POST'])
+@app.route('/keyword_search/<keyword>', methods=['GET', 'POST'])
 @login_required
 def keyword_search(keyword):
 	cur1 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
@@ -422,7 +554,6 @@ def keyword_search(keyword):
 						current_user=row[19],
 						qty=row[20]
 			) for row in cur1.fetchall()]  #store them in a list of dictionaries
-	print part_available
 	cur2 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
 							current_user, count(*) from parts where status==:s and (part like :k or project_name like :k or supplier\

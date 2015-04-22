@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block body %}
+<script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
+
+<h1>{{type}}</h1><br>
+<h2>Update Part</h2>
+<em>Select part(s) to update: </em>
+<form action="{{ url_for('update_part_search', type=type) }}" method=post class=add_entry>          
+          {% if part %}
+            <em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter">
+            <table id="table">
+              <th></th>
+              <th>PR</th>
+              <th>PO</th>
+              <th>Part</th>
+              <th>Item Description</th>
+              <th>Supplier</th>
+              <th>CPN</th>
+              <th>PID</th>
+              <th>MFG Part#</th>
+              <th>Qty</th>
+              <th>Submit Date</th>
+              <th>Tracking</th>
+              <th>Status</th>
+
+
+              {% for part in part %}
+              <tr>
+                <td><input type=checkbox name='do_update' value="{{part.id}}"></td>
+                <td> {{part.PR}} </td>
+                <td> {{part.PO}} </td>
+                <td> {{part.part}} </td>
+                <td> {{part.item_description}} </td>
+                <td> {{part.supplier}} </td>
+                <td> {{part.CPN}} </td>
+                <td> {{part.PID}} </td>
+                <td> {{part.manufacturer_part_num}} </td>
+                <td> {{part.qty}} </td>
+                <td> {{part.submit_date}} </td>
+                <td> {{part.tracking}} </td>
+                <td> {{part.status}} </td>
+
+              </tr>
+              {% endfor %}
+            </table>
+            <div class="metanav2">
+                <input type=submit class="btn btn-success" value="update"><br><br>
+            </div>
+          {% else %}
+            <em> No Parts found </em>
+          {% endif %}
+</form>
+
+{% endblock %}
