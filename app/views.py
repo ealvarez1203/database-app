@@ -345,14 +345,45 @@ def confirm_update():
 
 	form = UpdatePart(request.form)
 	form.status.choices = [('Available', 'Available'), ('Unavailable', 'Unavailable')]
+	form.status.default = update_part['status'].encode('utf-8')
 	if request.method == 'POST' and form.validate():
 		update_id = int(request.form.get('update_id'))
-		quantity = int(request.form.get('qty'))
+		quantity = int(request.form.get('update_qty'))
 
-#		for i in range(len(quantity)):
+		#	get all attributes of part
+		Part = Parts.query.filter_by(id=update_id).first()
+		#	get ids of rows that match these attributes
+		kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
+			'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
+			'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name}
+		ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
+		
+		#if input form input field is empty keep previous value for column
+		form.PR.data = (Part.PR if not form.PR.data else form.PR.data)
+		form.PO.data = (Part.PO if not form.PO.data else form.PO.data)
+		form.part.data = (Part.part if not form.part.data else form.part.data)
+		form.requestor.data = (Part.requestor if not form.requestor.data else form.requestor.data)
+		form.supplier.data = (Part.supplier if not form.supplier.data is None else form.supplier.data)
+		form.supplier_contact.data = (Part.supplier_contact if not form.supplier_contact.data else form.supplier_contact.data)
+		form.item_description.data = (Part.item_description if not form.item_description.data else form.item_description.data)
+		form.CPN.data = (Part.CPN if not form.CPN.data else form.CPN.data)
+		form.PID.data = (Part.PID if not form.PID.data else form.PID.data)
+		form.manufacturer_part_num.data = (Part.manufacturer_part_num if not form.manufacturer_part_num.data else form.manufacturer_part_num.data)
+		form.submit_date.data = (Part.submit_date if not form.submit_date.data else form.submit_date.raw_data[0])
+		form.tracking.data = (Part.tracking if not form.tracking.data else form.tracking.data)
+		form.project_name.data = (Part.project_name if not form.project_name.data else form.project_name.data)
 
-#		flash('The part has been updated!')
-#		return redirect(url_for('home'))
+		#	iterate through these parts only for specified quantities
+		while quantity > 0:
+			db.engine.execute('update parts set PR=:a, PO=:b, part=:c, requestor=:d, supplier=:e, supplier_contact=:f, item_description=:g,\
+						CPN=:h, PID=:i, manufacturer_part_num=:j, submit_date=:k, tracking=:l, status = :m, project_name=:n where id=:o',
+						a=form.PR.data, b=form.PO.data, c=form.part.data, d=form.requestor.data, e=form.supplier.data, f=form.supplier_contact.data,
+						g=form.item_description.data, h=form.CPN.data, i=form.PID.data, j=form.manufacturer_part_num.data, k=form.submit_date.data,
+						l=form.tracking.data, m=form.status.data, n=form.project_name.data, o=ids[quantity-1])	
+			quantity -= 1
+		db.session.commit()
+		flash('The part has been updated!')
+		return redirect(url_for('home'))
 	return render_template('confirm_update.html', part=update_part, update_id=update_id, form=form, project_names=project_names)
 
 @app.route('/return_part', methods=['GET', 'POST'])

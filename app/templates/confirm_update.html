@@ -33,7 +33,7 @@ $(document).ready(function(){
 
 <h2>Update Part</h2>
 <br>
-<form class="form-horizontal" role="form" method=post action="/update_part">
+<form class="form-horizontal" role="form" method=post action="">
     {{ form.csrf_token }}
     <div>
         <label>PR: </label> {{ form.PR(placeholder=part.PR) }}
@@ -186,6 +186,6 @@ $(document).ready(function(){
     <input type="hidden" value={{part.qty}} name="update_qty">
 
 
-<button class="btn btn-success" type="submit">Confirm Update</button>
+    <button class="btn btn-success" type="submit">Confirm Update</button>
 </form>
 {% endblock %}
