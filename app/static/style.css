@@ -1,10 +1,12 @@
-body            { font-family: Georgia; background: #eee; }
+body            { font-family: 'Georgia'; background: #eee; }
 a, h1, h2       { color: #428bca; }
 h1, h2          { font-family: 'Georgia', serif; margin: 0; }
 h1              { border-bottom: 2px solid #eee; }
-h2              { font-size: 1.2em; }
+h2              { font-size: 1.5em; margin:auto; }
+h3              { font-family: 'Georgia'; font-size: 1.3em; }
 table           { border-collapse: collapse;}
 table, td, th   { border: 1px solid #ccc; font-size:0.873em;}
+th  			{text-align: center}
 
 .page           { margin: 2em; width:70em auto; border: 5px solid #ccc;
                   padding: 0.8em; background: white; }
@@ -13,12 +15,20 @@ table, td, th   { border: 1px solid #ccc; font-size:0.873em;}
 .entries li h2  { margin-left: -1em; }
 .add-entry      { font-size: 0.9em; border-bottom: 1px solid #ccc; }
 .add-entry dl   { font-weight: bold; }
-.metanav        { text-align: right; font-size: 0.8em; padding: 0.3em;
+.metanav        { text-align: right; font-size: 1em; padding: 0.3em;
                   margin-bottom: 1em; background: #fafafa; }
-.metanav2        { text-align: center; font-size: 0.8em; padding: 0.3em;
+.metanav2        { text-align: center; font-size: 1.0em; padding: 0.3em;
                   margin-bottom: 1em;}
 .metanav3        { text-align: center;
 					right:0; left:0;}
 .flash          { text-align: center; background: #cee5F5; padding: 0.5em;
                   border: 1px solid #aacbe2; }
 .error          { background: #f0d6d6; padding: 0.5em; }
+
+#inputfile
+{
+width:250px;
+margin:auto;   
+}
+
+

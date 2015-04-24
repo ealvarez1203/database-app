@@ -5,7 +5,7 @@
    {% if parts %}
       Parts you have checked out:
        <form action="{{ url_for('return_part') }}" method=post class=add_entry>
-        <table>
+        <table class="table table-striped">
                <th></th>
                <th>part</th>
                <th>Supplier</th>

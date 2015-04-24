@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager, bcrypt
-from forms import LoginForm, CreateUserForm, AddPart, CheckoutPart, UpdatePart 
+from forms import *
 from models import User, Parts
-import time
+import time, xlrd, os
+from werkzeug import secure_filename
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -13,6 +14,10 @@ def not_found_error(error):
 def internal_error(error):
 	db.session.rollback()
 	return render_template('500.html'), 500
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -59,12 +64,50 @@ def create_user():
 @app.route('/home')
 @login_required
 def home():
-	return render_template('main.html')
+	return render_template('main.html', user=current_user.name)
 
 @app.route('/History/<serialNumber>/')
 @login_required
 def show_history(serialNumber):
 	return "show_history"
+
+@app.route('/Upload', methods=['GET','POST'])
+@login_required
+def upload_file():
+	if request.method == 'POST':
+	        file = request.files['file'] # file object from form
+	        if file and allowed_file(file.filename): #checks is file is uploaded and has valid format
+	            filename = secure_filename(file.filename) #verify authenticy of file
+	            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #save file in programs /tmp directory
+	            workbook = xlrd.open_workbook(os.path.join(app.config['UPLOAD_FOLDER'], filename))	#open workbook
+	            sheet = workbook.sheet_by_index(0) #select sheet number
+	            keys = [sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)] #obtain column names
+	            dict_list = [] 
+	            for row_index in xrange(1, sheet.nrows): #iterate through all rows of sheet and store them in dict_list
+	            	d = {keys[col_index]: sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols)}
+	            	dict_list.append(d)
+	            for i in dict_list: # import to database
+	            	for j in range(0, int(i['Qty'])):
+	            		db.session.add(Parts(i['PO#'],
+	    									i['PR#'], 
+											i['Part'], 
+											i['Project Name'],
+											i['Requestor'],
+											i['Supplier'],
+											i['Supplier Contact'],
+											i['Item Description'],
+											i['CPN'],
+											i['PID'],
+											i['Manufacturer Part#'],
+											i['Submit Date'],
+											i['Tracking#']
+					            		))
+				db.session.commit()
+	            flash('The excel file was sucessfully uploaded!')
+	            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #remove file from tmp folder
+	            return redirect(url_for('upload_file'))
+
+	return render_template('upload_file.html')
 
 @app.route('/inventory')
 @login_required

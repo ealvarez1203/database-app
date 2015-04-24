@@ -88,7 +88,7 @@ class Parts(db.Model):
 		self.manufacturer_part_num = manufacturer_part_num
 		self.submit_date = submit_date
 		self.tracking = tracking
-		self.status = 'Available'
+		self.status = 'Unvailable'
 		self.times_used = 0
 
 	def __repr__(self):
@@ -108,4 +108,5 @@ class Parts(db.Model):
 			self.tracking.encode('utf-8'), 
 			self.status.encode('utf-8'),
 			self.times_used.encode('utf-8')
-			)	
+			)
+		

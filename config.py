@@ -5,6 +5,8 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'savbu-database.d
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 WTF_CSRF_ENABLED = True
 SECRET_KEY = 'frlckjsanrclkjnrg'
+UPLOAD_FOLDER = os.path.join(basedir, 'tmp')
+ALLOWED_EXTENSIONS = set(['xlsx', 'xlsm', 'xls'])
 
 # mail server settings
 MAIL_SERVER = 'smtp.gmail.com'

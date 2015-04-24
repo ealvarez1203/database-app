@@ -8,7 +8,7 @@
 <form action="{{ url_for('update_part_search', type=type) }}" method=post class=add_entry>          
           {% if part %}
             <em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter">
-            <table id="table">
+            <table id="table" class="table table-striped">
               <th></th>
               <th>PR</th>
               <th>PO</th>

@@ -1,9 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
     <h2>Main</h2>
+    {% if user == 'admin' %}
+    <div class="metanav2">
+    	<a href="{{ url_for('upload_file') }}"><input type="button" class="btn btn-warning" value="Import"></a>
+        <a href="{{ url_for('update_part') }}"><input type="button" class="btn btn-success" value="Update"></a>
+    </div>
+    {%else%}
     <div class="metanav2">
         <a href="{{ url_for('return_part') }}"><input type="button" class="btn btn-primary" value="Return"></a>
         <a href="{{ url_for('checkout_part') }}"><input type="button" class="btn btn-default" value="Check out"></a>
-        <a href="{{ url_for('update_part') }}"><input type="button" class="btn btn-success" value="Update"></a>
     </div>
+    {%endif%}
 {% endblock %}

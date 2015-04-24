@@ -1,6 +1,7 @@
 from flask_wtf import Form
 from wtforms import TextField, PasswordField, BooleanField, IntegerField, SelectField, DateField, validators
 from wtforms.validators import DataRequired, Length, Email, EqualTo
+from flask_wtf.file import FileField
 
 class LoginForm(Form):
 	username = TextField('Username', validators=[DataRequired()])
@@ -64,4 +65,7 @@ class UpdatePart(Form):
 	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date')
 	tracking = TextField('tracking', id='tracking')
 	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
+
+class UploadFile(Form):
+	excelFile = FileField('excelFile')
 

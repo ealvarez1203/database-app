@@ -6,7 +6,8 @@
 
   <h1>{{type}}</h1><br>
   <h2>Check out a Part</h2>
-  <em>Select part(s) to delete: </em>
+
+  <p><em>Select part(s) to check out: </em></p>
     
   <div>
 
@@ -23,8 +24,8 @@
 
           {% if part_available %}
 
-            <em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter">
-            <table id="table">
+            <br><p><em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter"></p>
+            <table id="table" class="table table-striped">
               <th></th>
               <th>Part</th>
               <th>Item Description</th>
@@ -61,7 +62,7 @@
           {% if part_unavailable %}
 
             <em>{{type}}s Unvailable:  </em><input type="text" id="search2" placeholder="Type to filter">
-            <table id="table2">
+            <table id="table2" class="table table-striped">
               <th>part</th>
               <th>Supplier</th>
               <th>Item Description</th>
