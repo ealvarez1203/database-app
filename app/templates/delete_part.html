@@ -3,11 +3,28 @@
     <h2>Delete a Part</h2>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#selecctall').click(function(event) {  //on click
+                if(this.checked) { // check select status
+                    $('.checkbox1').each(function() { //loop through each checkbox
+                        this.checked = true;  //select all checkboxes with class "checkbox1"              
+                    });
+                }else{
+                    $('.checkbox1').each(function() { //loop through each checkbox
+                        this.checked = false; //deselect all checkboxes with class "checkbox1"                      
+                    });        
+                }
+            });
+           
+        });
+    </script>
 
     <form action="{{ url_for('delete_part') }}" method=post class=add_entry>
 
         <em>Select part(s) to delete: </em>
         <input type="text" id="search" placeholder="Type to filter">
+        <input text-align='right' type="checkbox" id="selecctall"/> Select All
         <table id="table" class="table table-striped">
            <th></th>
            <th>PR</th>
@@ -26,10 +43,10 @@
 
            {% for part in parts %}
             <tr>
-              <td><input type=checkbox name='do_delete' value="{{part.id}}"></td>
+              <td><input type=checkbox class='checkbox1' name='do_delete' value="{{part.id}}"></td>
               <td> {{part.PR}} </td>
               <td> {{part.PO}} </td>
-              <td> {{part.part}} </td>
+              <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
               <td> {{part.project_name}} </td>
               <td> {{part.supplier}} </td>
               <td> {{part.item_description}} </td>

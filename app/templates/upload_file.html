@@ -1,11 +1,40 @@
 {% extends "layout.html" %}
 {% block body %}
-<form action="" method=post enctype=multipart/form-data>
+<h2> Import data from Excel </h2><br>
 
+<em>To import data from an excel spreadsheet, make sure you have the following column headers (they can be in different order):</em>
+<table id="table" class="table table-striped">
+   <th>PO#</th>
+   <th>PR#</th>
+   <th>PART</th>
+   <th>PROJECT NAME</th>
+   <th>REQUESTOR</th>
+   <th>QTY</th>
+   <th>ITEM DESCRIPTION</th>
+   <th>SUPPLIER NAME</th>
+   <th>SUPPLIER CONTACT</th>
+   <th>CPN</th>
+   <th>PID</th>
+   <th>MFG PART#</th>
+   <th>DATE</th>
+   <th>TRACKING#</th>
+</table>
+
+<em>Please make sure the parts are labeled as:</em> <strong> CABLES, CHASSIS, CPU, DIMM, HDD, HEATSINK, MEZZ-CARD, OTHER, PROTOTYPE, PSU, RAID-UNIT and TPM. </strong>
+
+<form action="" method=post enctype=multipart/form-data>
 <div class="metanav2">
   	<em>Please select file: </em><input type=file id="inputfile" class="btn btn-default" name=file><br>
+  	Sheet #:
+  	<select name="sheet">
+		<option value="0">1</option>
+		<option value="1">2</option>
+		<option value="2">3</option>
+		<option value="3">4</option>
+	</select>
      <input type=submit class="btn btn-warning" value=Upload></p>
 </div>
+
 </form>
 
 {% endblock %}

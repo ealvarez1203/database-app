@@ -46,15 +46,23 @@
                 <td> {{part.PID}} </td>
                 <td> {{part.manufacturer_part_num}} </td>
                 <td> {{part.qty}} </td>
-                <td> {{part.times_used}} </td>
+                {% if part.times_used == '0' %}
+                  <td> {{part.times_used}} <td>
+                {% else %}
+                  <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
+                {% endif %}
+                
               </tr>
               {% endfor %}
             </table>
             <div class="metanav2">
-                <input type=submit class="btn btn-default" value="check out"><br><br>
+                <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/><input type=submit class="btn btn-default" value="check out"><br><br>
             </div>
           {% else %}
-            <em> No Parts Available </em>
+            <em> No Results </em>
+              <div class='metanav2'> 
+                <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>
+              </div>
           {% endif %}
         </div>
 
@@ -92,7 +100,10 @@
               {% endfor %}
             </table>
           {% else %}
-            <em> No Parts </em>
+            <em> No Results </em>
+              <div class='metanav2'> 
+                <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>
+              </div>
           {% endif %}
         </div>
       </div>

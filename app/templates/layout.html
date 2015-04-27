@@ -3,7 +3,6 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('.static', filename='jquery-ui.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='datepicker.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
@@ -17,7 +16,10 @@
     {% for message in get_flashed_messages() %}
         <div class=flash> {{ message }} </div>
     {% endfor %}
+    {% if error %}<p class=error style="text-colo"><strong>Error:</strong> {{error }} </p> {% endif %}
     <div class=metanav>
+        {% if user %} <em>Logged in as: </em>{{user}} {% endif %}
+        &nbsp;
         <a href="{{ url_for('home') }}"> main </a>
         &nbsp;
         <a href="{{ url_for('logout') }}"> log out </a>

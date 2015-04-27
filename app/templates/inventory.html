@@ -20,7 +20,6 @@
        <th>PID</th>
        <th>MFG Part#</th>
        <th>Submit Date</th>
-       <th>Tracking</th>
        <th>Qty</th>
        <th>Status</th>
 
@@ -28,7 +27,7 @@
         <tr>
             <td> {{part.PR}} </td>
             <td> {{part.PO}} </td>
-            <td> {{part.part}} </td>
+            <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
             <td> {{part.project_name}} </td>
             <td> {{part.requestor}} </td>
             <td> {{part.supplier}} </td>
@@ -38,7 +37,6 @@
             <td> {{part.PID}} </td>
             <td> {{part.manufacturer_part_num}} </td>
             <td> {{part.submit_date}} </td>
-            <td> {{part.tracking}} </td>
             <td> {{part.qty}}</td>
             <td> {{part.status}} </td>
         </tr>

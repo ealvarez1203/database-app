@@ -11,7 +11,7 @@ class LoginForm(Form):
 class CreateUserForm(Form):
 	username = TextField(
 			'username',
-			validators=[DataRequired(), Length(min=4, max=8)]
+			validators=[DataRequired(), Length(min=4, max=10)]
 	)
 	email = TextField(
 			'email',
@@ -29,19 +29,19 @@ class CreateUserForm(Form):
 	)
 
 class AddPart(Form):
-	PO = TextField('PO', validators=[DataRequired()])
-	PR = TextField('PR', validators=[DataRequired()])
-	part = TextField('part', validators=[DataRequired()], id="parts")
+	PO = TextField('PO', validators=[DataRequired()], id='PO')
+	PR = TextField('PR', validators=[DataRequired()], id='PR')
+	part = SelectField('part', coerce=unicode, validators=[DataRequired()], id="parts")
 	project_name = TextField('project_name', validators=[DataRequired()], id="project_names")
 	requestor = TextField('requestor', validators=[DataRequired()], id="requestors")
 	supplier = TextField('supplier', validators=[DataRequired()], id="suppliers")
 	supplier_contact = TextField('supplier_contact', validators=[DataRequired()], id="supplier_contacts")
 	item_description = TextField('item_description', validators=[DataRequired()], id="item_descriptions")
-	CPN = TextField('CPN')
-	PID = TextField('PID')
-	manufacturer_part_num = TextField('manufacturer_part_num', validators=[DataRequired()])
+	CPN = TextField('CPN', id="CPN")
+	PID = TextField('PID', id='PID')
+	manufacturer_part_num = TextField('manufacturer_part_num', validators=[DataRequired()], id='manufacturer_part_num')
 	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date')
-	tracking = TextField('tracking', validators=[DataRequired()])
+	tracking = TextField('tracking', validators=[DataRequired()], id='tracking')
 	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
 	qty = IntegerField('qty', validators=[DataRequired()])
 

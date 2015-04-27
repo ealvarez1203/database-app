@@ -3,17 +3,17 @@
 <h1> Update Part </h1><br>
 <div class="metanav2">
 	<div class="btn-group" role="group" aria-label="...">
-	  <a href="{{ url_for('update_part_search', type='DIMMs') }}" class="btn btn-default">DIMMs</a>
+	  <a href="{{ url_for('update_part_search', type='DIMM') }}" class="btn btn-default">DIMMs</a>
 	  <a href="{{ url_for('update_part_search', type='CPU') }}" class="btn btn-default">CPUs</a>
 	  <a href="{{ url_for('update_part_search', type='HDD') }}" class="btn btn-default">HDDs</a>
-	  <a href="{{ url_for('update_part_search', type='MEZZ-Card') }}" class="btn btn-default">MEZZ-Cards</a>
-	  <a href="{{ url_for('update_part_search', type='RAID-Unit') }}" class="btn btn-default">RAID-Unit</a>
+	  <a href="{{ url_for('update_part_search', type='MEZZ-CARD') }}" class="btn btn-default">MEZZ-Cards</a>
+	  <a href="{{ url_for('update_part_search', type='RAID-UNIT') }}" class="btn btn-default">RAID-Unit</a>
 	  <a href="{{ url_for('update_part_search', type='TPM') }}" class="btn btn-default">TPMs</a>
 	  <a href="{{ url_for('update_part_search', type='PSU') }}" class="btn btn-default">PSUs</a>
-	  <a href="{{ url_for('update_part_search', type='Chassis') }}" class="btn btn-default">Chassis</a>
-	  <a href="{{ url_for('update_part_search', type='Heatsink') }}" class="btn btn-default">Heatsinks</a>
-	  <a href="{{ url_for('update_part_search', type='Prototype') }}" class="btn btn-default">Prototypes</a>
-	  <a href="{{ url_for('update_part_search', type='Other') }}" class="btn btn-default">Other</a>
+	  <a href="{{ url_for('update_part_search', type='CHASSIS') }}" class="btn btn-default">Chassis</a>
+	  <a href="{{ url_for('update_part_search', type='HEATSINK') }}" class="btn btn-default">Heatsinks</a>
+	  <a href="{{ url_for('update_part_search', type='PROTOTYPE') }}" class="btn btn-default">Prototypes</a>
+	  <a href="{{ url_for('update_part_search', type='OTHER') }}" class="btn btn-default">Other</a>
 	</div>
 	<form class="navbar-form navbar-center" role="search" action="{{ url_for('update_part') }}" method='POST'>
 	   <em> Keyword search: </em>

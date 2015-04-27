@@ -2,7 +2,11 @@
 {% block body %}
 <script>
     $(document).ready(function(){
-        $("#return_date").datepicker();
+        $("#return_date").datepicker({
+        	changeMonth: true,
+        	changeYear: true,
+        	minDate: 0
+    	});
 	    var options_projects = {{ project_names|safe }}
 	    $("#project").autocomplete({
 	        source: options_projects
@@ -24,7 +28,7 @@
 Parts to be Checked out:
 <form class="form-signin" role="form" method="post" action="">
 	{{ form.csrf_token }}
-    <table>
+    <table class="table table-striped">
 
     	<th>Part</th>
     	<th>Item Description</th>

@@ -29,7 +29,7 @@
                 <td><input type=checkbox name='do_update' value="{{part.id}}"></td>
                 <td> {{part.PR}} </td>
                 <td> {{part.PO}} </td>
-                <td> {{part.part}} </td>
+                <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
                 <td> {{part.item_description}} </td>
                 <td> {{part.supplier}} </td>
                 <td> {{part.CPN}} </td>
@@ -44,10 +44,13 @@
               {% endfor %}
             </table>
             <div class="metanav2">
-                <input type=submit class="btn btn-success" value="update"><br><br>
+                <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>  <input type=submit class="btn btn-success" value="update"><br><br>
             </div>
           {% else %}
-            <em> No Parts found </em>
+            <em> No Results </em>
+              <div class='metanav2'> 
+                <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>
+              </div>
           {% endif %}
 </form>
 

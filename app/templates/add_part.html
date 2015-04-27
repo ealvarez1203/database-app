@@ -2,9 +2,13 @@
 {% block body %}
 <script>
 $(document).ready(function(){
-    var options_parts = {{ parts|safe }} 
-    $("#parts").autocomplete({
-        source: options_parts
+    var options_PRs = {{ PRs|safe }} 
+    $("#PR").autocomplete({
+        source: options_PRs
+    });
+    var options_POs = {{ POs|safe }} 
+    $("#PO").autocomplete({
+        source: options_POs
     });
     var options_project_names = {{ project_names|safe }} 
     $("#project_names").autocomplete({
@@ -26,11 +30,30 @@ $(document).ready(function(){
     $("#item_descriptions").autocomplete({
         source: options_item_descriptions
     });
-    
-    $( "#submit_date" ).datepicker();
+    var options_CPN = {{ CPNs|safe }}
+    $("#CPN").autocomplete({
+        source: options_CPN
+    });
+    var options_PID = {{ PIDs|safe }}
+    $("#PID").autocomplete({
+        source: options_PID
+    });
+    var options_manufacturer = {{ manufacturer_part_nums|safe }}
+    $("#manufacturer_part_num").autocomplete({
+        source: options_manufacturer
+    });
+    var options_tracking = {{ tracking|safe }}
+    $("#tracking").autocomplete({
+        source: options_tracking
+    });
+    $( "#submit_date" ).datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
 });
 </script>
 
+<div class="metanav2">
 <h2>Add New Part</h2>
 <br>
 <form class="form-horizontal" role="form" method=post action="/add_part">
@@ -58,15 +81,8 @@ $(document).ready(function(){
     </span>
     </p>
     
-    <p>
-    {{ form.part(placeholder="Part") }}
-    <span class="error">
-    {% if form.part.errors %}
-        {% for error in form.part.errors %}
-            {{ error }}
-        {% endfor %}
-    {% endif %}
-    </span>
+    <p>Part:
+        {{ form.part }}
     </p>
 
     <p>
@@ -168,7 +184,7 @@ $(document).ready(function(){
     </span>
     </p>
 
-    <p>
+    <p> Status:
     {{ form.status }}
     </p>
 
@@ -195,6 +211,7 @@ $(document).ready(function(){
     </p>
 <div class='metanav2'>
 <button class="btn btn-primary" type="submit">Submit</button>
+</div>
 </div>
 </form>
 {% endblock %}

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  <h2>History</h2><br>
+    {% if history %}
+    <table class="table table-striped">
+       <th>Project</th>
+       <th>User</th>
+       <th>Checkout Date</th>
+       <th>Return Date</th>
+
+       {% for item in history %}
+        <tr>
+            <td> {{item.project}} </td>
+            <td> {{item.user}} </td>
+            <td> {{item.checkout_date}} </td>
+            <td> {{item.return_date}} </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+      <em>History for this part is empty</em>
+    {% endif %}
+    <br>
+   <input action='action' type="button" value='Go Back' onclick="window.history.go(-1); return false;"/>
+{% endblock %}

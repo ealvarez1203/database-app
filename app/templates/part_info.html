@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Part info</h2><br>
+
+    <table id="table">
+      <tr>
+        <th>PR</th>
+        <td>{{part.PR}}</td>
+      </tr>
+      <tr>
+        <th>PO</th>
+        <td>{{part.PO}}</td>
+      </tr>
+      <tr>
+        <th>Part</th>
+        <td>{{part.part}}</td>
+      </tr>
+      <tr>
+        <th>Project</th>
+        <td>{{part.project_name}}</td>
+      </tr>
+      <tr>
+        <th>Requestor</th>
+        <td>{{part.requestor}}</td>
+      </tr>
+      <tr>
+        <th>Supplier</th>
+        <td>{{part.supplier}}</td>
+      </tr>
+      <tr>
+        <th>Supplier Contact</th>
+        <td>{{part.supplier_contact}}</td>
+      </tr>
+      <tr>
+        <th>Item Description</th>
+        <td>{{part.item_description}}</td>
+      </tr>
+      <tr>
+        <th>CPN</th>
+        <td>{{part.CPN}}</td>
+      </tr>
+      <tr>
+        <th>PID</th>
+        <td>{{part.PID}}</td>
+      </tr>
+      <tr>
+        <th>MFG PART#</th>
+        <td>{{part.manufacturer_part_num}}</td>
+      </tr>
+      <tr>
+        <th>Date Submitted</th>
+        <td>{{part.submit_date}}</td>
+      </tr>
+      <tr>
+        <th>Current User</th>
+        <td>{{part.current_user}}</td>
+      </tr>
+      <tr>
+        <th>Current Project</th>
+        <td>{{part.current_project}}</td>
+      </tr>      
+      <tr>
+        <th>Times Used</th>
+        <td>{{part.times_used}}</td>
+      </tr>
+      <tr>
+        <th>Qty</th>
+        <td>{{part.qty}}</td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td>{{part.status}}</td>
+      </tr>
+   </table>
+
+    <br>
+   <div class='metanav2'> 
+   <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>
+ </div>
+{% endblock %}

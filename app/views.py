@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager, bcrypt
 from forms import *
-from models import User, Parts
+from models import User, Parts, History
 import time, xlrd, os
 from werkzeug import secure_filename
 
@@ -48,18 +48,22 @@ def logout():
 
 @app.route('/register/', methods=['GET', 'POST']) 
 def create_user():
+	error = None
 	form = CreateUserForm()
 	if form.validate_on_submit():
-		user = User(
-			name=form.username.data,
-			email=form.email.data,
-			password=form.password.data
-		)
-		db.session.add(user)
-		db.session.commit()
-		login_user(user)
-		return redirect(url_for('home'))
-	return render_template('create_user.html', form=form)
+		if User.query.filter_by(name=form.username.data).first() or User.query.filter_by(email=form.email.data).first():
+			error = 'Username already exist. Please try using a different username or email'
+		else:	
+			user = User(
+				name=form.username.data,
+				email=form.email.data,
+				password=form.password.data
+			)
+			db.session.add(user)
+			db.session.commit()
+			login_user(user)
+			return redirect(url_for('home'))
+	return render_template('create_user.html', form=form, error=error)
 
 @app.route('/home')
 @login_required
@@ -69,51 +73,93 @@ def home():
 @app.route('/History/<serialNumber>/')
 @login_required
 def show_history(serialNumber):
-	return "show_history"
+	cur = db.engine.execute('select project, user, checkout_date, return_date from History where Part_SN=:s', s=serialNumber)
+	history = [dict(project=row[0], user=row[1], checkout_date=row[2], return_date=row[3]) for row in cur.fetchall()]
+	return render_template('history.html', history=history)
+
+@app.route('/Part/<id>/')
+@login_required
+def show_part_info(id):
+	cur = db.engine.execute('select PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description,\
+							 CPN, PID, manufacturer_part_num, submit_date, tracking, status, current_user, current_project,\
+							 checkout_date, return_date, times_used, count(*) from parts where id=:i group by PR, PO, part, project_name,\
+							 requestor, supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num,\
+							 submit_date, tracking, status', i=id)
+	part = [dict(PR=row[0], 
+				PO=row[1], 
+				part=row[2], 
+				project_name=row[3], 
+				requestor=row[4], 
+				supplier=row[5],
+				supplier_contact=row[6], 
+				item_description=row[7], 
+				CPN=row[8], 
+				PID=row[9], 
+				manufacturer_part_num=row[10],
+				submit_date=row[11], 
+				tracking=row[12], 
+				status=row[13],
+				current_user=row[14],
+				current_project=row[15],
+				checkout_date=row[16],
+				return_date=row[17],
+				times_used=row[18],
+				qty=row[19]
+			) for row in cur.fetchall()]
+	return render_template('part_info.html', part=part[0])
 
 @app.route('/Upload', methods=['GET','POST'])
 @login_required
 def upload_file():
+	error=None
 	if request.method == 'POST':
 	        file = request.files['file'] # file object from form
 	        if file and allowed_file(file.filename): #checks is file is uploaded and has valid format
 	            filename = secure_filename(file.filename) #verify authenticy of file
 	            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #save file in programs /tmp directory
 	            workbook = xlrd.open_workbook(os.path.join(app.config['UPLOAD_FOLDER'], filename))	#open workbook
-	            sheet = workbook.sheet_by_index(0) #select sheet number
+	            sheet = workbook.sheet_by_index(int(request.form.get('sheet'))) #select sheet number
 	            keys = [sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)] #obtain column names
 	            dict_list = [] 
 	            for row_index in xrange(1, sheet.nrows): #iterate through all rows of sheet and store them in dict_list
 	            	d = {keys[col_index]: sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols)}
 	            	dict_list.append(d)
-	            for i in dict_list: # import to database
-	            	for j in range(0, int(i['Qty'])):
-	            		db.session.add(Parts(i['PO#'],
-	    									i['PR#'], 
-											i['Part'], 
-											i['Project Name'],
-											i['Requestor'],
-											i['Supplier'],
-											i['Supplier Contact'],
-											i['Item Description'],
-											i['CPN'],
-											i['PID'],
-											i['Manufacturer Part#'],
-											i['Submit Date'],
-											i['Tracking#']
-					            		))
-				db.session.commit()
-	            flash('The excel file was sucessfully uploaded!')
+	            try:
+	            	for i in dict_list: # import to database
+	            		for j in range(0, int(i['QTY'])):
+	            			db.session.add(Parts((int(i['PO#']) if isinstance(i['PO#'], float) else i['PO#']),
+	    										(int(i['PO#']) if isinstance(i['PO#'], float) else i['PO#']), 
+												i['PART'], 
+												i['PROJECT NAME'],
+												i['REQUESTOR'],
+												i['SUPPLIER NAME'],
+												i['SUPPLIER CONTACT'],
+												i['ITEM DESCRIPTION'],
+												(int(i['CPN']) if isinstance(i['CPN'], float) else i['CPN']),
+												(int(i['PID']) if isinstance(i['PID'], float) else i['PID']),
+												(int(i['MFG PART#']) if isinstance(i['MFG PART#'], float) else i['MFG PART#']),
+												time.strftime("%m/%d/%Y"), # xlrd function needed
+												(int(i['TRACKING#']) if isinstance(i['TRACKING#'], float) else i['TRACKING#']), 
+												'Unavailable'
+					          			))
+	            	db.session.commit()
+	            	flash('The excel file was sucessfully uploaded!')
+	            except KeyError, key:
+	            	error = 'Column missing: %s'%key
+	            	return render_template('upload_file.html', error=error)
+
 	            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #remove file from tmp folder
 	            return redirect(url_for('upload_file'))
+	        else:
+	        	error= " Wrong File Format"
 
-	return render_template('upload_file.html')
+	return render_template('upload_file.html', error=error)
 
 @app.route('/inventory')
 @login_required
 def inventory():
 	cur = db.engine.execute('select PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description,\
-							 CPN, PID, manufacturer_part_num, submit_date, tracking, status, count(*) from parts group by PR, PO,\
+							 CPN, PID, manufacturer_part_num, submit_date, tracking, status, id, count(*) from parts group by PR, PO,\
 							 part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							 manufacturer_part_num, submit_date, tracking, status')
 	parts = [dict(PR=row[0], 
@@ -130,15 +176,18 @@ def inventory():
 				submit_date=row[11], 
 				tracking=row[12], 
 				status=row[13], 
-				qty=row[14]
+				id=row[14],
+				qty=row[15]
 			) for row in cur.fetchall()]
 	return render_template('inventory.html', parts=parts)
 
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
 def add_part():
-	parts = ["%s" %i for i in db.session.query(Parts.part).group_by(Parts.part).all()]
-	parts = [x.encode('utf-8') for x in parts]
+	POs = ["%s" %i for i in db.session.query(Parts.PO).group_by(Parts.PO).all()]
+	POs = [x.encode('utf-8') for x in POs]
+	PRs = ["%s" %i for i in db.session.query(Parts.PR).group_by(Parts.PR).all()]
+	PRs = [x.encode('utf-8') for x in PRs]
 	project_names = ["%s" %i for i in db.session.query(Parts.project_name).group_by(Parts.project_name).all()]
 	project_names = [x.encode('utf-8') for x in project_names]
 	current_projects = ["%s" %i for i in db.session.query(Parts.current_project).group_by(Parts.current_project).all()]
@@ -152,9 +201,19 @@ def add_part():
 	item_descriptions = ["%s" %i for i in db.session.query(Parts.item_description).group_by(Parts.item_description).all()]
 	item_descriptions = [x.encode('utf-8') for x in item_descriptions]
 	project_names = project_names + current_projects # merge these two lists
+	CPNs = ["%s" %i for i in db.session.query(Parts.CPN).group_by(Parts.CPN).all()]
+	CPNs = [x.encode('utf-8') for x in CPNs]
+	PIDs = ["%s" %i for i in db.session.query(Parts.PID).group_by(Parts.PID).all()]
+	PIDs = [x.encode('utf-8') for x in PIDs]
+	manufacturer_part_nums = ["%s" %i for i in db.session.query(Parts.manufacturer_part_num).group_by(Parts.manufacturer_part_num).all()]
+	manufacturer_part_nums = [x.encode('utf-8') for x in manufacturer_part_nums]
+	tracking = ["%s" %i for i in db.session.query(Parts.tracking).group_by(Parts.tracking).all()]
+	tracking = [x.encode('utf-8') for x in tracking]
 
 	form = AddPart(request.form)
 	form.status.choices = [('Available', 'Available'), ('Unavailable', 'Unavailable')]
+	form.part.choices = [('DIMM', 'DIMM'), ('CPU', 'CPU'), ('CABLES', 'CABLES'), ('CHASSIS', 'CHASSIS'), ('HDD', 'HDD'),
+							('MEZZ-CARD', 'MEZZ-CARD'), ('PROTOTYPE', 'PROTOTYPE'), ('PSU', 'PSU'), ('RAID-UNIT', 'RAID-UNIT'), ('TPM', 'TPM')]
 	if request.method == 'POST' and form.validate():
 		for i in range(0, int(form.qty.data)):
 			part = Parts(
@@ -177,8 +236,9 @@ def add_part():
 		db.session.commit()
 		flash("Part was added to the database")
 		return redirect(url_for('home'))
-	return render_template('add_part.html', form=form, parts=parts, project_names=project_names, requestors=requestors,
-		suppliers=suppliers, supplier_contacts=supplier_contacts, item_descriptions=item_descriptions)
+	return render_template('add_part.html', form=form, POs=POs, PRs=PRs, project_names=project_names, requestors=requestors,
+		suppliers=suppliers, supplier_contacts=supplier_contacts, item_descriptions=item_descriptions, CPNs=CPNs, PIDs=PIDs,
+		manufacturer_part_nums=manufacturer_part_nums, tracking=tracking)
 
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
@@ -280,35 +340,66 @@ def update_part():
 @app.route('/update_part_search/<type>', methods= ['GET', 'POST'])
 @login_required
 def update_part_search(type):
-	#retrieve parts where part=type and status=Available
-	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
-							count(*) from parts where part=:p group by part, supplier, item_description, CPN, PID, \
-							manufacturer_part_num', p=type)
-	part = [dict(id=row[0], 
-					PR=row[1], 
-					PO=row[2], 
-					part=row[3], 
-					project_name=row[4], 
-					requestor=row[5], 
-					supplier=row[6],
-					supplier_contact=row[7], 
-					item_description=row[8], 
-					CPN=row[9], 
-					PID=row[10], 
-					manufacturer_part_num=row[11],
-					submit_date=row[12],
-					current_project=row[13], 
-					tracking=row[14], 
-					status=row[15],
-					checkout_date=row[16],
-					return_date=row[17], 
-					times_used=row[18],
-					qty=row[19]
-			) for row in cur.fetchall()]  #store them in a list of dictionaries
+	if type=='OTHER':
+		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+								manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+								count(*) from parts where (part <> :a and part <> :b and part <> :c and part <> :d and part <> :e and part <> :f\
+								and part <> :g and part <> :h and part <> :i and part <> :k and part <> :l) group by part, supplier, item_description, CPN, PID, manufacturer_part_num',
+								a='DIMM', b='CPU', c='PSU', d='PROTOTYPE', e='MEZZ-CARD', f='HEATSINK', g='HDD', h='RAID-UNIT', i='CHASSIS', 
+								k='CABLES', l='TPM')
+		part = [dict(id=row[0], 
+						PR=row[1], 
+						PO=row[2], 
+						part=row[3], 
+						project_name=row[4], 
+						requestor=row[5], 
+						supplier=row[6],
+						supplier_contact=row[7], 
+						item_description=row[8], 
+						CPN=row[9], 
+						PID=row[10], 
+						manufacturer_part_num=row[11],
+						submit_date=row[12],
+						current_project=row[13], 
+						tracking=row[14], 
+						status=row[15],
+						checkout_date=row[16],
+						return_date=row[17], 
+						times_used=row[18],
+						qty=row[19]
+				) for row in cur.fetchall()]  #store them in a list of dictionaries
+	else:	
+		#retrieve parts where part=type and status=Available
+		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+								manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+								count(*) from parts where part=:p group by part, supplier, item_description, CPN, PID, \
+								manufacturer_part_num', p=type)
+		part = [dict(id=row[0], 
+						PR=row[1], 
+						PO=row[2], 
+						part=row[3], 
+						project_name=row[4], 
+						requestor=row[5], 
+						supplier=row[6],
+						supplier_contact=row[7], 
+						item_description=row[8], 
+						CPN=row[9], 
+						PID=row[10], 
+						manufacturer_part_num=row[11],
+						submit_date=row[12],
+						current_project=row[13], 
+						tracking=row[14], 
+						status=row[15],
+						checkout_date=row[16],
+						return_date=row[17], 
+						times_used=row[18],
+						qty=row[19]
+				) for row in cur.fetchall()]  #store them in a list of dictionaries
 	if request.method == 'POST':
 		update_id = request.form.getlist("do_update")
-		if update_id:
+		if len(update_id)>1:
+			flash('Please select only one item')
+		elif len(update_id)==1:
 			return redirect(url_for('confirm_update', update_id=update_id))
 		else:
 			flash('No part was selected')
@@ -347,7 +438,9 @@ def update_keyword_search(keyword):
 			) for row in cur.fetchall()]  #store them in a list of dictionaries
 	if request.method == 'POST':
 		update_id = request.form.getlist("do_update")
-		if update_id:
+		if len(update_id) >1:
+			flash('Please select only one item') 
+		elif len(update_id) ==1:
 			return redirect(url_for('confirm_update', update_id=update_id))
 		else:
 			flash('No part was selected')
@@ -537,31 +630,31 @@ def checkout_part():
 @login_required
 def part_search(type):
 	#retrieve parts where part=type and status=Available
-	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+	cur1 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
-							count(*) from parts where part=:p and status=:s group by part, supplier, item_description, CPN, PID, \
+							count(*) from parts where (part=:p and status=:s) group by part, supplier, item_description, CPN, PID, \
 							manufacturer_part_num', p=type, s="Available")
 	part_available = [dict(id=row[0], 
-						PR=row[1], 
-						PO=row[2], 
-						part=row[3], 
-						project_name=row[4], 
-						requestor=row[5], 
-						supplier=row[6],
-						supplier_contact=row[7], 
-						item_description=row[8], 
-						CPN=row[9], 
-						PID=row[10], 
-						manufacturer_part_num=row[11],
-						submit_date=row[12],
-						current_project=row[13], 
-						tracking=row[14], 
-						status=row[15],
-						checkout_date=row[16],
-						return_date=row[17], 
-						times_used=row[18],
-						qty=row[19]
-			) for row in cur.fetchall()]  #store them in a list of dictionaries
+							PR=row[1], 
+							PO=row[2], 
+							part=row[3], 
+							project_name=row[4], 
+							requestor=row[5], 
+							supplier=row[6],
+							supplier_contact=row[7], 
+							item_description=row[8], 
+							CPN=row[9], 
+							PID=row[10], 
+							manufacturer_part_num=row[11],
+							submit_date=row[12],
+							current_project=row[13], 
+							tracking=row[14], 
+							status=row[15],
+							checkout_date=row[16],
+							return_date=row[17], 
+							times_used=row[18],
+							qty=row[19]
+						) for row in cur1.fetchall()]  #store them in a list of dictionaries
 	#retrieve parts where part=type and status=Available
 	cur2 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
@@ -587,8 +680,7 @@ def part_search(type):
 						return_date=row[17], 
 						times_used=row[18],
 						current_user=row[19],
-						qty=row[20]
-			) for row in cur2.fetchall()]  #store them in a list of dictionaries
+						qty=row[20]) for row in cur2.fetchall()]  #store them in a list of dictionaries
 	if request.method == 'POST':
 		checkout_ids = request.form.getlist("do_checkout")
 		if checkout_ids:
@@ -706,6 +798,15 @@ def confirm_checkout():
 		for i in range(len(checkout_ids)):
 			#	get all attributes of part
 			Part = Parts.query.filter_by(id=checkout_ids[i]).first()
+			#	record history of part
+			history = History(
+				serial= Part.id,
+				project= form.project.data,
+				user=current_user.name,
+				checkout_date=date,
+				return_date= form.return_date.raw_data[0]
+			)
+			db.session.add(history)
 			#	get ids of rows that match these attributes
 			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
 				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 

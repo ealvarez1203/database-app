@@ -73,7 +73,8 @@ class Parts(db.Model):
 		PID,
 		manufacturer_part_num,
 		submit_date,
-		tracking
+		tracking,
+		status
 		):
 		self.PO = PO
 		self.PR = PR
@@ -88,7 +89,7 @@ class Parts(db.Model):
 		self.manufacturer_part_num = manufacturer_part_num
 		self.submit_date = submit_date
 		self.tracking = tracking
-		self.status = 'Unvailable'
+		self.status = status
 		self.times_used = 0
 
 	def __repr__(self):
@@ -109,4 +110,27 @@ class Parts(db.Model):
 			self.status.encode('utf-8'),
 			self.times_used.encode('utf-8')
 			)
+
+
+class History(db.Model):
+
+	__tablename__ = 'history'
+
+	id = db.Column(db.Integer, primary_key= True)
+	Part_SN = db.Column(db.String, ForeignKey('parts.id'))
+	project = db.Column(db.String, nullable=False)
+	user= db.Column(db.String, nullable=False)
+	checkout_date = db.Column(db.String, nullable=False)
+	return_date = db.Column(db.String, nullable=False)	
+
+	def __init__(self, serial, project, user, checkout_date, return_date):	
+		self.Part_SN = serial
+		self.project = project
+		self.user = user
+		self.checkout_date = checkout_date
+		self.return_date = return_date
+
+	def __repr__(self):
+		return '{}, {}, {}, {}, {}'.format(self.Part_SN, self.project, self.user, self.checkout_date, self.return_date)
+
 		

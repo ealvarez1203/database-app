@@ -5,7 +5,7 @@ h1              { border-bottom: 2px solid #eee; }
 h2              { font-size: 1.5em; margin:auto; }
 h3              { font-family: 'Georgia'; font-size: 1.3em; }
 table           { border-collapse: collapse;}
-table, td, th   { border: 1px solid #ccc; font-size:0.873em;}
+table, td, th   { border: 1px solid #ccc; font-size:0.85em;}
 th  			{text-align: center}
 
 .page           { margin: 2em; width:70em auto; border: 5px solid #ccc;
