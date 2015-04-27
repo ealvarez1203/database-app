@@ -96,7 +96,7 @@
                   <td> {{part.current_user}} </td>
                   <td> {{part.qty}} </td>
                   {% if part.times_used == '0' %}
-                      <td> {{part.times_used}} <td>
+                      <td> {{part.times_used}} </td>
                   {% else %}
                       <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
                   {% endif %}

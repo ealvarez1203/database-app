@@ -75,6 +75,7 @@ def home():
 def show_history(serialNumber):
 	cur = db.engine.execute('select project, user, checkout_date, return_date, detail from History where Part_SN=:s', s=serialNumber)
 	history = [dict(project=row[0], user=row[1], checkout_date=row[2], return_date=row[3], detail=row[4]) for row in cur.fetchall()]
+	print serialNumber
 	return render_template('history.html', history=history)
 
 @app.route('/Part/<id>/')
@@ -527,7 +528,7 @@ def confirm_update():
 def return_part():
 	#	retrieve data where current_user=currentuser and status=unavailable
 	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, count(*)\
+							manufacturer_part_num, submit_date, current_project, tracking, status, times_used checkout_date, return_date, count(*)\
 							from parts where current_user=:user and status=:s group by part, supplier, item_description, CPN, PID, \
 							manufacturer_part_num', user=current_user.name, s="Unavailable")
 	parts = [dict(id=row[0], 
@@ -855,9 +856,14 @@ def confirm_checkout():
 		for i in range(len(checkout_ids)):
 			#	get all attributes of part
 			Part = Parts.query.filter_by(id=checkout_ids[i]).first()
+			#	get ids of rows that match these attributes
+			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
+				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
+				'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name}
+			ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
 			#	record history of part
 			history = History(
-				serial= Part.id,
+				serial= ids[quantities[i]],
 				project= form.project.data,
 				user=current_user.name,
 				checkout_date=date,
@@ -866,12 +872,6 @@ def confirm_checkout():
 			)
 			db.session.add(history)
 			db.session.commit()
-			#	get ids of rows that match these attributes
-			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
-				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
-				'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name}
-			ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
-			
 			#	iterate through these parts only for specified quantities
 			while quantities[i] > 0:
 				db.engine.execute('update parts set status = :s, checkout_date = :d, return_date = :r, times_used=times_used+1,\

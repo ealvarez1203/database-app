@@ -1457,3 +1457,136 @@ TemplateSyntaxError: expected token 'name', got 'string'
 2015-04-27 08:52:45,066 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
 2015-04-27 09:19:29,823 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
 2015-04-27 09:20:56,699 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 09:44:12,481 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 09:49:36,201 ERROR: Exception on /checkout_part/confirm [POST] [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py:1423]
+Traceback (most recent call last):
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask_login.py", line 758, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/views.py", line 868, in confirm_checkout
+    db.session.add(history)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/scoping.py", line 150, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 788, in commit
+    self.transaction.commit()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 384, in commit
+    self._prepare_impl()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 364, in _prepare_impl
+    self.session.flush()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 1985, in flush
+    self._flush(objects)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 2103, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/util/langhelpers.py", line 60, in __exit__
+    compat.reraise(exc_type, exc_value, exc_tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 2067, in _flush
+    flush_context.execute()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/unitofwork.py", line 372, in execute
+    rec.execute(self)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/unitofwork.py", line 526, in execute
+    uow
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/persistence.py", line 65, in save_obj
+    mapper, table, insert)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/persistence.py", line 602, in _emit_insert_statements
+    execute(statement, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 841, in execute
+    return meth(self, multiparams, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/sql/elements.py", line 322, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 938, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1070, in _execute_context
+    context)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1271, in _handle_dbapi_exception
+    exc_info
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/util/compat.py", line 199, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1063, in _execute_context
+    context)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/default.py", line 442, in do_execute
+    cursor.execute(statement, parameters)
+OperationalError: (OperationalError) database is locked u'INSERT INTO history ("Part_SN", project, user, checkout_date, return_date, detail) VALUES (?, ?, ?, ?, ?, ?)' (917, u'colusa', u'eduaalva', '04/27/2015', u'05/31/2015', u'various tests')
+2015-04-27 09:51:01,498 ERROR: Exception on /checkout_part/confirm [POST] [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py:1423]
+Traceback (most recent call last):
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask_login.py", line 758, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/views.py", line 868, in confirm_checkout
+    db.session.add(history)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/scoping.py", line 150, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 788, in commit
+    self.transaction.commit()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 384, in commit
+    self._prepare_impl()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 364, in _prepare_impl
+    self.session.flush()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 1985, in flush
+    self._flush(objects)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 2103, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/util/langhelpers.py", line 60, in __exit__
+    compat.reraise(exc_type, exc_value, exc_tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/session.py", line 2067, in _flush
+    flush_context.execute()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/unitofwork.py", line 372, in execute
+    rec.execute(self)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/unitofwork.py", line 526, in execute
+    uow
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/persistence.py", line 65, in save_obj
+    mapper, table, insert)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/persistence.py", line 602, in _emit_insert_statements
+    execute(statement, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 841, in execute
+    return meth(self, multiparams, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/sql/elements.py", line 322, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 938, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1070, in _execute_context
+    context)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1271, in _handle_dbapi_exception
+    exc_info
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/util/compat.py", line 199, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1063, in _execute_context
+    context)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/default.py", line 442, in do_execute
+    cursor.execute(statement, parameters)
+OperationalError: (OperationalError) database is locked u'INSERT INTO history ("Part_SN", project, user, checkout_date, return_date, detail) VALUES (?, ?, ?, ?, ?, ?)' (917, u'colusa', u'eduaalva', '04/27/2015', u'05/28/2015', u'various tests')
+2015-04-27 09:52:47,721 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 09:59:09,162 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 09:59:17,720 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 09:59:17,920 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:07:24,364 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:08:37,201 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:09:38,962 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:12:41,769 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:14:09,769 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:18:31,279 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:24:11,384 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:28:12,624 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:28:30,025 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:31:00,510 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:38:42,584 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:39:17,093 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:39:36,509 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 10:39:48,846 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
