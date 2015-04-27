@@ -40,7 +40,7 @@ class AddPart(Form):
 	CPN = TextField('CPN', id="CPN")
 	PID = TextField('PID', id='PID')
 	manufacturer_part_num = TextField('manufacturer_part_num', validators=[DataRequired()], id='manufacturer_part_num')
-	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date')
+	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date', validators=[validators.Optional()])
 	tracking = TextField('tracking', validators=[DataRequired()], id='tracking')
 	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
 	qty = IntegerField('qty', validators=[DataRequired()])
@@ -48,6 +48,7 @@ class AddPart(Form):
 
 class CheckoutPart(Form):
 	project = TextField('project', validators=[DataRequired()], id='project')
+	details = TextField('details', validators=[DataRequired()], id='details')
 	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date')
 
 class UpdatePart(Form):

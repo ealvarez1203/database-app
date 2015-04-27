@@ -60,9 +60,10 @@ Parts to be Checked out:
     {% for ids in checkout_ids %}
        <input type="hidden" value="{{ids}}" name="checkout_ids">
     {% endfor %}
- 	<br> 
+ 	<div class='metanav2'>
+ 	<em> Please fill out the following:</em><br><br>
 	<p>
-	{{ form.project(placeholder="Project name") }}
+	{{ form.project(placeholder="project name") }}
 	<span class="error">
 	{% if form.project.errors %}
 		{% for error in form.project.errors %}
@@ -71,9 +72,8 @@ Parts to be Checked out:
 	{% endif %}
 	</span>
 	</p>
-
 	<p>
-	{{ form.return_date(placeholder="Return Date") }}
+	{{ form.return_date(placeholder="return date") }}
 	<span class="error">
 	{% if form.return_date.errors %}
 		{% for error in form.return_date.errors %}
@@ -81,7 +81,18 @@ Parts to be Checked out:
 		{% endfor %}
 	{% endif %}
 	</span>
-	</p>    
+	</p>
+	<p>
+	{{ form.details(placeholder="Description of use", size=30) }}
+	<span class="error">
+	{% if form.details.errors %}
+		{% for error in form.details.errors %}
+			{{ error }}
+		{% endfor %}
+	{% endif %}
+	</span>
+	</p>
+	<div>    
 <button class="btn btn-primary" type="submit">Confirm Checkout</button>
 </form>
 

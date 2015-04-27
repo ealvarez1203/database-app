@@ -121,14 +121,16 @@ class History(db.Model):
 	project = db.Column(db.String, nullable=False)
 	user= db.Column(db.String, nullable=False)
 	checkout_date = db.Column(db.String, nullable=False)
-	return_date = db.Column(db.String, nullable=False)	
+	return_date = db.Column(db.String, nullable=False)
+	detail = db.Column(db.String, nullable=True)	
 
-	def __init__(self, serial, project, user, checkout_date, return_date):	
+	def __init__(self, serial, project, user, checkout_date, return_date, detail):	
 		self.Part_SN = serial
 		self.project = project
 		self.user = user
 		self.checkout_date = checkout_date
 		self.return_date = return_date
+		self.detail = detail
 
 	def __repr__(self):
 		return '{}, {}, {}, {}, {}'.format(self.Part_SN, self.project, self.user, self.checkout_date, self.return_date)

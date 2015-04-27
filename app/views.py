@@ -73,8 +73,8 @@ def home():
 @app.route('/History/<serialNumber>/')
 @login_required
 def show_history(serialNumber):
-	cur = db.engine.execute('select project, user, checkout_date, return_date from History where Part_SN=:s', s=serialNumber)
-	history = [dict(project=row[0], user=row[1], checkout_date=row[2], return_date=row[3]) for row in cur.fetchall()]
+	cur = db.engine.execute('select project, user, checkout_date, return_date, detail from History where Part_SN=:s', s=serialNumber)
+	history = [dict(project=row[0], user=row[1], checkout_date=row[2], return_date=row[3], detail=row[4]) for row in cur.fetchall()]
 	return render_template('history.html', history=history)
 
 @app.route('/Part/<id>/')
@@ -344,9 +344,9 @@ def update_part_search(type):
 		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 								manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
 								count(*) from parts where (part <> :a and part <> :b and part <> :c and part <> :d and part <> :e and part <> :f\
-								and part <> :g and part <> :h and part <> :i and part <> :k and part <> :l) group by part, supplier, item_description, CPN, PID, manufacturer_part_num',
-								a='DIMM', b='CPU', c='PSU', d='PROTOTYPE', e='MEZZ-CARD', f='HEATSINK', g='HDD', h='RAID-UNIT', i='CHASSIS', 
-								k='CABLES', l='TPM')
+								and part <> :g and part <> :h and part <> :i and part <> :k and part <> :l) group by part, supplier, item_description,\
+								CPN, PID, manufacturer_part_num', a='DIMM', b='CPU', c='PSU', d='PROTOTYPE', e='MEZZ-CARD', f='HEATSINK', g='HDD',
+								h='RAID-UNIT', i='CHASSIS', k='CABLES', l='TPM')
 		part = [dict(id=row[0], 
 						PR=row[1], 
 						PO=row[2], 
@@ -630,11 +630,42 @@ def checkout_part():
 @login_required
 def part_search(type):
 	#retrieve parts where part=type and status=Available
-	cur1 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
-							count(*) from parts where (part=:p and status=:s) group by part, supplier, item_description, CPN, PID, \
-							manufacturer_part_num', p=type, s="Available")
-	part_available = [dict(id=row[0], 
+	if type=='OTHER':
+		cur1 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+								manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+								count(*) from parts where status=:s and (part <> :a and part <> :b and part <> :c and part <> :d and part <> :e\
+								and part <> :f and part <> :g and part <> :h and part <> :i and part <> :j and part <> :k) group by part,\
+								supplier, item_description, CPN, PID, manufacturer_part_num', a='DIMM', b='CPU', c='HEATSINK', d='CHASSIS',
+								e='CABLES', f='MEZZ-CARD', g='PSU', h='TPM', i='PROTOTYPE', j='HDD', k='RAID-UNIT', s="Available")
+		part_available = [dict(id=row[0], 
+								PR=row[1], 
+								PO=row[2], 
+								part=row[3], 
+								project_name=row[4], 
+								requestor=row[5], 
+								supplier=row[6],
+								supplier_contact=row[7], 
+								item_description=row[8], 
+								CPN=row[9], 
+								PID=row[10], 
+								manufacturer_part_num=row[11],
+								submit_date=row[12],
+								current_project=row[13], 
+								tracking=row[14], 
+								status=row[15],
+								checkout_date=row[16],
+								return_date=row[17], 
+								times_used=row[18],
+								qty=row[19]
+							) for row in cur1.fetchall()]  #store them in a list of dictionaries
+		#retrieve parts where part=type and status=Available
+		cur2 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+								manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+								current_user, count(*) from parts where status=:s and (part <> :a and part <> :b and part <> :c and part <> \
+								:d and part <> :e and part <> :f and part <> :g and part <> :h and part <> :i and part <> :j and part <> :k)\
+								group by part, supplier, item_description, CPN, PID, manufacturer_part_num', a='DIMM', b='CPU', c='HEATSINK',
+								d='CHASSIS', e='CABLES', f='MEZZ-CARD', g='PSU', h='TPM', i='PROTOTYPE', j='HDD', k='RAID-UNIT', s="Unavailable")
+		part_unavailable = [dict(id=row[0], 
 							PR=row[1], 
 							PO=row[2], 
 							part=row[3], 
@@ -653,34 +684,60 @@ def part_search(type):
 							checkout_date=row[16],
 							return_date=row[17], 
 							times_used=row[18],
-							qty=row[19]
-						) for row in cur1.fetchall()]  #store them in a list of dictionaries
-	#retrieve parts where part=type and status=Available
-	cur2 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
-							current_user, count(*) from parts where part=:p and status=:s group by part, supplier, item_description, CPN, PID, \
-							manufacturer_part_num', p=type, s="Unavailable")
-	part_unavailable = [dict(id=row[0], 
-						PR=row[1], 
-						PO=row[2], 
-						part=row[3], 
-						project_name=row[4], 
-						requestor=row[5], 
-						supplier=row[6],
-						supplier_contact=row[7], 
-						item_description=row[8], 
-						CPN=row[9], 
-						PID=row[10], 
-						manufacturer_part_num=row[11],
-						submit_date=row[12],
-						current_project=row[13], 
-						tracking=row[14], 
-						status=row[15],
-						checkout_date=row[16],
-						return_date=row[17], 
-						times_used=row[18],
-						current_user=row[19],
-						qty=row[20]) for row in cur2.fetchall()]  #store them in a list of dictionaries
+							current_user=row[19],
+							qty=row[20]) for row in cur2.fetchall()]  #store them in a list of dictionaries
+	else:
+		cur1 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+								manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+								count(*) from parts where (part=:p and status=:s) group by part, supplier, item_description, CPN, PID, \
+								manufacturer_part_num', p=type, s="Available")
+		part_available = [dict(id=row[0], 
+								PR=row[1], 
+								PO=row[2], 
+								part=row[3], 
+								project_name=row[4], 
+								requestor=row[5], 
+								supplier=row[6],
+								supplier_contact=row[7], 
+								item_description=row[8], 
+								CPN=row[9], 
+								PID=row[10], 
+								manufacturer_part_num=row[11],
+								submit_date=row[12],
+								current_project=row[13], 
+								tracking=row[14], 
+								status=row[15],
+								checkout_date=row[16],
+								return_date=row[17], 
+								times_used=row[18],
+								qty=row[19]
+							) for row in cur1.fetchall()]  #store them in a list of dictionaries
+		#retrieve parts where part=type and status=Available
+		cur2 = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
+								manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
+								current_user, count(*) from parts where part=:p and status=:s group by part, supplier, item_description, CPN, PID, \
+								manufacturer_part_num', p=type, s="Unavailable")
+		part_unavailable = [dict(id=row[0], 
+							PR=row[1], 
+							PO=row[2], 
+							part=row[3], 
+							project_name=row[4], 
+							requestor=row[5], 
+							supplier=row[6],
+							supplier_contact=row[7], 
+							item_description=row[8], 
+							CPN=row[9], 
+							PID=row[10], 
+							manufacturer_part_num=row[11],
+							submit_date=row[12],
+							current_project=row[13], 
+							tracking=row[14], 
+							status=row[15],
+							checkout_date=row[16],
+							return_date=row[17], 
+							times_used=row[18],
+							current_user=row[19],
+							qty=row[20]) for row in cur2.fetchall()]  #store them in a list of dictionaries
 	if request.method == 'POST':
 		checkout_ids = request.form.getlist("do_checkout")
 		if checkout_ids:
@@ -804,9 +861,11 @@ def confirm_checkout():
 				project= form.project.data,
 				user=current_user.name,
 				checkout_date=date,
-				return_date= form.return_date.raw_data[0]
+				return_date= form.return_date.raw_data[0],
+				detail= form.details.data
 			)
 			db.session.add(history)
+			db.session.commit()
 			#	get ids of rows that match these attributes
 			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
 				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
