@@ -91,7 +91,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label>Supplier: </label>{{ form.supplier(placeholder=part.supplier) }}
+        <label>Supplier: </label>{{ form.supplier(placeholder=part.supplier, size=35) }}
         <span class="error">
         {% if form.supplier.errors %}
             {% for error in form.supplier.errors %}
@@ -102,7 +102,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label>Supplier Contact: <label> {{ form.supplier_contact(placeholder=part.supplier_contact) }}
+        <label>Supplier Contact: <label> {{ form.supplier_contact(placeholder=part.supplier_contact, size=30) }}
         <span class="error">
         {% if form.supplier_contact.errors %}
             {% for error in form.supplier_contact.errors %}
@@ -113,7 +113,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label>Item Description: </label> {{ form.item_description(placeholder=part.item_description) }}
+        <label>Item Description: </label> {{ form.item_description(placeholder=part.item_description, size=40) }}
         <span class="error">
         {% if form.item_description.errors %}
             {% for error in form.item_description.errors %}
@@ -146,7 +146,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label> Manufacturer Part #: </label> {{ form.manufacturer_part_num(placeholder=part.manufacturer_part_num) }}
+        <label> Manufacturer Part #: </label> {{ form.manufacturer_part_num(placeholder=part.manufacturer_part_num, size=30) }}
         <span class="error">
         {% if form.manufacturer_part_num.errors %}
             {% for error in form.manufacturer_part_num.errors %}
@@ -157,7 +157,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label>Trancking info: </label> {{ form.tracking(placeholder=part.tracking) }}
+        <label>Trancking info: </label> {{ form.tracking(placeholder=part.tracking, size=30) }}
         <span class="error">
         {% if form.tracking.errors %}
             {% for error in form.tracking.errors %}
@@ -172,7 +172,7 @@ $(document).ready(function(){
         </p>
 
         <p>
-        <label>Submit date: </label> {{ form.submit_date(placeholder=part.submit_date) }}
+        <label>Date: </label> {{ form.submit_date(placeholder=part.submit_date) }}
         <span class="error">
         {% if form.submit_date.errors %}
             {% for error in form.submit_date.errors %}

@@ -410,7 +410,7 @@ def update_part_search(type):
 def update_keyword_search(keyword):
 	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
 							manufacturer_part_num, submit_date, current_project, tracking, status, checkout_date, return_date, times_used,\
-							current_user, count(*) from parts where part like :k or project_name like :k or supplier\
+							current_user, count(*) from parts where part like :k or project_name like :k or supplier like :k or status \
 							like :k or item_description like :k or CPN like :k or PID like :k or manufacturer_part_num like :k or current_project\
 							like :k or current_user like :k group by part, supplier, item_description, CPN, PID,\
 							manufacturer_part_num', k='%' + keyword + '%')
