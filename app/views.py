@@ -129,7 +129,7 @@ def upload_file():
 	            	for i in dict_list: # import to database
 	            		for j in range(0, int(i['QTY'])):
 	            			db.session.add(Parts((int(i['PO#']) if isinstance(i['PO#'], float) else i['PO#']),
-	    										(int(i['PO#']) if isinstance(i['PO#'], float) else i['PO#']), 
+	    										(int(i['PR#']) if isinstance(i['PR#'], float) else i['PR#']), 
 												i['PART'], 
 												i['PROJECT NAME'],
 												i['REQUESTOR'],

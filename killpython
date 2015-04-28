@@ -1,0 +1,1 @@
+killall /home/apps/database-app/venv:/bin/python

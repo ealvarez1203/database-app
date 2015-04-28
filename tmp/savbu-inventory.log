@@ -1590,3 +1590,6 @@ OperationalError: (OperationalError) database is locked u'INSERT INTO history ("
 2015-04-27 10:39:17,093 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
 2015-04-27 10:39:36,509 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
 2015-04-27 10:39:48,846 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 12:08:30,330 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 12:08:30,537 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-27 12:24:12,463 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
