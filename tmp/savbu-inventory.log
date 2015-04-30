@@ -1593,3 +1593,48 @@ OperationalError: (OperationalError) database is locked u'INSERT INTO history ("
 2015-04-27 12:08:30,330 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
 2015-04-27 12:08:30,537 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
 2015-04-27 12:24:12,463 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-28 15:46:05,693 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-28 15:47:33,520 ERROR: Exception on / [POST] [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py:1423]
+Traceback (most recent call last):
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/views.py", line 34, in login
+    user = User.query.filter_by(name = request.form['username']).first()
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/query.py", line 2370, in first
+    ret = list(self[0:1])
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/query.py", line 2231, in __getitem__
+    return list(res)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/query.py", line 2441, in __iter__
+    return self._execute_and_instances(context)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/orm/query.py", line 2456, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 841, in execute
+    return meth(self, multiparams, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/sql/elements.py", line 322, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 938, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1070, in _execute_context
+    context)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1271, in _handle_dbapi_exception
+    exc_info
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/util/compat.py", line 199, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/base.py", line 1063, in _execute_context
+    context)
+  File "/Users/eduaalva/Documents/Lab_Database_Project/savbu_database/venv/lib/python2.7/site-packages/sqlalchemy/engine/default.py", line 442, in do_execute
+    cursor.execute(statement, parameters)
+OperationalError: (OperationalError) no such table: users u'SELECT users.id AS users_id, users.name AS users_name, users.password AS users_password, users.email AS users_email \nFROM users \nWHERE users.name = ?\n LIMIT ? OFFSET ?' (u'admin', 1, 0)
+2015-04-28 15:51:45,918 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-28 15:51:46,130 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-28 15:55:08,306 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-28 15:55:08,527 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
+2015-04-28 15:56:23,373 INFO: savbu-inventory startup [in /Users/eduaalva/Documents/Lab_Database_Project/savbu_database/app/__init__.py:42]
