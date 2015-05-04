@@ -16,9 +16,8 @@
 
     <form action="{{ url_for('confirm_delete') }}" method=post class=add_entry>
 
-        <em>Parts to Delete: </em>
+        <em>Please select quantities of parts to Delete: </em>
         <table class="table table-striped">
-           <th>PR</th>
            <th>PO</th>
            <th>part</th>
            <th>Project</th>
@@ -28,14 +27,15 @@
            <th>PID</th>
            <th>MFG Part#</th>
            <th>Tracking</th>
-           <th>Qty</th>
            <th>Status</th>
+           <th>Used</th>
+           <th>Qty</th>
+           
 
             {% for part in delete_parts %}
             <tr>
-              <td> {{part.PR}} </td>
               <td> {{part.PO}} </td>
-              <td> {{part.part}} </td>
+              <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
               <td> {{part.project_name}} </td>
               <td> {{part.supplier}} </td>
               <td> {{part.item_description}} </td>
@@ -43,12 +43,17 @@
               <td> {{part.PID}} </td>
               <td> {{part.manufacturer_part_num}} </td>
               <td> {{part.tracking}} </td>
+              <td> {{part.status}} </td>
+              {% if part.times_used == '0' %}
+                  <td> {{part.times_used}} </td>
+              {% else %}
+                  <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
+              {% endif %}
               {% if part.qty == '1' %}
                   <td> {{part.qty}} </td>
               {% else %}
                   <td class="select" id="{{part.qty}}"></td>
               {% endif %}
-              <td> {{part.status}} </td>
             </tr>
             {% endfor %}
 

@@ -1,13 +1,13 @@
-{% extends "layout.html" %}
+  {% extends "layout.html" %}
 {% block body %}
 <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
 
-<h1>{{keyword}}</h1><br>
-<h2>Update Part</h2>
-<em>Select part(s) to update: </em>
+<h1>Update Part</h1><br>
+<h2>Results for: {{keyword}}</h2>
+<em>Select part(s) to update: </em> <input type="text" id="search" placeholder="Type to filter"> <br><br>
 <form action="{{ url_for('update_keyword_search', keyword=keyword) }}" method=post class=add_entry>
       {% if part %}
-            <em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter">
+            
             <table id="table" class="table table-striped">
               <th></th>
               <th>PR</th>

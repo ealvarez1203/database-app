@@ -56,7 +56,7 @@ class Parts(db.Model):
 	checkout_date = db.Column(db.String(20), nullable=True)
 	return_date= db.Column(db.String(20), nullable=True)
 	times_used = db.Column(db.Integer, nullable=False)
-	current_user = db.Column(db.Integer(20), ForeignKey('users.id'), nullable=True)
+	current_user = db.Column(db.Integer, ForeignKey('users.id'), nullable=True)
 	current_project = db.Column(db.String(20), nullable=True)
 
 	def __init__(

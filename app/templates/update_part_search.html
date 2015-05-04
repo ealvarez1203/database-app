@@ -2,12 +2,12 @@
 {% block body %}
 <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
 
-<h1>{{type}}</h1><br>
-<h2>Update Part</h2>
-<em>Select part(s) to update: </em>
+<h1>Update Part</h1>
+<h2>Results for :{{type}}'s</h2><br>
+
+<em>Select part(s) to update: </em><input type="text" id="search" placeholder="Type to filter"><br><br>
 <form action="{{ url_for('update_part_search', type=type) }}" method=post class=add_entry>          
           {% if part %}
-            <em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter">
             <table id="table" class="table table-striped">
               <th></th>
               <th>PR</th>
