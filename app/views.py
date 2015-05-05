@@ -558,10 +558,10 @@ def confirm_update():
 def return_part():
 	#	retrieve data where current_user=currentuser and status=unavailable
 	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-							manufacturer_part_num, submit_date, current_project, tracking, status, times_used checkout_date, return_date, count(*)\
-							from parts where current_user=:user and status=:s group by part, supplier, item_description, CPN, PID, \
+							manufacturer_part_num, submit_date, current_project, tracking, status, times_used, checkout_date, return_date, count(*)\
+							from parts where current_user=:user and status=:s group by PR, PO, part, supplier, item_description, CPN, PID, \
 							manufacturer_part_num', user=current_user.name, s="Unavailable")
-	parts = [dict(id=row[0], 
+	parts = [dict(id=row[0]-(row[19]-1), 
 				PR=row[1], 
 				PO=row[2], 
 				part=row[3], 
@@ -577,9 +577,10 @@ def return_part():
 				current_project=row[13], 
 				tracking=row[14], 
 				status=row[15],
-				checkout_date=row[16],
-				return_date=row[17], 
-				qty=row[18]
+				times_used=row[16],
+				checkout_date=row[17],
+				return_date=row[18], 
+				qty=row[19]
 			) for row in cur.fetchall()]  #store them in a list of dictionaries
 
 	if request.method == 'POST':
@@ -610,13 +611,17 @@ def confirm_return():
 						submit_date=part.submit_date, 
 						tracking=part.tracking, 
 						status=part.status, 
-						project_name=part.project_name
+						project_name=part.project_name,
+						current_user=part.current_user,
+						current_project=part.current_project,
+						times_used=part.times_used
 					) for part in return_parts]
 	#   add quantity variable to each checkout_parts
 	for i in return_parts:
 		kwargs = {'PR':i['PR'], 'PO':i['PO'], 'part':i['part'], 'requestor':i['requestor'], 'supplier':i['supplier'], 'supplier_contact':i['supplier_contact'],
 				'item_description':i['item_description'], 'CPN':i['CPN'], 'PID':i['PID'], 'manufacturer_part_num':i['manufacturer_part_num'], 
-				 'submit_date':i['submit_date'], 'tracking':i['tracking'], 'status':i['status'], 'project_name':i['project_name']}
+				 'submit_date':i['submit_date'], 'tracking':i['tracking'], 'status':i['status'], 'project_name':i['project_name'], 'current_user':i['current_user'],
+				 'current_project':i['current_project'], 'times_used':i['times_used']}
 		qty = Parts.query.filter_by(**kwargs).count()
 		i['qty'] = qty 
 
@@ -632,15 +637,16 @@ def confirm_return():
 			#	get ids of rows that match these attributes
 			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'requestor':Part.requestor, 'supplier':Part.supplier, 'supplier_contact':Part.supplier_contact,
 				'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 'manufacturer_part_num':Part.manufacturer_part_num, 
-				'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name}
-			ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
+				'submit_date':Part.submit_date, 'tracking':Part.tracking, 'status':Part.status, 'project_name':Part.project_name, 'current_user':Part.current_user,
+				'current_project':Part.current_project, 'times_used':Part.times_used}
+			ids = sorted([j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()]) 
 			
 			#	iterate through these parts only for specified quantities
-			while quantities[i] > 0:
-				db.engine.execute('update parts set status = :s, return_date = :r,\
-							current_user=:u, current_project=:p where id=:i', s='Available', r=date,
-							u=None, p=None, i=ids[quantities[i]-1])	
-				quantities[i] -= 1
+			iterator=1
+			while iterator<=quantities[i]:
+				db.engine.execute('update parts set status = :s, return_date = :r, current_user=:u, current_project=:p where id=:i',
+									s='Available', r=date, u=None, p=None, i=ids[iterator-1])	
+				iterator += 1
 			db.session.commit()
 		flash('The parts were checked out!')
 		return redirect(url_for('home'))
