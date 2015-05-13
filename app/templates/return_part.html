@@ -35,10 +35,14 @@
            {% endfor %}
         </table>
         <div class="metanav2">
-            <input type=submit class="btn btn-primary" value="return">
+          <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
+          <input type=submit class="btn btn-primary" value="return"><br><br>
         </div>
         </form><br>
     {% else %}
       <em> Currently you don't have any parts </em>
+      <div class="metanav2">
+        <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
+      </div>
     {% endif %}
 {% endblock %}

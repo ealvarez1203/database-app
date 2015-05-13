@@ -58,3 +58,65 @@
 2015-05-12 17:44:25,340 INFO Parts with id:91 and qty: 10 were updated by user: admin
 2015-05-12 17:49:36,291 INFO Parts with id:91 and qty: 10 were updated by user: admin
 2015-05-12 17:49:56,993 INFO savbu-inventory startup
+2015-05-12 20:28:17,526 INFO savbu-inventory startup
+2015-05-12 20:28:17,749 INFO savbu-inventory startup
+2015-05-12 20:29:35,772 INFO Part id:292 qty: 4 added by admin
+2015-05-12 20:31:02,450 INFO savbu-inventory startup
+2015-05-12 20:31:27,883 INFO Part PSU id:296 qty: 4 added by admin
+2015-05-12 20:36:29,414 INFO savbu-inventory startup
+2015-05-12 20:36:31,300 INFO Part: PSU | id:300 | quantity: 4 | action: added | user: admin
+2015-05-12 20:38:06,490 INFO savbu-inventory startup
+2015-05-12 20:38:25,919 INFO savbu-inventory startup
+2015-05-12 20:38:53,368 INFO PART: PSU | ID:304 | QUANTITY: 4 | ACTION: added | USER: admin
+2015-05-12 20:40:46,388 INFO savbu-inventory startup
+2015-05-12 20:42:05,116 INFO | ACTION: added to db | PART: MEZZ-CARD | ID:314 | QUANTITY: 10 | BY USER: admin
+2015-05-12 20:42:37,711 INFO savbu-inventory startup
+2015-05-12 20:42:50,085 INFO savbu-inventory startup
+2015-05-12 20:43:41,744 INFO savbu-inventory startup
+2015-05-12 20:43:53,094 INFO savbu-inventory startup
+2015-05-12 20:51:49,479 INFO savbu-inventory startup
+2015-05-12 20:51:53,056 INFO | ACTION: delete | PART: PSU | ID:289 | QUANTITY: 2 | BY USER: admin
+2015-05-12 20:51:53,069 INFO | ACTION: delete | PART: PSU | ID:293 | QUANTITY: 2 | BY USER: admin
+2015-05-12 20:51:53,082 INFO | ACTION: delete | PART: PSU | ID:297 | QUANTITY: 2 | BY USER: admin
+2015-05-12 20:51:53,095 INFO | ACTION: delete | PART: PSU | ID:301 | QUANTITY: 2 | BY USER: admin
+2015-05-12 21:04:58,559 INFO savbu-inventory startup
+2015-05-12 21:05:34,128 INFO savbu-inventory startup
+2015-05-12 21:05:48,507 INFO savbu-inventory startup
+2015-05-12 21:06:59,305 INFO | ACTION: add | PART: PSU | ID:315 | QUANTITY: 2 | BY USER: admin
+2015-05-12 21:08:33,493 INFO | ACTION: delete | PART: PSU | ID:295 | QUANTITY: 2 | BY USER: admin
+2015-05-12 21:09:33,897 INFO | ACTION: delete | PART: PSU | ID:315 | QUANTITY: 2 | BY USER: admin
+2015-05-12 21:18:09,024 INFO savbu-inventory startup
+2015-05-12 21:37:28,911 INFO | ACTION: add | PART: PROTOTYPE | ID:315 | QUANTITY: 4 | BY USER: admin
+2015-05-12 21:39:04,283 INFO | ACTION: add | PART: PROTOTYPE | ID:319 | QUANTITY: 4 | BY USER: admin
+2015-05-12 21:39:53,997 INFO | ACTION: add | PART: PROTOTYPE | ID:323 | QUANTITY: 4 | BY USER: admin
+2015-05-12 21:40:32,156 INFO | ACTION: delete | PART: PROTOTYPE | ID:315 | QUANTITY: 2 | BY USER: admin
+2015-05-12 21:40:32,168 INFO | ACTION: delete | PART: PROTOTYPE | ID:319 | QUANTITY: 2 | BY USER: admin
+2015-05-12 22:20:19,964 INFO savbu-inventory startup
+2015-05-12 22:21:05,177 INFO | ACTION: update | PART: PSU | ID:291 | QUANTITY: 2 | BY USER: admin
+2015-05-12 22:22:09,382 INFO | ACTION: update | PART: DIMM | ID:171 | QUANTITY: 60 | BY USER: admin
+2015-05-12 23:09:05,202 INFO savbu-inventory startup
+2015-05-12 23:09:05,421 INFO savbu-inventory startup
+2015-05-12 23:14:58,725 INFO savbu-inventory startup
+2015-05-12 23:15:52,439 INFO savbu-inventory startup
+2015-05-12 23:17:43,569 INFO savbu-inventory startup
+2015-05-12 23:22:27,203 INFO | ACTION: checkout | PART: HDD | ID:103 | QUANTITY: 5 | BY USER: eduaalva
+2015-05-12 23:51:29,145 INFO savbu-inventory startup
+2015-05-13 13:32:34,755 INFO savbu-inventory startup
+2015-05-13 13:32:34,975 INFO savbu-inventory startup
+2015-05-13 15:11:09,180 INFO savbu-inventory startup
+2015-05-13 15:11:34,647 INFO savbu-inventory startup
+2015-05-13 15:12:18,252 INFO savbu-inventory startup
+2015-05-13 15:15:46,326 INFO savbu-inventory startup
+2015-05-13 15:15:46,539 INFO savbu-inventory startup
+2015-05-13 15:16:23,118 INFO savbu-inventory startup
+2015-05-13 15:16:46,567 INFO savbu-inventory startup
+2015-05-13 15:19:35,210 INFO savbu-inventory startup
+2015-05-13 15:20:52,995 INFO savbu-inventory startup
+2015-05-13 15:20:53,206 INFO savbu-inventory startup
+2015-05-13 15:21:09,661 INFO savbu-inventory startup
+2015-05-13 15:23:00,826 INFO savbu-inventory startup
+2015-05-13 15:23:09,181 INFO savbu-inventory startup
+2015-05-13 15:24:21,061 INFO savbu-inventory startup
+2015-05-13 15:25:44,992 INFO savbu-inventory startup
+2015-05-13 15:25:50,311 INFO savbu-inventory startup
+2015-05-13 15:28:21,885 INFO savbu-inventory startup

@@ -5,6 +5,7 @@ from forms import *
 from models import User, Parts, History
 import time, xlrd, os
 from werkzeug import secure_filename
+from functools import wraps
 
 @app.errorhandler(404)
 def not_found_error(error):
@@ -22,6 +23,17 @@ def allowed_file(filename):
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.filter(User.id == int(user_id)).first()
+
+def allowed_users(*users):
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if current_user.name not in users:
+            	flash('Sorry, You Don\'t Currently Have Permission to Access this Page')
+                return redirect(url_for('home'))
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper
 
 # route for handling the login page logic
 @app.route('/login', methods=['GET', 'POST'])
@@ -111,6 +123,7 @@ def show_part_info(id):
 
 @app.route('/Upload', methods=['GET','POST'])
 @login_required
+@allowed_users('admin')
 def upload_file():
 	error=None
 	if request.method == 'POST':
@@ -185,6 +198,7 @@ def inventory():
 
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def add_part():
 	POs = ["%s" %i for i in db.session.query(Parts.PO).group_by(Parts.PO).all()]
 	POs = [x.encode('utf-8') for x in POs]
@@ -236,15 +250,16 @@ def add_part():
 				)
 			db.session.add(part)
 		db.session.commit()
-		app.logger.info('Part id:%s qty: %s added by %s'%(part.id, form.qty.data, current_user.name))
-		flash("Part was added to the database")
-		return redirect(url_for('home'))
+		app.logger.info('| ACTION: add | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(part.part, part.id-(int(form.qty.data)-1), form.qty.data, current_user.name))
+		flash("The part was succesfully added to the database!")
+		return redirect(url_for('add_part'))
 	return render_template('add_part.html', form=form, POs=POs, PRs=PRs, project_names=project_names, requestors=requestors,
 		suppliers=suppliers, supplier_contacts=supplier_contacts, item_descriptions=item_descriptions, CPNs=CPNs, PIDs=PIDs,
 		manufacturer_part_nums=manufacturer_part_nums, tracking=tracking)
 
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def delete_part():
 	#query parts by quantities
 	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
@@ -286,6 +301,7 @@ def delete_part():
 
 @app.route('/delete_part/confirm', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def confirm_delete():
 	#"""Obtain ids from args"""
 	delete_ids = [i.encode('utf-8') for i in request.args.getlist('delete_ids')]
@@ -338,19 +354,19 @@ def confirm_delete():
 				'times_used':Part.times_used}
 			ids = [j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()] 
 			
-			#	iterate through these parts only for specified quantities
-			iterator = 1
+			#	iterate through these parts only for specified quantities starting from last in list
 			while iterator <= quantities[i]:
 				Parts.query.filter(Parts.id == ids[iterator-1]).delete()	
 				iterator += 1
 			db.session.commit()
-			app.logger.info('Parts ids:%s with qtys: %s deleted by user: %s'%(delete_ids, quantities, current_user.name))
+			app.logger.info('| ACTION: delete | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, delete_ids[i], quantities[i], current_user.name))
 		flash('The parts were deleted')
-		return redirect(url_for('home'))
+		return redirect(url_for('delete_part'))
 	return render_template('confirm_delete.html', delete_parts=delete_parts, delete_ids=delete_ids)
 
 @app.route('/update', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def update_part():
 	if request.method == 'POST':
 		keyword = request.form['keyword']
@@ -362,6 +378,7 @@ def update_part():
 
 @app.route('/update_part_search/<keyword>', methods= ['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def update_part_search(keyword):
 	# if option is other, select all other type parts from db
 	if keyword=='OTHER':
@@ -442,6 +459,7 @@ def update_part_search(keyword):
 
 @app.route('/update_part/confirm', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def confirm_update():
 	# project names options for autocomplete field
 	project_names = ["%s" %i for i in db.session.query(Parts.project_name).group_by(Parts.project_name).all()]
@@ -522,7 +540,7 @@ def confirm_update():
 			iterator += 1
 
 		db.session.commit()
-		app.logger.info('Parts with id:%s and qty: %s were updated by user: %s'%(update_id, quantity, current_user.name))
+		app.logger.info('| ACTION: update | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(form.part.data, update_id, quantity, current_user.name))
 		flash('The part has been updated!')
 		return redirect(url_for('home'))
 	return render_template('confirm_update.html', part=update_part, update_id=update_id, form=form, project_names=project_names, status_default=update_part['status'].encode('utf-8'))
@@ -628,7 +646,7 @@ def confirm_return():
 									s='Available', r=date, u=None, p=None, i=ids[iterator-1])	
 				iterator += 1
 			db.session.commit()
-		app.logger.info('Parts with ids:%s and qtys: %s were returned by user: %s'%(return_ids, quantities, current_user.name))
+			app.logger.info('| ACTION: return | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, ids[0], quantities[i], current_user.name))
 		flash('The parts were checked out!')
 		return redirect(url_for('home'))
 	return render_template('confirm_return.html', return_parts=return_parts, return_ids=return_ids)
@@ -858,7 +876,7 @@ def confirm_checkout():
 							u=current_user.name, p=form.project.data, i=ids[iterator-1])	
 				iterator += 1
 			db.session.commit()
-		app.logger.info('Parts ids:%s with qtys: %s were checked out by user: %s'%(checkout_ids, quantities, current_user.name))
+			app.logger.info('| ACTION: checkout | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, ids[0], quantities[i], current_user.name))
 		flash('The parts were checked out!')
 		return redirect(url_for('home'))
 	return render_template('confirm_checkout.html', checkout_parts=checkout_parts, checkout_ids=checkout_ids, form=form, project_names=project_names)
