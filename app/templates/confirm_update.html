@@ -168,7 +168,19 @@ $(document).ready(function(){
         </p>
 
         <p>
-        <label>Status: </label> {{ form.status }}
+        <label>Status: </label> 
+        {% if status_default == 'Available' %}
+            <select name='status'>
+                <option value="Available" selected="selected">Available</option>
+                <option value="Unvailable">Unavailable</option>
+            </select>
+        {% else %}
+            <select name='status'>
+                <option value="Available">Available</option>
+                <option value="Unvailable" selected="selected">Unavailable</option>
+            </select>
+        {% endif %}
+
         </p>
 
         <p>

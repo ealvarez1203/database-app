@@ -21,7 +21,7 @@
            {% for part in parts %}
             <tr>
               <td><input type=checkbox name=do_return value="{{part.id}}"></td>
-              <td> {{part.part}} </td>
+              <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
               <td> {{part.supplier}} </td>
               <td> {{part.item_description}} </td>
               <td> {{part.CPN}} </td>

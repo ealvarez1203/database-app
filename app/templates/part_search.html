@@ -4,7 +4,7 @@
   <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
 
-  <h1>{{type}}</h1><br>
+  <h1>{{keyword}}</h1><br>
   <h2>Check out a Part</h2>
 
   <p><em>Select part(s) to check out: </em></p>
@@ -16,7 +16,7 @@
       <li><a href="#unavailable" role="tab" data-toggle="tab">Unavailable</a></li>
     </ul>
 
-    <form action="{{ url_for('part_search', type=type) }}" method=post class=add_entry>
+    <form action="{{ url_for('part_search', keyword=keyword) }}" method=post class=add_entry>
 
       <div class="tab-content">
 
@@ -24,7 +24,7 @@
 
           {% if part_available %}
 
-            <br><p><em>{{type}} Available:  </em><input type="text" id="search" placeholder="Type to filter"></p>
+            <br><p><em>{{keyword}}'s Available:  </em><input type="text" id="search" placeholder="Type to filter"></p>
             <table id="table" class="table table-striped">
               <th></th>
               <th>Part</th>
@@ -39,7 +39,7 @@
               {% for part in part_available %}
               <tr>
                 <td><input type=checkbox name='do_checkout' value="{{part.id}}"></td>
-                <td> {{part.part}} </td>
+                <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
                 <td> {{part.item_description}} </td>
                 <td> {{part.supplier}} </td>
                 <td> {{part.CPN}} </td>
@@ -69,7 +69,7 @@
         <div class="tab-pane fade" id="unavailable">
           {% if part_unavailable %}
 
-            <em>{{type}}s Unvailable:  </em><input type="text" id="search2" placeholder="Type to filter">
+            <em>{{keyword}}'s Unvailable:  </em><input type="text" id="search2" placeholder="Type to filter">
             <table id="table2" class="table table-striped">
               <th>part</th>
               <th>Supplier</th>
@@ -86,7 +86,7 @@
 
               {% for part in part_unavailable %}
                 <tr>
-                  <td> {{part.part}} </td>
+                  <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
                   <td> {{part.supplier}} </td>
                   <td> {{part.item_description}} </td>
                   <td> {{part.CPN}} </td>

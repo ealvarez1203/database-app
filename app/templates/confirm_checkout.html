@@ -40,7 +40,7 @@ Parts to be Checked out:
 
         {% for part in checkout_parts %}
         <tr>
-            <td> {{part.part}} </td>
+            <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
             <td> {{part.item_description}} </td>
             <td> {{part.supplier}} </td>
             <td> {{part.CPN}} </td>

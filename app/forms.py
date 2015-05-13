@@ -65,7 +65,7 @@ class UpdatePart(Form):
 	manufacturer_part_num = TextField('manufacturer_part_num', id='manufacturer_part_num')
 	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date', validators=[validators.Optional()])
 	tracking = TextField('tracking', id='tracking')
-	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
+	#status = SelectField('status', coerce=unicode, validators=[validators.optional()])
 
 class UploadFile(Form):
 	excelFile = FileField('excelFile')

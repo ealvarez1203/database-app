@@ -14,13 +14,12 @@
        <th>Project</th>
        <th>Requester</th>
        <th>Supplier</th>
-       <th>Supplier Contact</th>
        <th>Item Description</th>
        <th>CPN</th>
        <th>PID</th>
        <th>MFG Part#</th>
-       <th>Submit Date</th>
        <th>Qty</th>
+       <th>Times Used</th>
        <th>Status</th>
 
        {% for part in parts %}
@@ -31,13 +30,16 @@
             <td> {{part.project_name}} </td>
             <td> {{part.requestor}} </td>
             <td> {{part.supplier}} </td>
-            <td> {{part.supplier_contact}} </td>
             <td> {{part.item_description}} </td>
             <td> {{part.CPN}} </td>
             <td> {{part.PID}} </td>
             <td> {{part.manufacturer_part_num}} </td>
-            <td> {{part.submit_date}} </td>
             <td> {{part.qty}}</td>
+            {% if part.times_used == '0' %}
+              <td> {{part.times_used}} </td>
+            {% else %}
+              <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
+            {% endif %}
             <td> {{part.status}} </td>
         </tr>
    {% else %}
