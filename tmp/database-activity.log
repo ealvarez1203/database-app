@@ -141,3 +141,64 @@
 2015-05-13 22:50:29,457 INFO savbu-inventory startup
 2015-05-13 22:55:59,317 INFO savbu-inventory startup
 2015-05-13 22:56:12,508 INFO savbu-inventory startup
+2015-05-14 14:12:56,473 INFO savbu-inventory startup
+2015-05-14 14:12:56,717 INFO savbu-inventory startup
+2015-05-14 14:14:16,079 INFO User :admin was registered
+2015-05-14 14:19:28,287 INFO Excel file was updated by user: admin
+2015-05-14 14:21:59,399 INFO | ACTION: delete | PART: DIMM | ID:1 | QUANTITY: 32 | BY USER: admin
+2015-05-14 14:21:59,573 INFO | ACTION: delete | PART: DIMM | ID:33 | QUANTITY: 256 | BY USER: admin
+2015-05-14 14:21:59,599 INFO | ACTION: delete | PART: DIMM | ID:289 | QUANTITY: 16 | BY USER: admin
+2015-05-14 14:21:59,621 INFO | ACTION: delete | PART: HEATSINK | ID:305 | QUANTITY: 2 | BY USER: admin
+2015-05-14 14:21:59,652 INFO | ACTION: delete | PART: DIMM | ID:307 | QUANTITY: 16 | BY USER: admin
+2015-05-14 14:21:59,671 INFO | ACTION: delete | PART: HEATSINK | ID:323 | QUANTITY: 2 | BY USER: admin
+2015-05-14 14:21:59,745 INFO | ACTION: delete | PART: DIMM | ID:325 | QUANTITY: 96 | BY USER: admin
+2015-05-14 14:21:59,764 INFO | ACTION: delete | PART: HEATSINK | ID:421 | QUANTITY: 12 | BY USER: admin
+2015-05-14 14:21:59,812 INFO | ACTION: delete | PART: DIMM | ID:433 | QUANTITY: 64 | BY USER: admin
+2015-05-14 14:21:59,832 INFO | ACTION: delete | PART: HEATSINK | ID:497 | QUANTITY: 8 | BY USER: admin
+2015-05-14 14:21:59,852 INFO | ACTION: delete | PART: DIMM | ID:505 | QUANTITY: 16 | BY USER: admin
+2015-05-14 14:21:59,875 INFO | ACTION: delete | PART: DIMM | ID:521 | QUANTITY: 16 | BY USER: admin
+2015-05-14 14:21:59,912 INFO | ACTION: delete | PART: DIMM | ID:537 | QUANTITY: 48 | BY USER: admin
+2015-05-14 14:21:59,942 INFO | ACTION: delete | PART: DIMM | ID:585 | QUANTITY: 32 | BY USER: admin
+2015-05-14 14:21:59,971 INFO | ACTION: delete | PART: DIMM | ID:617 | QUANTITY: 32 | BY USER: admin
+2015-05-14 14:21:59,994 INFO | ACTION: delete | PART: DIMM | ID:649 | QUANTITY: 16 | BY USER: admin
+2015-05-14 14:22:22,158 INFO Excel file was updated by user: admin
+2015-05-14 14:30:06,341 INFO savbu-inventory startup
+2015-05-14 14:34:43,895 INFO savbu-inventory startup
+2015-05-14 14:34:59,317 INFO savbu-inventory startup
+2015-05-14 14:37:34,875 INFO savbu-inventory startup
+2015-05-14 14:38:04,393 INFO savbu-inventory startup
+2015-05-14 14:39:16,233 INFO savbu-inventory startup
+2015-05-14 14:42:25,037 INFO savbu-inventory startup
+2015-05-14 14:42:42,454 INFO savbu-inventory startup
+2015-05-14 14:43:04,911 INFO savbu-inventory startup
+2015-05-14 14:43:19,304 INFO savbu-inventory startup
+2015-05-14 14:43:31,687 INFO savbu-inventory startup
+2015-05-14 14:44:15,316 INFO savbu-inventory startup
+2015-05-14 14:44:34,785 INFO savbu-inventory startup
+2015-05-14 15:10:20,654 INFO savbu-inventory startup
+2015-05-14 15:12:02,715 INFO savbu-inventory startup
+2015-05-14 15:13:23,712 INFO savbu-inventory startup
+2015-05-14 15:13:47,201 INFO savbu-inventory startup
+2015-05-14 15:13:59,611 INFO savbu-inventory startup
+2015-05-14 15:14:39,212 INFO savbu-inventory startup
+2015-05-14 15:14:49,595 INFO savbu-inventory startup
+2015-05-14 15:20:01,733 INFO | ACTION: add | PART: CPU | ID:665 | QUANTITY: 30 | BY USER: admin
+2015-05-14 15:21:47,217 INFO savbu-inventory startup
+2015-05-14 15:22:44,773 INFO | ACTION: delete | PART: CPU | ID:665 | QUANTITY: 30 | BY USER: admin
+2015-05-14 15:23:44,676 INFO | ACTION: add | PART: CPU | ID:665 | QUANTITY: 20 | BY USER: admin
+2015-05-14 15:27:38,278 INFO | ACTION: delete | PART: CPU | ID:665 | QUANTITY: 10 | BY USER: admin
+2015-05-14 15:28:15,625 INFO savbu-inventory startup
+2015-05-14 15:29:23,474 INFO savbu-inventory startup
+2015-05-14 15:29:46,923 INFO savbu-inventory startup
+2015-05-14 15:30:34,588 INFO savbu-inventory startup
+2015-05-14 15:35:54,438 INFO | ACTION: update | PART: CPU | ID:665 | QUANTITY: 10 | BY USER: admin
+2015-05-14 15:37:26,181 INFO savbu-inventory startup
+2015-05-14 15:38:43,309 INFO | ACTION: add | PART: CPU | ID:675 | QUANTITY: 20 | BY USER: admin
+2015-05-14 15:40:06,789 INFO savbu-inventory startup
+2015-05-14 15:40:24,638 INFO | ACTION: update | PART: CPU | ID:665 | QUANTITY: 10 | BY USER: admin
+2015-05-14 15:40:47,631 INFO | ACTION: update | PART: CPU | ID:675 | QUANTITY: 20 | BY USER: admin
+2015-05-14 15:43:21,808 INFO User :eduaalva was registered
+2015-05-14 15:46:49,545 INFO savbu-inventory startup
+2015-05-14 15:46:51,747 INFO | ACTION: checkout | PART: CPU | ID:665 | QUANTITY: 10 | BY USER: eduaalva
+2015-05-14 15:49:14,917 INFO | ACTION: return | PART: CPU | ID:665 | QUANTITY: 10 | BY USER: eduaalva
+2015-05-14 15:49:50,817 INFO | ACTION: delete | PART: CPU | ID:665 | QUANTITY: 10 | BY USER: admin

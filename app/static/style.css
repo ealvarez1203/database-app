@@ -24,6 +24,7 @@ th  			{text-align: center}
 .flash          { text-align: center; background: #cee5F5; padding: 0.5em;
                   border: 1px solid #aacbe2; }
 .error          { background: #f0d6d6; padding: 0.5em; }
+.show_part_table { border: 1px solid #ccc; font-size:1.1em;}
 
 #inputfile
 {

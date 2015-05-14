@@ -2,7 +2,7 @@
 {% block body %}
     <h2>Part info</h2><br>
 
-    <table id="table">
+    <table id="table" class='show_part_table'>
       <tr>
         <th>PR</th>
         <td>{{part.PR}}</td>
@@ -60,13 +60,20 @@
         <td>{{part.current_project}}</td>
       </tr>      
       <tr>
-              <tr>
         <th>Tracking #</th>
         <td>{{part.tracking}}</td>
       </tr>      
       <tr>
         <th>Qty</th>
         <td>{{part.qty}}</td>
+      </tr>
+      <tr>
+        <th>Times Used</th>
+        {% if part.times_used == 0 %}
+            <td> {{part.times_used}} </td>
+        {% else %}
+            <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
+        {% endif %}
       </tr>
       <tr>
         <th>Status</th>

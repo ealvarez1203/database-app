@@ -3,7 +3,7 @@
 
    <h2>Return Parts</h2>
    {% if parts %}
-      Parts you have checked out:
+      <em>Parts you have checked out: </em><br><br>
        <form action="{{ url_for('return_part') }}" method=post class=add_entry>
         <table class="table table-striped">
                <th></th>
@@ -36,7 +36,7 @@
         </table>
         <div class="metanav2">
           <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
-          <input type=submit class="btn btn-primary" value="return"><br><br>
+          <input type=submit class="btn btn-default" value="Return"><br><br>
         </div>
         </form><br>
     {% else %}

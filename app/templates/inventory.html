@@ -19,8 +19,8 @@
        <th>PID</th>
        <th>MFG Part#</th>
        <th>Qty</th>
-       <th>Times Used</th>
        <th>Status</th>
+       <th>Location</th>
 
        {% for part in parts %}
         <tr>
@@ -35,12 +35,8 @@
             <td> {{part.PID}} </td>
             <td> {{part.manufacturer_part_num}} </td>
             <td> {{part.qty}}</td>
-            {% if part.times_used == '0' %}
-              <td> {{part.times_used}} </td>
-            {% else %}
-              <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
-            {% endif %}
             <td> {{part.status}} </td>
+            <td> {{part.location}} </td>
         </tr>
    {% else %}
      <em>Database is empty</em>

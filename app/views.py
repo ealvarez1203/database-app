@@ -93,34 +93,38 @@ def show_history(serialNumber):
 @app.route('/Part/<id>/')
 @login_required
 def show_part_info(id):
-	cur = db.engine.execute('select PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-	 						manufacturer_part_num, submit_date, tracking, status, location, current_user, current_project, checkout_date,\
-	 						return_date, times_used, count(*) from parts where id=:i group by PR, PO, part, project_name, requestor,\
-	 						supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num, submit_date, tracking, status,\
-	 						checkout_date, return_date, times_used, current_user, current_project', i=id)
-	part = [dict(PR=row[0], 
-				PO=row[1], 
-				part=row[2], 
-				project_name=row[3], 
-				requestor=row[4], 
-				supplier=row[5],
-				supplier_contact=row[6], 
-				item_description=row[7], 
-				CPN=row[8], 
-				PID=row[9], 
-				manufacturer_part_num=row[10],
-				submit_date=row[11], 
-				tracking=row[12], 
-				status=row[13],
-				location=row[14],
-				current_user=row[15],
-				current_project=row[16],
-				checkout_date=row[17],
-				return_date=row[18],
-				times_used=row[19],
-				qty=row[20]
-			) for row in cur.fetchall()]
-	return render_template('part_info.html', part=part[0])
+	part = Parts.query.get(id)
+	part = dict(id=part.id, 
+						PR=part.PR, 
+						PO=part.PO, 
+						part=part.part, 
+						project_name=part.project_name,
+						requestor=part.requestor, 
+						supplier=part.supplier, 
+						supplier_contact=part.supplier_contact, 
+						item_description=part.item_description, 
+						CPN=part.CPN, 
+						PID=part.PID, 
+						manufacturer_part_num=part.manufacturer_part_num, 
+						submit_date=part.submit_date, 
+						tracking=part.tracking, 
+						status=part.status,
+						location=part.location, 
+						checkout_date=part.checkout_date,
+						return_date=part.return_date,
+						times_used=part.times_used,
+						current_user=part.current_user,
+						current_project=part.current_project
+					) 
+	#   add quantity variable to each update_part
+	kwargs = {'PR':part['PR'], 'PO':part['PO'], 'part':part['part'], 'project_name':part['project_name'], 'requestor':part['requestor'],
+		'supplier':part['supplier'], 'supplier_contact':part['supplier_contact'], 'item_description':part['item_description'], 'CPN':part['CPN'], 
+		'PID':part['PID'], 'manufacturer_part_num':part['manufacturer_part_num'], 'submit_date':part['submit_date'], 'tracking':part['tracking'], 
+		'status':part['status'], 'location':part['location'], 'checkout_date':part['checkout_date'], 'return_date':part['return_date'], 
+		'times_used':part['times_used'], 'current_user':part['current_user'], 'current_project':part['current_project']}
+	qty = Parts.query.filter_by(**kwargs).count()
+	part['qty'] = qty 
+	return render_template('part_info.html', part=part)
 
 @app.route('/Upload', methods=['GET','POST'])
 @login_required
@@ -160,7 +164,7 @@ def upload_file():
 					          			))
 	            	db.session.commit()
 	            	app.logger.info('Excel file was updated by user: %s'%current_user.name)
-	            	flash('The excel file was sucessfully uploaded!')
+	            	flash('The Excel File was Sucessfully Uploaded to the Database!')
 	            except KeyError, key:
 	            	error = 'Column missing: %s'%key
 	            	return render_template('upload_file.html', error=error)
@@ -252,12 +256,12 @@ def add_part():
 				submit_date = form.submit_date.raw_data[0],
 				tracking = form.tracking.data,
 				status = form.status.data,
-				location = form.status.data
+				location = form.location.data
 				)
 			db.session.add(part)
 		db.session.commit()
 		app.logger.info('| ACTION: add | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(part.part, part.id-(int(form.qty.data)-1), form.qty.data, current_user.name))
-		flash("The part was succesfully added to the database!")
+		flash("The Part was Added to the Database!")
 		return redirect(url_for('add_part'))
 	return render_template('add_part.html', form=form, POs=POs, PRs=PRs, project_names=project_names, requestors=requestors,
 		suppliers=suppliers, supplier_contacts=supplier_contacts, item_descriptions=item_descriptions, CPNs=CPNs, PIDs=PIDs,
@@ -303,7 +307,7 @@ def delete_part():
 		if delete_ids:
 			return redirect(url_for('confirm_delete', delete_ids=delete_ids))
 		else:
-			flash('No Part was selected')
+			flash('No Part was Selected!')
 	return render_template('delete_part.html', parts=parts)
 
 @app.route('/delete_part/confirm', methods=['GET', 'POST'])
@@ -369,7 +373,7 @@ def confirm_delete():
 				iterator += 1
 			db.session.commit()
 			app.logger.info('| ACTION: delete | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, delete_ids[i], quantities[i], current_user.name))
-		flash('The parts were deleted')
+		flash('The Parts were Deleted From Database')
 		return redirect(url_for('delete_part'))
 	return render_template('confirm_delete.html', delete_parts=delete_parts, delete_ids=delete_ids)
 
@@ -382,7 +386,7 @@ def update_part():
 		if keyword:
 			return redirect(url_for('update_part_search', keyword=keyword))
 		else:
-			flash('Please enter a keyword!')
+			flash('Please Enter a Keyword!')
 	return render_template('update_part.html')
 
 @app.route('/update_part_search/<keyword>', methods= ['GET', 'POST'])
@@ -572,7 +576,7 @@ def confirm_update():
 						CPN=:h, PID=:i, manufacturer_part_num=:j, submit_date=:k, tracking=:l, status = :m, project_name=:n, location=:o where id=:p',
 						a=form.PR.data, b=form.PO.data, c=form.part.data, d=form.requestor.data, e=form.supplier.data, f=form.supplier_contact.data,
 						g=form.item_description.data, h=form.CPN.data, i=form.PID.data, j=form.manufacturer_part_num.data, k=form.submit_date.data,
-						l=form.tracking.data, m=request.form['status'], n=form.project_name.data, o=form.project_name.data, p=ids[iterator-1])
+						l=form.tracking.data, m=request.form['status'], n=form.project_name.data, o=form.location.data, p=ids[iterator-1])
 			iterator += 1
 
 		db.session.commit()
@@ -657,7 +661,7 @@ def confirm_return():
 		kwargs = {'PR':i['PR'], 'PO':i['PO'], 'part':i['part'], 'project_name':i['project_name'], 'requestor':i['requestor'], 'supplier':i['supplier'], 
 				'supplier_contact':i['supplier_contact'], 'item_description':i['item_description'], 'CPN':i['CPN'], 'PID':i['PID'], 
 				'manufacturer_part_num':i['manufacturer_part_num'], 'submit_date':i['submit_date'], 'tracking':i['tracking'], 'status':i['status'], 
-				'location':i['location'] 'checkout_date':i['checkout_date'], 'return_date':i['return_date'], 'times_used':i['times_used'],
+				'location':i['location'], 'checkout_date':i['checkout_date'], 'return_date':i['return_date'], 'times_used':i['times_used'],
 				'current_user':i['current_user'], 'current_project':i['current_project']}
 		qty = Parts.query.filter_by(**kwargs).count()
 		i['qty'] = qty 
@@ -730,7 +734,7 @@ def part_search(keyword):
 								submit_date=row[12], 
 								tracking=row[13], 
 								status=row[14],
-								location=row[15]
+								location=row[15],
 								checkout_date=row[16],
 								return_date=row[17], 
 								times_used=row[18],
@@ -762,7 +766,7 @@ def part_search(keyword):
 								submit_date=row[12], 
 								tracking=row[13], 
 								status=row[14],
-								location=row[15]
+								location=row[15],
 								checkout_date=row[16],
 								return_date=row[17], 
 								times_used=row[18],
@@ -795,7 +799,7 @@ def part_search(keyword):
 								submit_date=row[12], 
 								tracking=row[13], 
 								status=row[14],
-								location=row[15]
+								location=row[15],
 								checkout_date=row[16],
 								return_date=row[17], 
 								times_used=row[18],
@@ -828,7 +832,7 @@ def part_search(keyword):
 								submit_date=row[12], 
 								tracking=row[13], 
 								status=row[14],
-								location=row[15]
+								location=row[15],
 								checkout_date=row[16],
 								return_date=row[17], 
 								times_used=row[18],
@@ -920,7 +924,7 @@ def confirm_checkout():
 			#	iterate through these parts only for specified quantities
 			iterator=1
 			while iterator<=quantities[i]:
-				db.engine.execute('update parts set status = :s, location =: checkout_date = :d, return_date = :r, times_used=times_used+1,\
+				db.engine.execute('update parts set status = :s, location =:l, checkout_date =:d, return_date =:r, times_used=times_used+1,\
 							current_user=:u, current_project=:p where id=:i', s='Unavailable', d=date, r=form.return_date.raw_data[0],
 							u=current_user.name, p=form.project.data, l=form.location.data, i=ids[iterator-1])	
 				iterator += 1

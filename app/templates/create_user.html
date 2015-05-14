@@ -1,8 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>Create User</h1>
+<div class='metanav2'>
+	<h1>Create User</h1>
+</div>
 <br>
 <form class="form-signin" role="form" method="post" action="">
+	<div class=metanav2>
 	{{ form.csrf_token }}
 	<p>
 	{{ form.username(placeholder="username") }}
@@ -45,5 +48,6 @@
 	</span>
 	</p>
 <button class="btn btn-primary" type="submit">Create user</button>
+</div>
 </form>
 {% endblock %}

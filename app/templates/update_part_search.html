@@ -3,7 +3,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
 
 <h1>Update Part</h1>
-<h2>Results for :{{keyword}}'s</h2><br>
+<h2>Results for :{{keyword}}</h2><br>
 
 <em>Select part(s) to update: </em><input type="text" id="search" placeholder="Type to filter"><br><br>
 <form action="{{ url_for('update_part_search', keyword=keyword) }}" method=post class=add_entry>          
@@ -37,7 +37,6 @@
                 <td> {{part.manufacturer_part_num}} </td>
                 <td> {{part.qty}} </td>
                 <td> {{part.submit_date}} </td>
-                <td> {{part.tracking}} </td>
                 <td> {{part.status}} </td>
                 <td> {{part.location}} </td>
 
@@ -49,8 +48,8 @@
                 <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>  <input type=submit class="btn btn-success" value="update"><br><br>
             </div>
           {% else %}
-            <em> No Results </em>
               <div class='metanav2'> 
+                <em> Sorry No Results </em><br><br>
                 <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>
               </div>
           {% endif %}
