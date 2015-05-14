@@ -46,6 +46,10 @@ $(document).ready(function(){
     $("#tracking").autocomplete({
         source: options_tracking
     });
+    var options_location = {{ location|safe }}
+    $("#location").autocomplete({
+        source: options_location
+    });
     $( "#submit_date" ).datepicker({
         changeMonth: true,
         changeYear: true
@@ -186,6 +190,17 @@ $(document).ready(function(){
 
     <p> Status:
     {{ form.status }}
+    </p>
+
+    <p>
+    {{ form.location(placeholder="Location") }}
+    <span class="error">
+    {% if form.location.errors %}
+        {% for error in form.location.errors %}
+            {{ error }}
+        {% endfor %}
+    {% endif %}
+    </span>
     </p>
 
     <p>

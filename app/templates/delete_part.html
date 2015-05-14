@@ -35,9 +35,9 @@
            <th>CPN</th>
            <th>PID</th>
            <th>MFG Part#</th>
-           <th>Tracking</th>
            <th>Qty</th>
            <th>Status</th>
+           <th>Location</th>
            <th>Used</th>
 
 
@@ -56,6 +56,7 @@
               <td> {{part.tracking}} </td>
               <td> {{part.qty}} </td>
               <td> {{part.status}} </td>
+              <td> {{part.location}} </td>
               {% if part.times_used == '0' %}
                   <td> {{part.times_used}} </td>
               {% else %}

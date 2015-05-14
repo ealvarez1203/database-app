@@ -53,6 +53,7 @@ class Parts(db.Model):
 	submit_date = db.Column(db.String(10), nullable=True)
 	tracking = db.Column(db.String(30), nullable=True)
 	status = db.Column(db.String(20), nullable=False)
+	location = db.Column(db.String(20), nullable=True)
 	checkout_date = db.Column(db.String(20), nullable=True)
 	return_date= db.Column(db.String(20), nullable=True)
 	times_used = db.Column(db.Integer, nullable=False)
@@ -74,7 +75,8 @@ class Parts(db.Model):
 		manufacturer_part_num,
 		submit_date,
 		tracking,
-		status
+		status, 
+		location
 		):
 		self.PO = PO
 		self.PR = PR
@@ -90,6 +92,7 @@ class Parts(db.Model):
 		self.submit_date = submit_date
 		self.tracking = tracking
 		self.status = status
+		self.location = location
 		self.times_used = 0
 
 	def __repr__(self):

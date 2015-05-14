@@ -26,6 +26,26 @@ $(document).ready(function(){
     $("#item_descriptions").autocomplete({
         source: options_item_descriptions
     });
+    var options_CPN = {{ CPNs|safe }}
+    $("#CPN").autocomplete({
+        source: options_CPN
+    });
+    var options_PID = {{ PIDs|safe }}
+    $("#PID").autocomplete({
+        source: options_PID
+    });
+    var options_manufacturer = {{ manufacturer_part_nums|safe }}
+    $("#manufacturer_part_num").autocomplete({
+        source: options_manufacturer
+    });
+    var options_tracking = {{ tracking|safe }}
+    $("#tracking").autocomplete({
+        source: options_tracking
+    });
+    var options_location = {{ location|safe }}
+    $("#location").autocomplete({
+        source: options_location
+    });
     
     $( "#submit_date" ).datepicker();
 });
@@ -181,6 +201,17 @@ $(document).ready(function(){
             </select>
         {% endif %}
 
+        </p>
+
+        <p>
+        <label>Location: </label> {{ form.location(placeholder=part.location, size=25) }}
+        <span class="error">
+        {% if form.location.errors %}
+            {% for error in form.location.errors %}
+                {{ error }}
+            {% endfor %}
+        {% endif %}
+        </span>
         </p>
 
         <p>

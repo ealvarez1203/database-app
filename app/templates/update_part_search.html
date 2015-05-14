@@ -20,8 +20,8 @@
               <th>MFG Part#</th>
               <th>Qty</th>
               <th>Submit Date</th>
-              <th>Tracking</th>
               <th>Status</th>
+              <th>Location</th>
 
 
               {% for part in part %}
@@ -39,6 +39,8 @@
                 <td> {{part.submit_date}} </td>
                 <td> {{part.tracking}} </td>
                 <td> {{part.status}} </td>
+                <td> {{part.location}} </td>
+
 
               </tr>
               {% endfor %}

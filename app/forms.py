@@ -43,6 +43,7 @@ class AddPart(Form):
 	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date')
 	tracking = TextField('tracking', validators=[DataRequired()], id='tracking')
 	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
+	location = TextField('location', validators=[DataRequired()], id='location')
 	qty = IntegerField('qty', validators=[DataRequired()])
 
 
@@ -50,6 +51,7 @@ class CheckoutPart(Form):
 	project = TextField('project', validators=[DataRequired()], id='project')
 	details = TextField('details', validators=[DataRequired()], id='details')
 	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date')
+	location = TextField('location', validators=[DataRequired()], id='location')
 
 class UpdatePart(Form):
 	PO = TextField('PO', id='PO')
@@ -66,6 +68,7 @@ class UpdatePart(Form):
 	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date', validators=[validators.Optional()])
 	tracking = TextField('tracking', id='tracking')
 	#status = SelectField('status', coerce=unicode, validators=[validators.optional()])
+	location = TextField('location', id='location')
 
 class UploadFile(Form):
 	excelFile = FileField('excelFile')

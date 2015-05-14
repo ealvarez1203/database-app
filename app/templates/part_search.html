@@ -34,6 +34,7 @@
               <th>PID</th>
               <th>MFG Part#</th>
               <th>Qty</th>
+              <th>Location</th>
               <th>Times Used</th>
 
               {% for part in part_available %}
@@ -46,6 +47,7 @@
                 <td> {{part.PID}} </td>
                 <td> {{part.manufacturer_part_num}} </td>
                 <td> {{part.qty}} </td>
+                <td> {{part.location}} </td>
                 {% if part.times_used == '0' %}
                   <td> {{part.times_used}} </td>
                 {% else %}

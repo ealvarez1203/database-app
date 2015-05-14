@@ -17,8 +17,6 @@
 
         <em>Parts to Return: </em>
         <table class="table table-striped">
-           <th>PR</th>
-           <th>PO</th>
            <th>part</th>
            <th>Project</th>
            <th>Supplier</th>
@@ -26,7 +24,9 @@
            <th>CPN</th>
            <th>PID</th>
            <th>MFG Part#</th>
+           <th>Location</th>
            <th>Qty</th>
+           
 
             {% for part in return_parts %}
             <tr>
@@ -39,11 +39,13 @@
               <td> {{part.CPN}} </td>
               <td> {{part.PID}} </td>
               <td> {{part.manufacturer_part_num}} </td>
+              <td> {{part.location}} </td>
               {% if part.qty == '1' %}
                   <td> {{part.qty}} </td>
               {% else %}
                   <td class="select" id="{{part.qty}}"></td>
               {% endif %}
+              
             </tr>
             {% endfor %}
 

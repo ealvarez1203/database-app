@@ -11,6 +11,10 @@
 	    $("#project").autocomplete({
 	        source: options_projects
 	    });
+	    var options_location = {{ location|safe }}
+    	$("#location").autocomplete({
+        	source: options_location
+    	});
 	    $( document ).ready(function() {
 	        $(".select").each(function() {
 	                var select = $('<select>', {name: "qty"});
@@ -67,6 +71,16 @@ Parts to be Checked out:
 	<span class="error">
 	{% if form.project.errors %}
 		{% for error in form.project.errors %}
+			{{ error }}
+		{% endfor %}
+	{% endif %}
+	</span>
+	</p>
+	<p>
+	{{ form.location(placeholder="location") }}
+	<span class="error">
+	{% if form.location.errors %}
+		{% for error in form.location.errors %}
 			{{ error }}
 		{% endfor %}
 	{% endif %}
