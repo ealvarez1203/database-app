@@ -141,7 +141,7 @@ def upload_file():
 	            keys = [sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)] #obtain column names
 	            dict_list = [] 
 	            for row_index in xrange(1, sheet.nrows): #iterate through all rows of sheet and store them in dict_list
-	            	d = {keys[col_index]: sheet.cell(row_index, col_index).value for col_index in xrange(sheet.ncols)}
+	            	d = dict((keys[col_index], sheet.cell(row_index, col_index).value) for col_index in xrange(sheet.ncols))
 	            	dict_list.append(d)
 	            try:
 	            	for i in dict_list: # import to database
