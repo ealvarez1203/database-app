@@ -30,8 +30,6 @@
 
             {% for part in return_parts %}
             <tr>
-              <td> {{part.PR}} </td>
-              <td> {{part.PO}} </td>
               <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
               <td> {{part.project_name}} </td>
               <td> {{part.supplier}} </td>

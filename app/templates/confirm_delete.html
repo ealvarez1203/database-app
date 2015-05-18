@@ -49,7 +49,7 @@
               {% else %}
                   <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
               {% endif %}
-              {% if part.qty == 1 %}
+              {% if part.qty == '1' %}
                   <td> {{part.qty}} </td>
               {% else %}
                   <td class="select" id="{{part.qty}}"></td>

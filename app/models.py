@@ -138,4 +138,29 @@ class History(db.Model):
 	def __repr__(self):
 		return '{}, {}, {}, {}, {}'.format(self.Part_SN, self.project, self.user, self.checkout_date, self.return_date)
 
+class Requests(db.Model):
+
+	__tablename__ = 'requests'
+
+	id = db.Column(db.Integer, primary_key= True)
+	current_user = db.Column(db.Integer, ForeignKey('parts.current_user'), nullable=False)
+	requestor = db.Column(db.Integer, ForeignKey('users.id'), nullable=False)
+	request_date= db.Column(db.String(20), nullable=False)
+	return_date = db.Column(db.String(20), nullable=False)
+	project_name = db.Column(db.String(20), nullable=False)
+	location = db.Column(db.String(20), nullable=False)
+	use_detail = db.Column(db.String(100), nullable=True)	
+
+	def __init__(self, current_user, requestor, request_date, return_date, project_name, location, use_detail):	
+		self.current_user = current_user
+		self.requestor = requestor
+		self.request_date = request_date
+		self.return_date = return_date
+		self.project_name = project_name
+		self.location = location
+		self.use_detail = use_detail
+
+	def __repr__(self):
+		return '{}, {}, {}, {}, {}'.format(self.current_user, self.requestor, self.request_date, self.return_date, self.project_name, location, use_detail)
+
 		

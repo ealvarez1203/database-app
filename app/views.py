@@ -352,7 +352,7 @@ def confirm_delete():
 
 	#"""Post Method"""#
 	if request.method == 'POST':
-		delete_ids = [int(i) for i in request.form.getlist('delete_ids')]
+		delete_ids = sorted([int(i) for i in request.form.getlist('delete_ids')])
 		quantities = [int(i) for i in request.form.getlist('qty')]
 
 		for i in range(len(delete_ids)):
@@ -365,7 +365,7 @@ def confirm_delete():
 				'location':Part.location, 'current_user':Part.current_user, 'current_project':Part.current_project, 'checkout_date':Part.checkout_date, 
 				'return_date':Part.return_date, 'times_used':Part.times_used}
 			ids = sorted([j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()]) 
-			
+
 			#	iterate through these parts only for specified quantities starting from last in list
 			iterator=len(ids)-quantities[i]
 			while iterator < len(ids):
@@ -669,7 +669,7 @@ def confirm_return():
 	if request.method == 'POST':
 		date = time.strftime("%m/%d/%Y")
 		#	get ids and quentities from form
-		return_ids = [int(i) for i in request.form.getlist('return_ids')]
+		return_ids = sorted([int(i) for i in request.form.getlist('return_ids')])
 		quantities = [int(i) for i in request.form.getlist('qty')]
 
 		for i in range(len(return_ids)):
@@ -895,7 +895,7 @@ def confirm_checkout():
 	form = CheckoutPart(request.form)
 	if request.method == 'POST' and form.validate():
 		date = time.strftime("%m/%d/%Y")
-		checkout_ids = [int(i) for i in request.form.getlist('checkout_ids')]
+		checkout_ids = sorted([int(i) for i in request.form.getlist('checkout_ids')])
 		quantities = [int(i) for i in request.form.getlist('qty')]
 
 		for i in range(len(checkout_ids)):
