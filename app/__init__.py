@@ -3,7 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.login import LoginManager
 from flask.ext.mail import Mail 
-import logging
+import logging, sqlite3
 
 app = Flask(__name__)
 db = SQLAlchemy(app)

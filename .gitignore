@@ -1,5 +1,8 @@
-venv
+venv/
+tmp/failure.log
+tmp/database-activity.log
 *.DS_Store
 *.pyc
 *.db
 *.xlsx
+*.xls
