@@ -162,8 +162,9 @@ def upload_file():
 												'Unavailable', 
 												i['LOCATION']
 					          			))
+	            		app.logger.info('| ACTION: upload | PART: %s | QUANTITY: %s | BY USER: %s'%(i['PART'], int(i['QTY']), current_user.name))	
 	            	db.session.commit()
-	            	app.logger.info('Excel file was updated by user: %s'%current_user.name)
+	            	
 	            	flash('The Excel File was Sucessfully Uploaded to the Database!')
 	            except KeyError, key:
 	            	error = 'Column missing: %s'%key
