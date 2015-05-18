@@ -10,7 +10,7 @@ class User(db.Model):
 
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(20), nullable=False, unique=True)
-	password = db.Column(db.String(20), nullable=False)
+	password = db.Column(db.String(50), nullable=False)
 	email = db.Column(db.String(20), nullable=True, unique=True)
 	parts = relationship("Parts", backref="user")
 
@@ -39,26 +39,26 @@ class Parts(db.Model):
 	__tablename__ = 'parts'
 
 	id = db.Column(db.Integer, primary_key=True)
-	PO = db.Column(db.String(20), nullable=False)
-	PR = db.Column(db.String(20), nullable=False)
+	PO = db.Column(db.String(50), nullable=False)
+	PR = db.Column(db.String(50), nullable=False)
 	part = db.Column(db.String(20), nullable=False)
-	project_name = db.Column(db.String(20), nullable=False)
-	requestor = db.Column(db.String(20), nullable=False)
-	supplier = db.Column(db.String(30), nullable=False)
-	supplier_contact = db.Column(db.String(30), nullable=False)
+	project_name = db.Column(db.String(30), nullable=False)
+	requestor = db.Column(db.String(30), nullable=False)
+	supplier = db.Column(db.String(50), nullable=False)
+	supplier_contact = db.Column(db.String(50), nullable=False)
 	item_description= db.Column(db.String(200), nullable=True)
 	CPN = db.Column(db.String(20), nullable=True)
 	PID = db.Column(db.String(20), nullable=True)
-	manufacturer_part_num = db.Column(db.String(30), nullable=True)
+	manufacturer_part_num = db.Column(db.String(50), nullable=True)
 	submit_date = db.Column(db.String(10), nullable=True)
-	tracking = db.Column(db.String(30), nullable=True)
+	tracking = db.Column(db.String(50), nullable=True)
 	status = db.Column(db.String(20), nullable=False)
-	location = db.Column(db.String(20), nullable=True)
+	location = db.Column(db.String(30), nullable=True)
 	checkout_date = db.Column(db.String(20), nullable=True)
 	return_date= db.Column(db.String(20), nullable=True)
 	times_used = db.Column(db.Integer, nullable=False)
 	current_user = db.Column(db.Integer, ForeignKey('users.id'), nullable=True)
-	current_project = db.Column(db.String(20), nullable=True)
+	current_project = db.Column(db.String(30), nullable=True)
 
 	def __init__(
 		self, 
@@ -120,12 +120,12 @@ class History(db.Model):
 	__tablename__ = 'history'
 
 	id = db.Column(db.Integer, primary_key= True)
-	Part_SN = db.Column(db.String(20), ForeignKey('parts.id'))
-	project = db.Column(db.String(20), nullable=False)
+	Part_SN = db.Column(db.String(50), ForeignKey('parts.id'))
+	project = db.Column(db.String(30), nullable=False)
 	user= db.Column(db.String(20), nullable=False)
-	checkout_date = db.Column(db.String(10), nullable=False)
-	return_date = db.Column(db.String(10), nullable=False)
-	detail = db.Column(db.String(30), nullable=True)	
+	checkout_date = db.Column(db.String(20), nullable=False)
+	return_date = db.Column(db.String(20), nullable=False)
+	detail = db.Column(db.String(50), nullable=True)	
 
 	def __init__(self, serial, project, user, checkout_date, return_date, detail):	
 		self.Part_SN = serial

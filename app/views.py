@@ -36,6 +36,7 @@ def allowed_users(*users):
     return wrapper
 
 # route for handling the login page logic
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	error = None
@@ -77,7 +78,6 @@ def create_user():
 			return redirect(url_for('home'))
 	return render_template('create_user.html', form=form, error=error)
 
-@app.route('/')
 @app.route('/home')
 @login_required
 def home():
