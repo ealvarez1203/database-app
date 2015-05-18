@@ -591,10 +591,10 @@ def confirm_update():
 @login_required
 def return_part():
 	#	retrieve data where current_user=currentuser and status=unavailable
-	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-							manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user,\
-							current_project, count(*) from parts where current_user=:user and status=:s group by PR, PO, part, project_name,\
-							requestor, supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num, submit_date, tracking,\
+	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, \
+							manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user, \
+							current_project, count(*) from parts where current_user=:user and status=:s group by PR, PO, part, project_name, \
+							requestor, supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num, submit_date, tracking, \
 							status, location, checkout_date, return_date, times_used, current_user, current_project', user=current_user.name, s="Unavailable")
 	parts = [dict(id=row[0]-(row[21]-1), 
 				PR=row[1], 
@@ -711,11 +711,11 @@ def checkout_part():
 def part_search(keyword):
 	#retrieve parts where part=type and status=Available
 	if keyword=='OTHER':
-		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user,\
-								current_project, count(*) from parts where status=:s and (part <> :a and part <> :b and part <> :c and part <> :d\
-								and part <> :e and part <> :f and part <> :g and part <> :h and part <> :i and part <> :j and part <> :k) group\
-								by PO, PR, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num,\
+		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, \
+								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user, \
+								current_project, count(*) from parts where status=:s and (part <> :a and part <> :b and part <> :c and part <> :d \
+								and part <> :e and part <> :f and part <> :g and part <> :h and part <> :i and part <> :j and part <> :k) group \
+								by PO, PR, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num, \
 								submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user, current_project', a='DIMM', 
 								b='CPU', c='HEATSINK', d='CHASSIS', e='CABLES', f='MEZZ-CARD', g='PSU', h='TPM', i='PROTOTYPE', j='HDD', k='RAID-UNIT', 
 								s="Available")
@@ -743,11 +743,11 @@ def part_search(keyword):
 								qty=row[21]
 							) for row in cur.fetchall()]  #store them in a list of dictionaries
 		#retrieve parts where part=type and status=Available
-		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user,\
-								current_project, count(*) from parts where status=:s and (part <> :a and part <> :b and part <> :c and part <> :d\
-								and part <> :e and part <> :f and part <> :g and part <> :h and part <> :i and part <> :j and part <> :k) group\
-								by PO, PR, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num,\
+		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, \
+								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user, \
+								current_project, count(*) from parts where status=:s and (part <> :a and part <> :b and part <> :c and part <> :d \
+								and part <> :e and part <> :f and part <> :g and part <> :h and part <> :i and part <> :j and part <> :k) group \
+								by PO, PR, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, manufacturer_part_num, \
 								submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user, current_project', a='DIMM', 
 								b='CPU', c='HEATSINK', d='CHASSIS', e='CABLES', f='MEZZ-CARD', g='PSU', h='TPM', i='PROTOTYPE', j='HDD', k='RAID-UNIT', 
 								s="Unavailable")
@@ -775,13 +775,13 @@ def part_search(keyword):
 								qty=row[21]
 							) for row in cur.fetchall()]  #store them in a list of dictionaries
 	else:
-		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user,\
-								current_project, count(*) from parts where status=:s and (PO like :k or PR like :k or part like :k or project_name\
-								like :k or requestor like :k or supplier like :k or supplier_contact like :k or item_description like :k or CPN\
-								like :k or PID like :k or manufacturer_part_num like :k or submit_date like :k or tracking like :k or status like :k\
-								or current_user like :k or current_project like :k) group by PO, PR, part, project_name, requestor, supplier,\
-								supplier_contact, item_description, CPN, PID, manufacturer_part_num, submit_date, tracking, status, location,\
+		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, \
+								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user, \
+								current_project, count(*) from parts where status=:s and (PO like :k or PR like :k or part like :k or project_name \
+								like :k or requestor like :k or supplier like :k or supplier_contact like :k or item_description like :k or CPN \
+								like :k or PID like :k or manufacturer_part_num like :k or submit_date like :k or tracking like :k or status like :k \
+								or current_user like :k or current_project like :k) group by PO, PR, part, project_name, requestor, supplier, \
+								supplier_contact, item_description, CPN, PID, manufacturer_part_num, submit_date, tracking, status, location, \
 								checkout_date, return_date, times_used, current_user, current_project', k='%' + keyword + '%', s="Available")
 
 		part_available = [dict(id=row[0]-(row[21]-1), 
@@ -808,13 +808,13 @@ def part_search(keyword):
 								qty=row[21]
 							) for row in cur.fetchall()]  #store them in a list of dictionaries
 		#retrieve parts where part=type and status=Available
-		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
-								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user,\
-								current_project, count(*) from parts where status=:s and (PO like :k or PR like :k or part like :k or project_name\
-								like :k or requestor like :k or supplier like :k or supplier_contact like :k or item_description like :k or CPN\
-								like :k or PID like :k or manufacturer_part_num like :k or submit_date like :k or tracking like :k or status like :k\
-								or current_user like :k or current_project like :k) group by PO, PR, part, project_name, requestor, supplier,\
-								supplier_contact, item_description, CPN, PID, manufacturer_part_num, submit_date, tracking, status, location,\
+		cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID, \
+								manufacturer_part_num, submit_date, tracking, status, location, checkout_date, return_date, times_used, current_user, \
+								current_project, count(*) from parts where status=:s and (PO like :k or PR like :k or part like :k or project_name \
+								like :k or requestor like :k or supplier like :k or supplier_contact like :k or item_description like :k or CPN \
+								like :k or PID like :k or manufacturer_part_num like :k or submit_date like :k or tracking like :k or status like :k \
+								or current_user like :k or current_project like :k) group by PO, PR, part, project_name, requestor, supplier, \
+								supplier_contact, item_description, CPN, PID, manufacturer_part_num, submit_date, tracking, status, location, \
 								checkout_date, return_date, times_used, current_user, current_project', k='%' + keyword + '%', s="Unavailable")
 
 		part_unavailable = [dict(id=row[0]-(row[21]-1), 
@@ -924,7 +924,7 @@ def confirm_checkout():
 			#	iterate through these parts only for specified quantities
 			iterator=1
 			while iterator<=quantities[i]:
-				db.engine.execute('update parts set status = :s, location =:l, checkout_date =:d, return_date =:r, times_used=times_used+1,\
+				db.engine.execute('update parts set status = :s, location =:l, checkout_date =:d, return_date =:r, times_used=times_used+1, \
 							current_user=:u, current_project=:p where id=:i', s='Unavailable', d=date, r=form.return_date.raw_data[0],
 							u=current_user.name, p=form.project.data, l=form.location.data, i=ids[iterator-1])	
 				iterator += 1
