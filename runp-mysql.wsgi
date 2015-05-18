@@ -2,7 +2,7 @@
 
 import sys, os
 import logging
-os.environ['DATABASE_URL'] = 'mysql://apps:apps@localhost/apps'
+os.environ['DATABASE_URL'] = 'mysql://user:password@localhost/database_name'
 
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0,"/var/www/database-app/")

@@ -1,1 +1,1 @@
-killall /home/apps/database-app/venv:/bin/python
+killall /var/www/database-app/venv:/bin/python
