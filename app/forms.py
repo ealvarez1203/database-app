@@ -19,7 +19,7 @@ class CreateUserForm(Form):
 	)
 	password = PasswordField(
 			'password',
-			validators=[DataRequired(), Length(min=6, max=25)]
+			validators=[DataRequired(), Length(min=6, max=10)]
 	)
 	confirm = PasswordField(
 			'Repeat password',
