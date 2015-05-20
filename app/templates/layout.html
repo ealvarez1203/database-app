@@ -18,7 +18,7 @@
     {% endfor %}
     {% if error %}<p class=error style="text-colo"><strong>Error:</strong> {{error }} </p> {% endif %}
     <div class=metanav>
-        {% if user %} <em>Logged in as: </em>{{user}} {% endif %}
+        {% if user %} <em>Logged in as: </em><a href="{{ url_for('show_user_info', username=user) }}">{{user}}</a> {% endif %}
         &nbsp;
         <a href="{{ url_for('home') }}"> main </a>
         &nbsp;

@@ -90,6 +90,16 @@ def show_history(serialNumber):
 	history = [dict(project=row[0], user=row[1], checkout_date=row[2], return_date=row[3], detail=row[4]) for row in cur.fetchall()]
 	return render_template('history.html', history=history)
 
+@app.route('/UserInfo/<username>/')
+@login_required
+def show_user_info(username):
+	user = User.query.filter_by(name=username).first()
+	user = dict(id=user.id,
+				name=user.name,
+				email=user.email
+			)
+	return render_template('user_info.html', User=user)
+
 @app.route('/Part/<id>/')
 @login_required
 def show_part_info(id):
@@ -206,7 +216,6 @@ def inventory():
 
 @app.route('/add_part', methods=['GET', 'POST'])
 @login_required
-@allowed_users('admin')
 def add_part():
 	POs = ["%s" %i for i in db.session.query(Parts.PO).group_by(Parts.PO).all()]
 	POs = [x.encode('utf-8') for x in POs]
@@ -270,7 +279,6 @@ def add_part():
 
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
-@allowed_users('admin')
 def delete_part():
 	#query parts by quantities
 	cur = db.engine.execute('select id, PR, PO, part, project_name, requestor, supplier, supplier_contact, item_description, CPN, PID,\
@@ -313,7 +321,6 @@ def delete_part():
 
 @app.route('/delete_part/confirm', methods=['GET', 'POST'])
 @login_required
-@allowed_users('admin')
 def confirm_delete():
 	#"""Obtain ids from args"""
 	delete_ids = [i.encode('utf-8') for i in request.args.getlist('delete_ids')]
@@ -902,6 +909,7 @@ def confirm_checkout():
 		for i in range(len(checkout_ids)):
 			#	get all attributes of part
 			Part = Parts.query.filter_by(id=checkout_ids[i]).first()
+
 			#	get ids of rows that match these attributes
 			kwargs = {'PR':Part.PR, 'PO':Part.PO, 'part':Part.part, 'project_name':Part.project_name, 'requestor':Part.requestor, 'supplier':Part.supplier, 
 				'supplier_contact':Part.supplier_contact, 'item_description':Part.item_description, 'CPN':Part.CPN, 'PID':Part.PID, 
@@ -932,6 +940,5 @@ def confirm_checkout():
 			db.session.commit()
 			app.logger.info('| ACTION: checkout | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, ids[0], quantities[i], current_user.name))
 		flash('The parts were checked out!')
-		return redirect(url_for('home'))
+		return redirect(url_for('checkout_part'))
 	return render_template('confirm_checkout.html', checkout_parts=checkout_parts, checkout_ids=checkout_ids, form=form, project_names=project_names, location=location)
-

@@ -53,11 +53,10 @@
               <td> {{part.CPN}} </td>
               <td> {{part.PID}} </td>
               <td> {{part.manufacturer_part_num}} </td>
-              <td> {{part.tracking}} </td>
               <td> {{part.qty}} </td>
               <td> {{part.status}} </td>
               <td> {{part.location}} </td>
-              {% if part.times_used == '0' %}
+              {% if part.times_used == 0 %}
                   <td> {{part.times_used}} </td>
               {% else %}
                   <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>

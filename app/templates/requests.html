@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block body %}
+
+   <h2>Requests</h2>
+   {% if requests %}
+      <em>Current requests: </em><br><br>
+       <form action="{{ url_for('requests') }}" method=post class=add_entry>
+        <table class="table table-striped">
+               <th></th>
+               <th>part</th>
+               <th>Supplier</th>
+               <th>Item Description</th>
+               <th>CPN</th>
+               <th>PID</th>
+               <th>MFG Part#</th>
+               <th>Project</th>
+               <th>Qty</th>
+               <th>Checked out on</th>
+               <th>Return Date</th>
+               
+           {% for part in parts %}
+            <tr>
+              <td><input type=checkbox name=do_return value="{{part.id}}"></td>
+              <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
+              <td> {{part.supplier}} </td>
+              <td> {{part.item_description}} </td>
+              <td> {{part.CPN}} </td>
+              <td> {{part.PID}} </td>
+              <td> {{part.manufacturer_part_num}} </td>
+              <td> {{part.current_project}} </td>
+              <td> {{part.qty}}</td>
+              <th> {{part.checkout_date}}
+              <td> {{part.return_date}} </td>
+            </tr>
+           {% endfor %}
+        </table>
+        <div class="metanav2">
+          <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
+          <input type=submit class="btn btn-default" value="Return"><br><br>
+        </div>
+        </form><br>
+    {% else %}
+      <em> Currently you don't have any parts </em>
+      <div class="metanav2">
+        <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
+      </div>
+    {% endif %}
+{% endblock %}

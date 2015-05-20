@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>User info</h2><br>
+
+    <table id="table" class='show_part_table'>
+      <tr>
+        <th>Username</th>
+        <td>{{User.name}}</td>
+      </tr>
+      <tr>
+        <th>email</th>
+        <td>{{User.email}}</td>
+      </tr>
+   </table>
+   <br>
+   <div class='metanav2'> 
+   <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>
+ </div>
+{% endblock %}

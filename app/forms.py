@@ -50,7 +50,7 @@ class AddPart(Form):
 class CheckoutPart(Form):
 	project = TextField('project', validators=[DataRequired()], id='project')
 	details = TextField('details', validators=[DataRequired()], id='details')
-	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date')
+	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date', validators=[validators.Optional()])
 	location = TextField('location', validators=[DataRequired()], id='location')
 
 class UpdatePart(Form):
