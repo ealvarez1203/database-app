@@ -48,6 +48,14 @@
         <td>{{part.manufacturer_part_num}}</td>
       </tr>
       <tr>
+        <th>Serial Number</th>
+        {% if part.SN %}
+          <td> {{part.SN}} </td>
+        {% else %}
+          <td> N/A </td>
+        {% endif %}
+      </tr>
+      <tr>
         <th>Date Submitted</th>
         <td>{{part.submit_date}}</td>
       </tr>
@@ -76,7 +84,11 @@
         {% if part.times_used == 0 %}
             <td> {{part.times_used}} </td>
         {% else %}
-            <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
+            {% if part.SN %}
+              <td><a href="{{ url_for('show_history', serialNumber=part.SN) }}">{{part.times_used}}</a></td>
+            {% else %}
+              <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
+            {% endif %}
         {% endif %}
       </tr>
       <tr>

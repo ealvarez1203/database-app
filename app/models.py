@@ -59,6 +59,7 @@ class Parts(db.Model):
 	times_used = db.Column(db.Integer, nullable=False)
 	current_user = db.Column(db.Integer, ForeignKey('users.id'), nullable=True)
 	current_project = db.Column(db.String(30), nullable=True)
+	SN = db.Column(db.String(30), nullable=True)
 
 	def __init__(
 		self, 
@@ -73,6 +74,7 @@ class Parts(db.Model):
 		CPN,
 		PID,
 		manufacturer_part_num,
+		SN,
 		submit_date,
 		tracking,
 		status, 
@@ -89,6 +91,7 @@ class Parts(db.Model):
 		self.CPN = CPN
 		self.PID = PID
 		self.manufacturer_part_num = manufacturer_part_num
+		self.SN = SN
 		self.submit_date = submit_date
 		self.tracking = tracking
 		self.status = status
@@ -108,6 +111,7 @@ class Parts(db.Model):
 			self.CPN.encode('utf-8'),
 			self.PID.encode('utf-8'),
 			self.manufacturer_part_num.encode('utf-8'),
+			self.SN.encode('utf-8'),
 			self.submit_date.encode('utf-8'),
 			self.tracking.encode('utf-8'), 
 			self.status.encode('utf-8'),

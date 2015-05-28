@@ -123,7 +123,7 @@ $(document).ready(function(){
     </p>
   
     <p>
-    {{ form.supplier_contact(placeholder="Supplier Contact") }}
+    {{ form.supplier_contact(placeholder="Supplier Contact", size=35) }}
     <span class="error">
     {% if form.supplier_contact.errors %}
         {% for error in form.supplier_contact.errors %}
@@ -134,7 +134,7 @@ $(document).ready(function(){
     </p>
   
     <p>
-    {{ form.item_description(placeholder="Item Description") }}
+    {{ form.item_description(placeholder="Item Description", size=40) }}
     <span class="error">
     {% if form.item_description.errors %}
         {% for error in form.item_description.errors %}
@@ -167,10 +167,21 @@ $(document).ready(function(){
     </p>
   
     <p>
-    {{ form.manufacturer_part_num(placeholder="MFG Part#") }}
+    {{ form.manufacturer_part_num(placeholder="MFG Part#", size=30) }}
     <span class="error">
     {% if form.manufacturer_part_num.errors %}
         {% for error in form.manufacturer_part_num.errors %}
+            {{ error }}
+        {% endfor %}
+    {% endif %}
+    </span>
+    </p>
+
+    <p>
+    {{ form.SN(placeholder="S/N (if any)") }}
+    <span class="error">
+    {% if form.SN.errors %}
+        {% for error in form.SN.errors %}
             {{ error }}
         {% endfor %}
     {% endif %}

@@ -40,11 +40,12 @@ class AddPart(Form):
 	CPN = TextField('CPN', id="CPN")
 	PID = TextField('PID', id='PID')
 	manufacturer_part_num = TextField('manufacturer_part_num', validators=[DataRequired()], id='manufacturer_part_num')
+	SN = TextField('SN', filters = [lambda x: x or None])
 	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date')
 	tracking = TextField('tracking', validators=[DataRequired()], id='tracking')
 	status = SelectField('status', coerce=unicode, validators=[validators.optional()])
 	location = TextField('location', validators=[DataRequired()], id='location')
-	qty = IntegerField('qty', validators=[DataRequired()])
+	qty = IntegerField('qty', validators=[validators.NumberRange(min=1, max=None, message='Please Enter a Positive Interger')])
 
 
 class CheckoutPart(Form):
@@ -64,6 +65,7 @@ class UpdatePart(Form):
 	item_description = TextField('item_description', id="item_descriptions")
 	CPN = TextField('CPN', id='CPN')
 	PID = TextField('PID', id='PID')
+	SN = TextField('SN', id='SN')
 	manufacturer_part_num = TextField('manufacturer_part_num', id='manufacturer_part_num')
 	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date', validators=[validators.Optional()])
 	tracking = TextField('tracking', id='tracking')

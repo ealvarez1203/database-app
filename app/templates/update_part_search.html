@@ -26,7 +26,7 @@
 
               {% for part in part %}
               <tr>
-                <td><input type=checkbox name='do_update' value="{{part.id}}"></td>
+                <td><input type=radio name='do_update' value="{{part.id}}"></td>
                 <td> {{part.PR}} </td>
                 <td> {{part.PO}} </td>
                 <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>

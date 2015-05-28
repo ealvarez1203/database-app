@@ -175,7 +175,21 @@ $(document).ready(function(){
         {% endif %}
         </span>
         </p>
-      
+    
+        {% if part.SN %}
+
+            <label> Serial Number: </label> {{ form.SN(placeholder=part.SN, size=25) }}
+            <span class="error">
+            {% if form.SN %}
+                {% for error in form.SN.errors %}
+                    {{ error }}
+                {% endfor %}
+            {% endif %}
+            </span>
+            </p>
+
+        {% endif %}
+
         <p>
         <label>Trancking info: </label> {{ form.tracking(placeholder=part.tracking, size=30) }}
         <span class="error">
@@ -192,12 +206,12 @@ $(document).ready(function(){
         {% if status_default == 'Available' %}
             <select name='status'>
                 <option value="Available" selected="selected">Available</option>
-                <option value="Unvailable">Unavailable</option>
+                <option value="Unavailable">Unavailable</option>
             </select>
         {% else %}
             <select name='status'>
                 <option value="Available">Available</option>
-                <option value="Unvailable" selected="selected">Unavailable</option>
+                <option value="Unavailable" selected="selected">Unavailable</option>
             </select>
         {% endif %}
 
