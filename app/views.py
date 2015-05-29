@@ -168,6 +168,7 @@ def upload_file():
 												(int(i['CPN']) if isinstance(i['CPN'], float) else i['CPN']),
 												(int(i['PID']) if isinstance(i['PID'], float) else i['PID']),
 												(int(i['MFG PART#']) if isinstance(i['MFG PART#'], float) else i['MFG PART#']),
+												(int(i['S/N']) if isinstance(i['S/N'], float) else i['S/N']),
 												time.strftime("%m/%d/%Y"), # xlrd function needed
 												(int(i['TRACKING#']) if isinstance(i['TRACKING#'], float) else i['TRACKING#']), 
 												'Unavailable', 
