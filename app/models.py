@@ -147,9 +147,6 @@ class Requests(db.Model):
 	__tablename__ = 'requests'
 
 	id = db.Column(db.Integer, primary_key= True)
-	part_id = db.Column(db.Integer, ForeignKey('parts.id'))
-	part = db.Column(db.String(20), nullable=False)
-	qty = db.Column(db.Integer)
 	current_user = db.Column(db.Integer, ForeignKey('parts.current_user'), nullable=False)
 	requestor = db.Column(db.Integer, ForeignKey('users.id'), nullable=False)
 	request_date= db.Column(db.String(20), nullable=False)
@@ -157,6 +154,9 @@ class Requests(db.Model):
 	project_name = db.Column(db.String(20), nullable=False)
 	location = db.Column(db.String(20), nullable=False)
 	use_detail = db.Column(db.String(100), nullable=True)	
+	part_id = db.Column(db.Integer, ForeignKey('parts.id'))
+	part = db.Column(db.String(20), nullable=False)
+	qty = db.Column(db.Integer)
 
 
 	def __init__(self, part_id, part, qty, current_user, requestor, request_date, return_date, project_name, location, use_detail):
