@@ -725,7 +725,7 @@ def confirm_return(part_id):
 			iterator += 1
 		db.session.commit()
 		app.logger.info('| ACTION: return | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, return_id, quantity, current_user.name))
-		flash('The parts were checked out!')
+		flash('The parts were returned!')
 		return redirect(url_for('home'))
 	return render_template('confirm_return.html', return_part=return_part)
 
