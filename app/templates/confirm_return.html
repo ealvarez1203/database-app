@@ -13,7 +13,7 @@
     </script>
     <h2>Confirm Return</h2><br>
 
-    <form action="{{ url_for('confirm_return') }}" method=post class=add_entry>
+    <form class="form-signin" role="form" method="post" action="">
 
         <em>Parts to Return: </em>
         <table class="table table-striped">
@@ -27,29 +27,25 @@
            <th>Location</th>
            <th>Qty</th>
            
-
-            {% for part in return_parts %}
             <tr>
-              <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
-              <td> {{part.project_name}} </td>
-              <td> {{part.supplier}} </td>
-              <td> {{part.item_description}} </td>
-              <td> {{part.CPN}} </td>
-              <td> {{part.PID}} </td>
-              <td> {{part.manufacturer_part_num}} </td>
-              <td> {{part.location}} </td>
-              {% if part.qty == '1' %}
-                  <td> {{part.qty}} </td>
+              <td><a href="{{ url_for('show_part_info', id=return_part.id) }}">{{return_part.part}}</a></td>
+              <td> {{return_part.project_name}} </td>
+              <td> {{return_part.supplier}} </td>
+              <td> {{return_part.item_description}} </td>
+              <td> {{return_part.CPN}} </td>
+              <td> {{return_part.PID}} </td>
+              <td> {{return_part.manufacturer_part_num}} </td>
+              <td> {{return_part.location}} </td>
+              {% if return_part.qty == '1' %}
+                  <td> {{return_part.qty}} </td>
               {% else %}
-                  <td class="select" id="{{part.qty}}"></td>
+                  <td class="select" id="{{return_part.qty}}"></td>
               {% endif %}
               
             </tr>
-            {% endfor %}
 
-        {% for ids in return_ids %}
-           <input type="hidden" value="{{ids}}" name="return_ids">
-        {% endfor %}
+           <input type="hidden" value={{return_part.id}} name="return_id">
+
         </table>
         <div class="metanav2">
             <input type=submit class="btn btn-primary" value="Confirm Return">

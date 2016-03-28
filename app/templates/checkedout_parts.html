@@ -1,13 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
-  <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='jquery-dataTables.js') }}"></script>
-  <script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-dataTables.js') }}"></script>
+    <script>
+
     $(document).ready(function() {
         // Setup - add a text input to each footer cell
         $('#example tfoot th').each( function () {
             var title = $(this).text();
-            $(this).html( '<input type="text" style="min-width: 85px;" placeholder="Search '+title+'" />' );
+            $(this).html( '<input type="text" style="min-width: 50px; max-width: 90px" placeholder="Search '+title+'" />' );
         } );
  
         // DataTable
@@ -26,13 +27,32 @@
             } );
         } );
     } );
-  </script>
+    </script>
 
-<h1>Update Part</h1><br>
-<em>Results for :{{keyword}}</em>
-<br><br>
-   
-      {% if parts %}
+	<h2>Checked out Parts</h2><br>
+
+    {% if user == 'admin' %}
+    <div class=metanav>
+    <dul class="nav nav-pills">
+        <li role="presentation"><a href="{{ url_for('home') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('show_requests') }}">Requests</a></li>
+        <li role="presentation" class="active"><a href="{{ url_for('list_checkedout_parts') }}">Checked Out Parts</a></li>
+        <li role="presentation"><a href="{{ url_for('upload_file') }}">Import from spreadsheet</a></li>
+    </ul>    
+    </div>
+    <br>
+    {%else%}
+    <div class=metanav>
+    <dul class="nav nav-pills">  
+        <li role="presentation"><a href="{{ url_for('home') }}">Home</a></li>
+        <li role="presentation" class="active"><a href="{{ url_for('return_part') }}">My Parts</a></li>
+        <li role="presentation"><a href="{{ url_for('show_requests') }}">Requests</a></li>    
+    </ul>
+    </div>
+    <br>
+    {%endif%}
+
+      {% if checkedout_parts %}
       <table id="example" class="display" cellspacing="0" width="100%">
         <em>Click on Part to display all attributes</em> 
         <thead> 
@@ -62,7 +82,7 @@
         </tr>
       </tfoot>
       <tbody>
-         {% for part in parts %}
+         {% for part in checkedout_parts %}
             <tr>
               <td> {{part.PR}} </td>
               <td> {{part.PO}} </td>
@@ -85,9 +105,12 @@
             </div>
           {% else %}
               <div class='metanav2'> 
-                <em> Currently, there are no {{keyword}}'s logged in our database  </em><br><br>
+                <em> Oops, No Results Found!  </em><br><br>
                 <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/>
               </div>
           {% endif %}
+
+
+
 
 {% endblock %}

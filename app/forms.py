@@ -54,10 +54,16 @@ class CheckoutPart(Form):
 	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date', validators=[validators.Optional()])
 	location = TextField('location', validators=[DataRequired()], id='location')
 
+class RequestPart(Form):
+	project = TextField('project', validators=[DataRequired()], id='project')
+	details = TextField('details', validators=[DataRequired()], id='details')
+	return_date = DateField('return_date', format='%m/%d/%Y', id='return_date', validators=[validators.Optional()])
+	location = TextField('location', validators=[DataRequired()], id='location')
+
 class UpdatePart(Form):
 	PO = TextField('PO', id='PO')
 	PR = TextField('PR', id='PR')
-	part = TextField('part', id="parts")
+	#part = TextField('part', id="parts")
 	project_name = TextField('project_name', id="project_names")
 	requestor = TextField('requestor', id="requestors")
 	supplier = TextField('supplier', id="suppliers")

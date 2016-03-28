@@ -1,26 +1,32 @@
 {% extends "layout.html" %}
 {% block body %}
 
-   <h2>Return Parts</h2>
+   <h2>My Parts</h2><br>
+   <div class=metanav>
+       <dul class="nav nav-pills">  
+        <li role="presentation"><a href="{{ url_for('home') }}">Home</a></li>
+        <li role="presentation" class="active"><a href="{{ url_for('return_part') }}">My Parts</a></li>
+        <li role="presentation"><a href="{{ url_for('show_requests') }}">Requests</a></li>    
+    </ul>
+    </div>
+    <br><br>
    {% if parts %}
       <em>Parts you have checked out: </em><br><br>
-       <form action="{{ url_for('return_part') }}" method=post class=add_entry>
         <table class="table table-striped">
-               <th></th>
-               <th>part</th>
-               <th>Supplier</th>
-               <th>Item Description</th>
-               <th>CPN</th>
-               <th>PID</th>
-               <th>MFG Part#</th>
-               <th>Project</th>
-               <th>Qty</th>
-               <th>Checked out on</th>
-               <th>Return Date</th>
+             <th>part</th>
+             <th>Supplier</th>
+             <th>Item Description</th>
+             <th>CPN</th>
+             <th>PID</th>
+             <th>MFG Part#</th>
+             <th>Project</th>
+             <th>Qty</th>
+             <th>Checked out on</th>
+             <th>Return Date</th>
+             <th>Return</th>
                
            {% for part in parts %}
             <tr>
-              <td><input type=checkbox name=do_return value="{{part.id}}"></td>
               <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
               <td> {{part.supplier}} </td>
               <td> {{part.item_description}} </td>
@@ -31,18 +37,42 @@
               <td> {{part.qty}}</td>
               <th> {{part.checkout_date}}
               <td> {{part.return_date}} </td>
+              <td>
+                <a href="{{ url_for('confirm_return', part_id=part.id) }}" class="btn btn-primary">Return</a>
+              </td>
             </tr>
            {% endfor %}
         </table>
-        <div class="metanav2">
-          <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
-          <input type=submit class="btn btn-default" value="Return"><br><br>
-        </div>
-        </form><br>
+        <br>
     {% else %}
-      <em> Currently you don't have any parts </em>
+      <div class="metanav3"><em> Currently you don't have any parts checked out</em></div><br>
+    {% endif %}
+    
+    {% if requested_parts %}
+      <em>These are the parts that have been requested and still waiting on confirmation:</em><br><br>
+      <div class="metanav2">
+        <table class="table table-striped">
+            <th>Part</th>
+            <th>Qty</th>
+            <th>Requested to</th>
+            <th>Requested on</th>
+            <th>Cancel</th>
+
+            {% for part in requested_parts %}
+            <tr>
+              <td><a href="{{ url_for('show_part_info', id=part.part_id) }}">{{part.part}}</a></td>
+              <td> {{part.qty}} </td>
+              <td> {{part.current_user}} </td>
+              <td> {{part.request_date}} </td>
+              <td>
+                <a href="{{ url_for('return_part', part_id=part.id) }}" class="btn btn-default">Cancel</a>
+              </td>
+            </tr>
+            {% endfor %}
+        </table>
+      </div>
+    {% endif %}
       <div class="metanav2">
         <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
       </div>
-    {% endif %}
 {% endblock %}

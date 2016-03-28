@@ -1,48 +1,61 @@
 {% extends "layout.html" %}
 {% block body %}
 
-   <h2>Requests</h2>
-   {% if requests %}
-      <em>Current requests: </em><br><br>
-       <form action="{{ url_for('requests') }}" method=post class=add_entry>
+   <h2>Requests</h2><br>
+
+    {% if user == 'admin' %}
+    <div class=metanav>
+    <dul class="nav nav-pills">
+        <li role="presentation"><a href="{{ url_for('home') }}">Home</a></li>
+        <li role="presentation" class="active"><a href="{{ url_for('show_requests') }}">Requests</a></li>
+        <li role="presentation"><a href="{{ url_for('list_checkedout_parts') }}">Checked Out Parts</a></li>
+        <li role="presentation"><a href="{{ url_for('upload_file') }}">Import from spreadsheet</a></li>
+    </ul>    
+    </div>
+    <br>
+    {%else%}
+    <div class=metanav>
+    <dul class="nav nav-pills">  
+        <li role="presentation"><a href="{{ url_for('home') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('return_part') }}">My Parts</a></li>
+        <li role="presentation" class="active"><a href="{{ url_for('show_requests') }}">Requests</a></li>    
+    </ul>
+    </div>
+    <br>
+    {%endif%}
+
+  {% if requests %}
+      <em>Bellow are the requests to check out parts that are under your posession: </em><br><br>
+       <form action="{{ url_for('show_requests') }}" method="post" class="add_entry">
         <table class="table table-striped">
-               <th></th>
-               <th>part</th>
-               <th>Supplier</th>
-               <th>Item Description</th>
-               <th>CPN</th>
-               <th>PID</th>
-               <th>MFG Part#</th>
-               <th>Project</th>
+               <th>Part</th>
                <th>Qty</th>
-               <th>Checked out on</th>
-               <th>Return Date</th>
+               <th>Requester</th>
+               <th>Date Requested</th>
+               <th>Project Name</th>
+               <th>Action</th>
+ 
                
-           {% for part in parts %}
+           {% for request in requests %}
             <tr>
-              <td><input type=checkbox name=do_return value="{{part.id}}"></td>
-              <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
-              <td> {{part.supplier}} </td>
-              <td> {{part.item_description}} </td>
-              <td> {{part.CPN}} </td>
-              <td> {{part.PID}} </td>
-              <td> {{part.manufacturer_part_num}} </td>
-              <td> {{part.current_project}} </td>
-              <td> {{part.qty}}</td>
-              <th> {{part.checkout_date}}
-              <td> {{part.return_date}} </td>
+              <td><a href="{{ url_for('show_part_info', id=request.id) }}">{{request.part}}</a></td>
+              <td> {{request.qty}} </td>
+              <td> {{request.requestor}} </td>
+              <td> {{request.request_date}} </td>
+              <td> {{request.project_name}} </td>
+              <td align=center>
+                <a href="{{ url_for('confirm_request', request_id=request.id) }}" class="btn btn-success">Confirm</a>
+              </td>
             </tr>
            {% endfor %}
         </table>
-        <div class="metanav2">
-          <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
-          <input type=submit class="btn btn-default" value="Return"><br><br>
-        </div>
-        </form><br>
+      </form><br>
     {% else %}
-      <em> Currently you don't have any parts </em>
-      <div class="metanav2">
-        <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
-      </div>
+      <div class="metanav3"><em> Currently you don't have any requests</em></div><br>
     {% endif %}
+
+    <div class="metanav2">
+      <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
+    </div>
+
 {% endblock %}

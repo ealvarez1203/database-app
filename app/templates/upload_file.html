@@ -1,7 +1,27 @@
 {% extends "layout.html" %}
 {% block body %}
 <h2> Import data from Excel Spreadsheet </h2><br>
-
+    {% if user == 'admin' %}
+    <div class=metanav>
+    <dul class="nav nav-pills">
+        <li role="presentation"><a href="{{ url_for('home') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('show_requests') }}">Requests</a></li>
+        <li role="presentation"><a href="{{ url_for('list_checkedout_parts') }}">Checked Out Parts</a></li>
+        <li role="presentation" class="active"><a href="{{ url_for('upload_file') }}">Import from spreadsheet</a></li>
+    </ul>    
+    </div>
+    <br>
+    {%else%}
+    <div class=metanav>
+    <dul class="nav nav-pills">  
+        <li role="presentation"><a href="{{ url_for('home') }}">Home</a></li>
+        <li role="presentation"><a href="{{ url_for('return_part') }}">My Parts</a></li>
+        <li role="presentation" class="active"><a href="{{ url_for('show_requests') }}">Requests</a></li>    
+    </ul>
+    </div>
+    <br>
+    {%endif%}
+    
 <em>To import data from an excel spreadsheet, make sure you have the following column headers (they can be in different order):</em>
 <table id="table" class="table table-striped">
    <th>PO#</th>

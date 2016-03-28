@@ -1,8 +1,34 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h2>Delete a Part</h2>
+    <h2>Delete a Part</h2><br>
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-dataTables.js') }}"></script>
+    <script>
+
+    $(document).ready(function() {
+        // Setup - add a text input to each footer cell
+        $('#example tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" style="min-width: 50px; max-width: 90px" placeholder="Search '+title+'" />' );
+        } );
+ 
+        // DataTable
+        var table = $('#example').DataTable();
+ 
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+ 
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    } );
+    </script>
     <script>
         $(document).ready(function() {
             $('#selecctall').click(function(event) {  //on click
@@ -23,9 +49,11 @@
     <form action="{{ url_for('delete_part') }}" method=post class=add_entry>
 
         <em>Select part(s) to delete: </em>
-        <input type="text" id="search" placeholder="Type to filter">
         <input text-align='right' type="checkbox" id="selecctall"/> Select All
-        <table id="table" class="table table-striped">
+        
+        <table id="example" class="display" cellspacing="0" width="100%">
+          <col width="80">
+          <thead> 
            <th></th>
            <th>PO</th>
            <th>Part</th>
@@ -35,13 +63,23 @@
            <th>CPN</th>
            <th>PID</th>
            <th>MFG Part#</th>
-           <th>Qty</th>
            <th>Status</th>
-           <th>Location</th>
-           <th>Used</th>
+          </thead> 
+          <tfoot> 
+           <th></th>
+           <th>PO</th>
+           <th>Part</th>
+           <th>Project</th>
+           <th>Supplier</th>
+           <th>Item Description</th>
+           <th>CPN</th>
+           <th>PID</th>
+           <th>MFG Part#</th>
+           <th>Status</th>
+          </tfoot> 
 
 
-
+          <tbody>
            {% for part in parts %}
             <tr>
               <td><input type=checkbox class='checkbox1' name='do_delete' value="{{part.id}}"></td>
@@ -53,17 +91,10 @@
               <td> {{part.CPN}} </td>
               <td> {{part.PID}} </td>
               <td> {{part.manufacturer_part_num}} </td>
-              <td> {{part.qty}} </td>
               <td> {{part.status}} </td>
-              <td> {{part.location}} </td>
-              {% if part.times_used == 0 %}
-                  <td> {{part.times_used}} </td>
-              {% else %}
-                  <td><a href="{{ url_for('show_history', serialNumber=part.id) }}">{{part.times_used}}</a></td>
-              {% endif %}
             </tr>
            {% endfor %}
-
+         </tbody>
         </table>
         <div class="metanav2">
             <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> <input type=submit class="btn btn-default" value="delete">

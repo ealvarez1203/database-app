@@ -1,47 +1,85 @@
 {% extends "layout.html" %}
 {% block body %}
     <h2>Inventory</h2><br>
+    
     <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='dynamicFilter.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-dataTables.js') }}"></script>
+    <script>
+
+    $(document).ready(function() {
+        // Setup - add a text input to each footer cell
+        $('#example tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" style="min-width: 50px; max-width: 90px" placeholder="Search '+title+'" />' );
+        } );
+ 
+        // DataTable
+        var table = $('#example').DataTable();
+ 
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+ 
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    } );
+    </script>
 
 
-    <em> Type here to Filter:  </em> <input type="text" id="search" placeholder="keywords" size=30>
-    <br><br>
-    <table id="table" class="table table-striped">
-       <th>PR</th>
-       <th>PO</th>
-       <th>Part</th>
-       <th>Project</th>
-       <th>Requester</th>
-       <th>Supplier</th>
-       <th>Item Description</th>
-       <th>CPN</th>
-       <th>PID</th>
-       <th>MFG Part#</th>
-       <th>Qty</th>
-       <th>Status</th>
-       <th>Location</th>
-
+    <table id="example" class="display" cellspacing="0" width="100%">
+      <thead> 
+        <tr>
+          <th>PR</th>
+          <th>PO</th>
+          <th>Part</th>
+          <th>Requester</th>
+          <th>Supplier</th>
+          <th>Item Description</th>
+          <th>CPN</th>
+          <th>PID</th>
+          <th>MFG Part#</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tfoot> 
+        <tr>
+          <th>PR</th>
+          <th>PO</th>
+          <th>Part</th>
+          <th>Requester</th>
+          <th>Supplier</th>
+          <th>Item Description</th>
+          <th>CPN</th>
+          <th>PID</th>
+          <th>MFG Part#</th>
+          <th>Status</th>
+        </tr>
+      </tfoot>
+      <tbody>
        {% for part in parts %}
         <tr>
             <td> {{part.PR}} </td>
             <td> {{part.PO}} </td>
             <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
-            <td> {{part.project_name}} </td>
             <td> {{part.requestor}} </td>
             <td> {{part.supplier}} </td>
             <td> {{part.item_description}} </td>
             <td> {{part.CPN}} </td>
             <td> {{part.PID}} </td>
             <td> {{part.manufacturer_part_num}} </td>
-            <td> {{part.qty}}</td>
             <td> {{part.status}} </td>
-            <td> {{part.location}} </td>
         </tr>
-   {% else %}
-     <em>Database is empty</em>
-   {% endfor %}
-
+      
+      {% else %}
+        <em>Database is empty</em>
+      {% endfor %}
+    </tbody>
    </table>
 {% endblock %}
 

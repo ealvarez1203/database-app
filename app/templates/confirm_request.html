@@ -27,9 +27,9 @@
 	});
 </script>
 
-<h2>Check out a Part</h2><br>
+<h2>Request</h2><br>
 
-Please select the quantity and confirm checkout: <br><br>
+Parts to be Requested:
 <form class="form-signin" role="form" method="post" action="">
 	{{ form.csrf_token }}
     <table class="table table-striped">
@@ -43,7 +43,7 @@ Please select the quantity and confirm checkout: <br><br>
     	<th>Qty</th>
 
         <tr>
-            <td><a href="{{ url_for('show_part_info', id=part.id) }}"> {{part.part}} </a></td>
+            <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
             <td> {{part.item_description}} </td>
             <td> {{part.supplier}} </td>
             <td> {{part.CPN}} </td>
@@ -57,11 +57,9 @@ Please select the quantity and confirm checkout: <br><br>
 
         </tr>
 
-
     </table>
 
-    <input type="hidden" value="{{part.id}}" name="checkout_id">
-    
+    <input type="hidden" value="{{part.current_user}}" name="current_user">
  	<div class='metanav2'>
  	<em> Please fill out the following:</em><br><br>
 	<p>
@@ -85,7 +83,7 @@ Please select the quantity and confirm checkout: <br><br>
 	</span>
 	</p>
 	<p>
-	{{ form.return_date(placeholder="use until [approx. date]") }}
+	{{ form.return_date(placeholder="use until [date]") }}
 	<span class="error">
 	{% if form.return_date.errors %}
 		{% for error in form.return_date.errors %}
@@ -95,7 +93,7 @@ Please select the quantity and confirm checkout: <br><br>
 	</span>
 	</p>
 	<p>
-	{{ form.details(placeholder="Brief description of use", size=30) }}
+	{{ form.details(placeholder="Description of use", size=30) }}
 	<span class="error">
 	{% if form.details.errors %}
 		{% for error in form.details.errors %}
@@ -104,16 +102,8 @@ Please select the quantity and confirm checkout: <br><br>
 	{% endif %}
 	</span>
 	</p>
-	<div>   
-
-		
-{% if current_user == 'admin' or 'None' %} 
-<em> Note: A request for the part will be sent to Admin </em><br> 
-	<button class="btn btn-primary" type="submit">Confirm Checkout</button>
-{% else %}
-<em> Note: A request for the part will be sent to {{current_user}}</em><br> 
-	<button class="btn btn-danger" type="submit">Send Request</button>
-{% endif %}
+	<div>    
+<button class="btn btn-danger" type="submit">Confirm Request</button>
 </form>
 
 {% endblock %}

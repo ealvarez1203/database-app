@@ -2,10 +2,6 @@
 {% block body %}
 <script>
 $(document).ready(function(){
-    var options_parts = {{ parts|safe }} 
-    $("#parts").autocomplete({
-        source: options_parts
-    });
     var options_project_names = {{ project_names|safe }} 
     $("#project_names").autocomplete({
         source: options_project_names
@@ -46,7 +42,15 @@ $(document).ready(function(){
     $("#location").autocomplete({
         source: options_location
     });
-    
+    $( document ).ready(function() {
+        $(".select").each(function() {
+                var select = $('<select>', {name: "update_qty"});
+                for (var i = this.id; i >= 1; i--) {
+                    $('<option>', {value: i, text: i}).appendTo(select);
+                }
+                select.appendTo(this);
+        });
+    });
     $( "#submit_date" ).datepicker();
 });
 </script>
@@ -76,17 +80,249 @@ $(document).ready(function(){
         </span>
         </p>
         
-        <p>    
         <p>
-        <label>Part: </label> {{ form.part(placeholder=part.part) }}
-        <span class="error">
-        {% if form.part.errors %}
-            {% for error in form.part.errors %}
-                {{ error }}
-            {% endfor %}
+        <label>Part: </label> 
+        {% if part_default == 'DIMM' %}
+            <select name='part'>
+                <option value="DIMM" selected="selected">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'LRDIMM' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM" selected="selected">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'CPU' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU" selected="selected">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'HDD' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD" selected="selected">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'NVMe' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe" selected="selected">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'MEZZ-CARD' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD" selected="selected">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'GPU' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU" selected="selected">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'RAID-UNIT' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT" selected="selected">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'TPM' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM" selected="selected">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'PSU' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU" selected="selected">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'CHASSIS' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS" selected="selected">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'HEATSINK' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK" selected="selected">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% elif part_default == 'PROTOTYPE' %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE" selected="selected">PROTOTYPE</option>
+                <option value="OTHER">OTHER</option>
+            </select>
+        {% else %}
+            <select name='part'>
+                <option value="DIMM">DIMMs</option>
+                <option value="LRDIMM">LRDIMM</option>
+                <option value="CPU">CPU</option>
+                <option value="HDD">HDD</option>
+                <option value="NVMe">NVMe</option>
+                <option value="MEZZ-CARD">MEZZ-CARD</option>
+                <option value="GPU">GPU</option>
+                <option value="RAID-UNIT">RAID-UNIT</option>
+                <option value="TPM">TPM</option>
+                <option value="PSU">PSU</option>
+                <option value="CHASSIS">CHASSIS</option>
+                <option value="HEATSINK">HEATSINK</option>
+                <option value="PROTOTYPE">PROTOTYPE</option>
+                <option value="OTHER" selected="selected">OTHER</option>
+            </select>
         {% endif %}
-        </span>
-        </p>
+        </p>   
+
 
         <p>
         <label>Project: </label> {{ form.project_name(placeholder=part.project_name) }}
@@ -111,7 +347,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label>Supplier: </label>{{ form.supplier(placeholder=part.supplier, size=35) }}
+        <label>Supplier: </label>{{ form.supplier(placeholder=part.supplier, size=40) }}
         <span class="error">
         {% if form.supplier.errors %}
             {% for error in form.supplier.errors %}
@@ -122,7 +358,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label>Supplier Contact: <label> {{ form.supplier_contact(placeholder=part.supplier_contact, size=30) }}
+        <label>Supplier Contact: <label> {{ form.supplier_contact(placeholder=part.supplier_contact, size=40) }}
         <span class="error">
         {% if form.supplier_contact.errors %}
             {% for error in form.supplier_contact.errors %}
@@ -133,7 +369,7 @@ $(document).ready(function(){
         </p>
       
         <p>
-        <label>Item Description: </label> {{ form.item_description(placeholder=part.item_description, size=40) }}
+        <label>Item Description: </label> {{ form.item_description(placeholder=part.item_description, size=60) }}
         <span class="error">
         {% if form.item_description.errors %}
             {% for error in form.item_description.errors %}
@@ -214,8 +450,15 @@ $(document).ready(function(){
                 <option value="Unavailable" selected="selected">Unavailable</option>
             </select>
         {% endif %}
-
         </p>
+
+        <label>Qty: 
+        {% if part.qty == '1' %}
+                {{part.qty|safe}} 
+        {% else %}
+                <p style="display:inline" class="select" id="{{part.qty}}"></p>
+        {% endif %}
+        </label>
 
         <p>
         <label>Location: </label> {{ form.location(placeholder=part.location, size=25) }}

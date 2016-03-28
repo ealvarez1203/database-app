@@ -3,15 +3,16 @@
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('.static', filename='jquery-ui.css') }}">
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='jquery-dataTables.css') }}">
 <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='bootstrap.js') }}"></script>
-<title>Savbu Hardware Lab Database</title>
+<title>CSPG Hardware Lab Database</title>
 
 <div class=page>
 
 
-    <h1><a href="{{ url_for('home') }}">Savbu Hardware Lab Database</h1>
+    <h1><a href="{{ url_for('home') }}">CSPG Hardware Lab Database</h1>
 
     {% for message in get_flashed_messages() %}
         <div class=flash> {{ message }} </div>
@@ -27,7 +28,7 @@
 
     {% block body %}{% endblock %}
 
-    <div class=metanav2>
+    <div class='metanav2'>
         <a href="{{ url_for('add_part') }}">add part</a>
         &nbsp;
         <a href="{{ url_for('delete_part') }}">delete part</a>

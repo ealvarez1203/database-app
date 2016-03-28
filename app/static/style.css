@@ -21,6 +21,8 @@ th  			{text-align: center}
                   margin-bottom: 1em;}
 .metanav3        { text-align: center;
 					right:0; left:0;}
+.metanav4        { text-align: left; font-size: 1.0em; padding: 0.3em;
+                  margin-bottom: 1em;}
 .flash          { text-align: center; background: #cee5F5; padding: 0.5em;
                   border: 1px solid #aacbe2; }
 .error          { background: #f0d6d6; padding: 0.5em; }
@@ -31,5 +33,10 @@ th  			{text-align: center}
 width:250px;
 margin:auto;   
 }
+tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
 
 
