@@ -38,7 +38,7 @@
                
            {% for request in requests %}
             <tr>
-              <td><a href="{{ url_for('show_part_info', id=request.id) }}">{{request.part}}</a></td>
+              <td><a href="{{ url_for('show_part_info', id=request.part_id) }}">{{request.part}}</a></td>
               <td> {{request.qty}} </td>
               <td> {{request.requestor}} </td>
               <td> {{request.request_date}} </td>
