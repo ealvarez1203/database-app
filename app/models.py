@@ -155,7 +155,7 @@ class Requests(db.Model):
 	location = db.Column(db.String(20), nullable=False)
 	use_detail = db.Column(db.String(100), nullable=True)	
 	part_id = db.Column(db.Integer, ForeignKey('parts.id'))
-	part = db.Column(db.String(20), nullable=False)
+	part = db.Column(db.String(20), nullable=True)
 	qty = db.Column(db.Integer)
 
 
