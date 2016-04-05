@@ -1,18 +1,17 @@
 {% extends "layout.html" %}
 {% block body %}
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='jquery-dataTables.js') }}"></script>
-    <script>
-
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='jquery-dataTables.js') }}"></script>
+  <script>
     $(document).ready(function() {
         // Setup - add a text input to each footer cell
-        $('#example tfoot th').each( function () {
+        $('#table1 tfoot th').each( function () {
             var title = $(this).text();
-            $(this).html( '<input type="text" style="min-width: 50px; max-width: 90px" placeholder="Search '+title+'" />' );
+            $(this).html( '<input type="text" style="min-width: 65px; max-width: 90px" placeholder="Search '+title+'" />' );
         } );
- 
-        // DataTable
-        var table = $('#example').DataTable();
+
+       // DataTable
+       var table = $('#table1').DataTable();
  
         // Apply the search
         table.columns().every( function () {
@@ -27,18 +26,17 @@
             } );
         } );
     } );
-    </script>
+  </script>
     <script>
-
     $(document).ready(function() {
         // Setup - add a text input to each footer cell
-        $('#example2 tfoot th').each( function () {
+        $('#table2 tfoot th').each( function () {
             var title = $(this).text();
-            $(this).html( '<input type="text" style="min-width: 50px; max-width: 90px" placeholder="Search '+title+'" />' );
+            $(this).html( '<input type="text" style="min-width: 75px;" placeholder="Search '+title+'" />' );
         } );
- 
-        // DataTable
-        var table = $('#example2').DataTable();
+
+       // DataTable
+       var table = $('#table2').DataTable();
  
         // Apply the search
         table.columns().every( function () {
@@ -53,7 +51,7 @@
             } );
         } );
     } );
-    </script>
+  </script>
   <h1>{{keyword}}</h1><br>
   <h2>Check out a Part</h2>
 
@@ -75,7 +73,7 @@
           {% if part_available %}
 
             <br><p><em>{{keyword}}'s Available:  </em>
-            <table id="example" class="display" cellspacing="0" width="100%">
+            <table id="table1" class="display" cellspacing="0" width="100%">
               <thead> 
                 <tr>
                   <th>Part</th>
@@ -101,6 +99,7 @@
                   <th>Qty</th>
                   <th>Location</th>
                   <th>Times Used</th>
+                  <th></th>
                 </tr>
               </tfoot>
 
@@ -126,7 +125,7 @@
                 
               </tr>
               {% endfor %}
-            </tbody>
+              </tbody>
             </table>
             <div class="metanav2">
                 <input action='action' type="button" class='btn btn-default' value='Go Back' onclick="window.history.go(-1); return false;"/> 
@@ -143,7 +142,7 @@
           {% if part_unavailable %}
 
             <em>{{keyword}}'s Unavailable:  </em>
-            <table id="example2" class="display" cellspacing="0" width="100%">
+            <table id="table2" class="display" cellspacing="0" width="100%">
               <thead> 
                 <tr>
                   <th>Part</th>
@@ -171,6 +170,7 @@
                   <th>Qty</th>
                   <th>Times Used</th>
                   <th>Will be returned</th>
+                  <th></th>
                 </tr>
               </tfoot>
               <tbody>

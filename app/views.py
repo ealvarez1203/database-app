@@ -314,6 +314,7 @@ def add_part():
 
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def delete_part():
 	#query parts with their qty's
 	cur = db.engine.execute('SELECT *, COUNT(*) FROM parts GROUP BY PR, PO, part, project_name, requestor, supplier, supplier_contact,\
@@ -355,6 +356,7 @@ def delete_part():
 
 @app.route('/delete_part/confirm', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def confirm_delete():
 	#"""Obtain ids from args"""
 	delete_ids = sorted([i.encode('utf-8') for i in request.args.getlist('delete_ids')]) # same order as listed in delete_part page
@@ -726,7 +728,7 @@ def confirm_return(part_id):
 		db.session.commit()
 		app.logger.info('| ACTION: return | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, return_id, quantity, current_user.name))
 		flash('The parts were returned!')
-		return redirect(url_for('home'))
+		return redirect(url_for('return_part'))
 	return render_template('confirm_return.html', return_part=return_part)
 
 @app.route('/checkout_part', methods=['GET', 'POST'])

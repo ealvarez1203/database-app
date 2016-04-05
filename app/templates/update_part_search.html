@@ -5,13 +5,13 @@
   <script>
     $(document).ready(function() {
         // Setup - add a text input to each footer cell
-        $('#example tfoot th').each( function () {
+        $('#table tfoot th').each( function () {
             var title = $(this).text();
-            $(this).html( '<input type="text" style="min-width: 85px;" placeholder="Search '+title+'" />' );
+            $(this).html( '<input type="text" style="min-width: 65px; max-width: 90px" placeholder="Search '+title+'" />' );
         } );
  
         // DataTable
-        var table = $('#example').DataTable();
+        var table = $('#table').DataTable();
  
         // Apply the search
         table.columns().every( function () {
@@ -33,7 +33,7 @@
 <br><br>
    
       {% if parts %}
-      <table id="example" class="display" cellspacing="0" width="100%">
+      <table id="table" class="display" cellspacing="0" width="100%">
         <em>Click on Part to display all attributes</em> 
         <thead> 
         <tr>
