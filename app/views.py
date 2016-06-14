@@ -991,6 +991,7 @@ def confirm_request(request_id):
 		
 		# store prev_history with new id
 		new_id = len(ids)-Request.qty
+
 		for row in prev_history:	
 			history = History(
 			serial= ids[new_id],
@@ -1000,7 +1001,7 @@ def confirm_request(request_id):
 			return_date= row.return_date,
 			detail= row.detail
 		)
-		db.session.add(history)
+			db.session.add(history)
 		# Record new history with new id
 		history = History(
 			serial= ids[new_id],
@@ -1033,7 +1034,7 @@ def confirm_request(request_id):
 					u=Request.requestor, p=Request.project_name, l=Request.location, i=ids[iterator])	
 		iterator += 1
 	db.session.commit()
-	app.logger.info('| ACTION: checkout | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, ids[0], Request.qty, Request.requestor))
+	app.logger.info('| ACTION: checkout | PART: %s | ID:%s | QUANTITY: %s | BY USER: %s'%(Part.part, ids[len(ids)-Request.qty], Request.qty, Request.requestor))
 
 	#clear request
 	Request.query.filter_by(id=request_id).delete()
