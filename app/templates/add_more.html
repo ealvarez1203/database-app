@@ -50,15 +50,6 @@ $(document).ready(function(){
     $("#location").autocomplete({
         source: options_location
     });
-    //$( document ).ready(function() {
-    //    $(".select").each(function() {
-    //            var select = $('<select>', {name: "update_qty"});
-    //            for (var i = this.id; i >= 1; i--) {
-    //                $('<option>', {value: i, text: i}).appendTo(select);
-    //            }
-    //            select.appendTo(this);
-    //    });
-    //});
     $( "#submit_date" ).datepicker();
     $('.btn-number').click(function(e){
         e.preventDefault();
@@ -108,13 +99,13 @@ $(document).ready(function(){
         if(valueCurrent >= minValue) {
             $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
         } else {
-            alert('Sorry, the minimum value was reached');
+            alert('Sorry, the minimum value is 1');
             $(this).val($(this).data('oldValue'));
         }
         if(valueCurrent <= maxValue) {
             $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
         } else {
-            alert('Sorry, the maximum value was reached');
+            alert('Sorry, the maximum value has been reached');
             $(this).val($(this).data('oldValue'));
         }
         
@@ -138,7 +129,7 @@ $(document).ready(function(){
 });
 </script>
 
-<h2>Update Part</h2>
+<h2>Adding Existing Part</h2>
 <br>
 <form class="form-horizontal" role="form" method=post action="">
     {{ form.csrf_token }}
@@ -437,19 +428,17 @@ $(document).ready(function(){
         </span>
         </p>
     
-        {% if part.SN %}
-
-            <label> Serial Number: </label> {{ form.SN(placeholder=part.SN, size=25) }}
-            <span class="error">
-            {% if form.SN %}
-                {% for error in form.SN.errors %}
-                    {{ error }}
-                {% endfor %}
-            {% endif %}
-            </span>
-            </p>
-
+        <p>
+        <label> Serial Number: </label>
+        {{ form.SN(placeholder="S/N (Qty must be 1)") }}
+        <span class="error">
+        {% if form.SN.errors %}
+            {% for error in form.SN.errors %}
+                {{ error }}
+            {% endfor %}
         {% endif %}
+        </span>
+        </p>
 
         <p>
         <label>Trancking info: </label> {{ form.tracking(placeholder=part.tracking, size=30) }}
@@ -477,16 +466,16 @@ $(document).ready(function(){
         {% endif %}
         </p>
 
-        <label>Qty: 
+        <label>Qty to be Added: 
         <div class="input-group">
           <span class="input-group-btn">
-              <button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="update_qty">
+              <button type="button" class="btn btn-primary btn-number" data-type="minus" data-field="qty">
                   <span class="glyphicon glyphicon-minus"></span>
               </button>
           </span>
-          <input type="text" name="update_qty" class="form-control input-number" value="{{part.qty|safe}}">
+          <input type="text" name="qty" class="form-control input-number" value="1">
           <span class="input-group-btn">
-              <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="update_qty">
+              <button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="qty">
                   <span class="glyphicon glyphicon-plus"></span>
               </button>
           </span>
@@ -515,10 +504,11 @@ $(document).ready(function(){
         </span>
         </p>
     </div>    
-    <input type="hidden" value={{update_id}} name="update_id">
-    <input type="hidden" value={{part.qty}} name="update_qty">
+    <input type="hidden" value={{id}} name="id">
+    <input type="hidden" value={{part.qty}} name="qty">
 
-
-    <button class="btn btn-success" type="submit">Confirm Update</button>
+    <div class="metanav2">
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </div>  
 </form>
 {% endblock %}

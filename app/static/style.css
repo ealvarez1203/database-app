@@ -39,4 +39,10 @@ tfoot input {
         box-sizing: border-box;
     }
 
+.input-group{
+width: 130px;
+  margin: 30px auto;
+  
+}
+
 

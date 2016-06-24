@@ -47,6 +47,23 @@ class AddPart(Form):
 	location = TextField('location', validators=[DataRequired()], id='location')
 	qty = IntegerField('qty', validators=[validators.NumberRange(min=1, max=None, message='Please Enter a Positive Interger')])
 
+class Add_more(Form):
+	PO = TextField('PO', id='PO')
+	PR = TextField('PR', id='PR')
+	#part = TextField('part', id="parts")
+	project_name = TextField('project_name', id="project_names")
+	requestor = TextField('requestor', id="requestors")
+	supplier = TextField('supplier', id="suppliers")
+	supplier_contact = TextField('supplier_contact', id="supplier_contacts")
+	item_description = TextField('item_description', id="item_descriptions")
+	CPN = TextField('CPN', id='CPN')
+	PID = TextField('PID', id='PID')
+	SN = TextField('SN', id='SN')
+	manufacturer_part_num = TextField('manufacturer_part_num', id='manufacturer_part_num')
+	submit_date = DateField('submit_date', format='%m/%d/%Y', id='submit_date', validators=[validators.Optional()])
+	tracking = TextField('tracking', id='tracking')
+	#status = SelectField('status', coerce=unicode, validators=[validators.optional()])
+	location = TextField('location', id='location')
 
 class CheckoutPart(Form):
 	project = TextField('project', validators=[DataRequired()], id='project')

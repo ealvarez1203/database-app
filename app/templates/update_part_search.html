@@ -37,41 +37,41 @@
         <em>Click on Part to display all attributes</em> 
         <thead> 
         <tr>
-          <th>PR</th>
           <th>PO</th>
           <th>Part</th>
           <th>Supplier</th>
           <th>Item Description</th>
           <th>CPN</th>
-          <th>PID</th>
           <th>MFG Part#</th>
+          <th>Qty</th>
+          <th>Location</th>
           <th>Update</th>
         </tr>
       </thead>
       <tfoot> 
         <tr>
-          <th>PR</th>
           <th>PO</th>
           <th>Part</th>
           <th>Supplier</th>
           <th>Item Description</th>
           <th>CPN</th>
-          <th>PID</th>
           <th>MFG Part#</th>
+          <th>Qty</th>
+          <th>Location</th>
           <th></th>
         </tr>
       </tfoot>
       <tbody>
          {% for part in parts %}
             <tr>
-              <td> {{part.PR}} </td>
               <td> {{part.PO}} </td>
               <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
               <td> {{part.supplier}} </td>
               <td> {{part.item_description}} </td>
               <td> {{part.CPN}} </td>
-              <td> {{part.PID}} </td>
               <td> {{part.manufacturer_part_num}} </td>
+              <td> {{part.qty}} </td>
+              <td> {{part.location}} </td>
                 <td>
                   <a href="{{ url_for('confirm_update', part_id=part.id) }}" class="btn btn-success">Update</a>
                 </td>

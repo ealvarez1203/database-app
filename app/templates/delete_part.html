@@ -61,8 +61,8 @@
            <th>Supplier</th>
            <th>Item Description</th>
            <th>CPN</th>
-           <th>PID</th>
            <th>MFG Part#</th>
+           <th>Qty</th>
            <th>Status</th>
           </thead> 
           <tfoot> 
@@ -73,8 +73,8 @@
            <th>Supplier</th>
            <th>Item Description</th>
            <th>CPN</th>
-           <th>PID</th>
            <th>MFG Part#</th>
+           <th>Qty</th>
            <th>Status</th>
           </tfoot> 
 
@@ -89,8 +89,8 @@
               <td> {{part.supplier}} </td>
               <td> {{part.item_description}} </td>
               <td> {{part.CPN}} </td>
-              <td> {{part.PID}} </td>
               <td> {{part.manufacturer_part_num}} </td>
+              <td> {{part.qty}} </td>
               <td> {{part.status}} </td>
             </tr>
            {% endfor %}
