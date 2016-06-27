@@ -104,6 +104,7 @@
    <div class='metanav2'> 
       {% if user == 'admin' %}
         <a href="{{ url_for('confirm_update', part_id=part.id) }}" class="btn btn-success">Update</a>
+        <a href="{{ url_for('confirm_delete', delete_ids=part.id) }}" class="btn btn-danger">Delete</a>
       {%elif user != part.current_user %}
         {%if part.status == 'Available' %}
           <a href="{{ url_for('send_request', part_id=part.id) }}" class="btn btn-primary">Check out</a>
