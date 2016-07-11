@@ -25,7 +25,7 @@
     {%endif%}
 
   {% if requests %}
-      <em>Bellow are the requests to check out parts that are under your posession: </em><br><br>
+      <em>Bellow are the requests form other users to check out parts under your username: </em><br><br>
        <form action="{{ url_for('show_requests') }}" method="post" class="add_entry">
         <table class="table table-striped">
                <th>Part</th>
@@ -52,6 +52,31 @@
       </form><br>
     {% else %}
       <div class="metanav3"><em> Currently you don't have any requests</em></div><br>
+    {% endif %}
+
+    {% if requested_parts and user != 'admin' %}
+      <em>These are the parts that you have requested and still waiting on confirmation:</em><br><br>
+      <div class="metanav2">
+        <table class="table table-striped">
+            <th>Part</th>
+            <th>Qty</th>
+            <th>Requested to</th>
+            <th>Requested on</th>
+            <th>Cancel</th>
+
+            {% for request in requested_parts %}
+            <tr>
+              <td><a href="{{ url_for('show_part_info', id=request.part_id) }}">{{request.part}}</a></td>
+              <td> {{request.qty}} </td>
+              <td> {{request.current_user}} </td>
+              <td> {{request.request_date}} </td>
+              <td>
+                <a href="{{ url_for('show_requests', part_id=request.part_id) }}" class="btn btn-default">Cancel</a>
+              </td>
+            </tr>
+            {% endfor %}
+        </table>
+      </div>
     {% endif %}
 
     <div class="metanav2">

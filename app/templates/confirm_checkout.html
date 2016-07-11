@@ -107,11 +107,11 @@ Please select the quantity and confirm checkout: <br><br>
 	<div>   
 
 		
-{% if current_user == 'admin' or 'None' %} 
+{% if part.current_user == 'admin' or part.current_user == 'None' %} 
 <em> Note: A request for the part will be sent to Admin </em><br> 
 	<button class="btn btn-primary" type="submit">Confirm Checkout</button>
 {% else %}
-<em> Note: A request for the part will be sent to {{current_user}}</em><br> 
+<em> Note: A request for the part will be sent to {{part.current_user}}</em><br> 
 	<button class="btn btn-danger" type="submit">Send Request</button>
 {% endif %}
 </form>

@@ -1,26 +1,3 @@
-# routes:
-# login
-# logout
-# create user
-# home
-# show history
-# show part info 
-# show user info
-# upload file
-# inventory
-# add part
-# delete part
-# confirm part
-# update part
-# confirm update
-# return part
-# confirm return
-# checkout part
-# part search
-# send request(part_id)
-# show request
-# confirm request
-
 from flask import render_template, flash, redirect, url_for, request
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from app import app, db, login_manager, bcrypt 
@@ -30,15 +7,12 @@ import time, xlrd, os
 from werkzeug import secure_filename
 from functools import wraps
 from sqlalchemy import or_
-
-
+from sqlalchemy.sql.expression import func
 
 
 @app.errorhandler(404)
 def not_found_error(error):
 	return render_template('404.html'), 404
-
-
 
 
 @app.errorhandler(500)
@@ -47,20 +21,14 @@ def internal_error(error):
 	return render_template('500.html'), 500
 
 
-
-
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 
-
-
 @login_manager.user_loader
 def load_user(user_id):
 	return User.query.filter(User.id == int(user_id)).first()
-
-
 
 
 def allowed_users(*users):
@@ -73,8 +41,6 @@ def allowed_users(*users):
             return f(*args, **kwargs)
         return wrapped
     return wrapper
-
-
 
 
 # route for handling the login page logic
@@ -94,17 +60,11 @@ def login():
 				error = 'Invalid Credentials. Please try again.'
 	return render_template('login.html', form=form, error=error)
 
-
-
-
 @app.route('/logout/')
 def logout():
 	logout_user()
 	flash('You were logged out.')
 	return redirect(url_for('login'))
-
-
-
 
 @app.route('/register/', methods=['GET', 'POST']) 
 def create_user():
@@ -126,15 +86,10 @@ def create_user():
 			return redirect(url_for('home'))
 	return render_template('create_user.html', form=form, error=error)
 
-
-
-
 @app.route('/home')
 @login_required
 def home():
 	return render_template('main.html', user=current_user.name)
-
-
 
 
 @app.route('/History/<serialNumber>/')
@@ -143,8 +98,6 @@ def show_history(serialNumber):
 	cur = db.engine.execute('SELECT project, user, checkout_date, return_date, detail FROM History WHERE Part_SN=:s', s=serialNumber)
 	history = [dict(project=row[0], user=row[1], checkout_date=row[2], return_date=row[3], detail=row[4]) for row in cur.fetchall()]
 	return render_template('history.html', history=history)
-
-
 
 
 @app.route('/UserInfo/<username>/')
@@ -156,8 +109,6 @@ def show_user_info(username):
 				email=user.email
 			)
 	return render_template('user_info.html', User=user)
-
-
 
 
 @app.route('/Part/<id>/')
@@ -215,8 +166,6 @@ def show_part_info(id):
 	return render_template('part_info.html', part=part, user=current_user.name)
 
 
-
-
 @app.route('/Upload', methods=['GET','POST'])
 @login_required
 @allowed_users('admin')
@@ -268,8 +217,6 @@ def upload_file():
 	        	error= "Wrong File Format"
 
 	return render_template('upload_file.html', error=error, user=current_user.name)
-
-
 
 
 @app.route('/inventory')
@@ -346,8 +293,6 @@ def inventory():
 		qty = Parts.query.filter_by(**kwargs).count()
 		i['qty'] = qty 
 	return render_template('inventory.html', parts=parts)
-
-
 
 
 @app.route('/add_part', methods=['GET', 'POST'])
@@ -434,6 +379,7 @@ def add_part():
 
 @app.route('/add_more/<part_id>/', methods=['GET', 'POST'])
 @login_required
+@allowed_users('admin')
 def add_more(part_id):
 	error = None
 	# project names options for autocomplete field
@@ -602,8 +548,6 @@ def add_more(part_id):
 		manufacturer_part_nums=manufacturer_part_nums, tracking=tracking, location=location, status_default=part['status'].encode('utf-8'), error=error)
 
 
-
-
 @app.route('/delete_part', methods=['GET', 'POST'])
 @login_required
 @allowed_users('admin')
@@ -690,8 +634,6 @@ def delete_part():
 		else:
 			flash('No Part was Selected!')
 	return render_template('delete_part.html', parts=delete_parts)
-
-
 
 
 @app.route('/delete_part/confirm', methods=['GET', 'POST'])
@@ -796,8 +738,6 @@ def confirm_delete():
 	return render_template('confirm_delete.html', delete_parts=delete_parts, delete_ids=delete_ids)
 
 
-
-
 @app.route('/update', methods=['GET', 'POST'])
 @login_required
 def update_part():
@@ -810,15 +750,35 @@ def update_part():
 	return render_template('update_part.html')
 
 
-
-
 @app.route('/update_part_search/<keyword>', methods= ['GET', 'POST'])
 @login_required
 @allowed_users('admin')
 def update_part_search(keyword):
 	# if option is other, select all other type parts from db
 	if keyword=='OTHER':
-		parts = Parts.query.filter(~Parts.part.in_(['DIMM',
+		parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project
+										).filter(~Parts.part.in_(['DIMM',
 													'CPU',
 													'PSU',
 													'PROTOTYPE',
@@ -853,7 +813,7 @@ def update_part_search(keyword):
 													Parts.current_project
 											).all()
 
-		parts = [dict(id=part.id, 
+		parts = [dict(id=part[0], 
 						PR=part.PR, 
 						PO=part.PO, 
 						part=part.part, 
@@ -905,7 +865,29 @@ def update_part_search(keyword):
 			i['qty'] = qty 
 	else:	
 		#retrieve parts where part=type and status=Available
-		parts = Parts.query.filter(or_(Parts.PO.like('%'+keyword+'%'),
+		parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project
+						).filter(or_(Parts.PO.like('%'+keyword+'%'),
 										Parts.PR.like('%'+keyword+'%'),
 										Parts.part.like('%'+keyword+'%'),
 										Parts.project_name.like('%'+keyword+'%'),
@@ -947,7 +929,7 @@ def update_part_search(keyword):
 										Parts.current_project
 								).all()
 		
-		parts = [dict(id=part.id, 
+		parts = [dict(id=part[0], 
 						PR=part.PR, 
 						PO=part.PO, 
 						part=part.part, 
@@ -999,8 +981,6 @@ def update_part_search(keyword):
 			i['qty'] = qty 
 
 	return render_template('update_part_search.html', keyword=keyword, parts=parts)
-
-
 
 
 @app.route('/update_part/confirm/<part_id>', methods=['GET', 'POST'])
@@ -1220,19 +1200,32 @@ def confirm_update(part_id):
 		manufacturer_part_nums=manufacturer_part_nums, tracking=tracking, location=location, status_default=update_part['status'].encode('utf-8'))
 
 
-
-
-
 @app.route('/return_part', methods=['GET', 'POST'])
-@app.route('/return_part/<part_id>', methods=['GET', 'POST'])
 @login_required
-def return_part(part_id=None):
-	if part_id:
-		Requests.query.filter_by(id=part_id).delete()
-		db.session.commit()
-		flash('The request has been canceled')
+def return_part():
 	#	retrieve data where current_user=currentuser and status=unavailable
-	parts = Parts.query.filter(Parts.current_user==current_user.name, Parts.status=='Unavailable'
+	parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project).filter(Parts.current_user==current_user.name, Parts.status=='Unavailable'
 							).group_by(Parts.PR, 
 									Parts.PO,
 									Parts.part,
@@ -1256,7 +1249,7 @@ def return_part(part_id=None):
 									Parts.current_project
 							).all()
 	
-	parts = [dict(id=part.id, 
+	parts = [dict(id=part[0], 
 					PR=part.PR, 
 					PO=part.PO, 
 					part=part.part, 
@@ -1307,12 +1300,7 @@ def return_part(part_id=None):
 		qty = Parts.query.filter_by(**kwargs).count()
 		i['qty'] = qty 
 
-	#retrieve any parts requested by user
-	requested_parts = Requests.query.filter(Requests.requestor==current_user.name)
-
-	return render_template('return_part.html', parts=parts, requested_parts=requested_parts)
-
-
+	return render_template('return_part.html', parts=parts)
 
 
 @app.route('/return_part/confirm/<part_id>', methods=['GET', 'POST'])
@@ -1413,9 +1401,6 @@ def confirm_return(part_id):
 	return render_template('confirm_return.html', return_part=return_part)
 
 
-
-
-
 @app.route('/checkout_part', methods=['GET', 'POST'])
 @login_required
 def checkout_part():
@@ -1428,14 +1413,34 @@ def checkout_part():
 	return render_template('checkout_part.html')
 
 
-
-
 @app.route('/search/<keyword>', methods= ['GET', 'POST'])
 @login_required
 def part_search(keyword):
 	#retrieve parts where part=type and status=Available
 	if keyword=='OTHER':
-		available_parts = Parts.query.filter(~Parts.part.in_(['DIMM',
+		available_parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project
+								).filter(~Parts.part.in_(['DIMM',
 													'CPU',
 													'PSU',
 													'PROTOTYPE',
@@ -1471,7 +1476,7 @@ def part_search(keyword):
 													Parts.current_project
 											).all()
 
-		available_parts = [dict(id=part.id, 
+		available_parts = [dict(id=part[0], 
 						PR=part.PR, 
 						PO=part.PO, 
 						part=part.part, 
@@ -1522,7 +1527,29 @@ def part_search(keyword):
 			qty = Parts.query.filter_by(**kwargs).count()
 			i['qty'] = qty 
 
-		unavailable_parts = Parts.query.filter(~Parts.part.in_(['DIMM',
+		unavailable_parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project
+							).filter(~Parts.part.in_(['DIMM',
 													'CPU',
 													'PSU',
 													'PROTOTYPE',
@@ -1558,7 +1585,7 @@ def part_search(keyword):
 													Parts.current_project
 											).all()
 
-		unavailable_parts = [dict(id=part.id, 
+		unavailable_parts = [dict(id=part[0], 
 						PR=part.PR, 
 						PO=part.PO, 
 						part=part.part, 
@@ -1610,7 +1637,29 @@ def part_search(keyword):
 			i['qty'] = qty 
 	else:	
 		#retrieve parts where part=type and status=Available
-		available_parts = Parts.query.filter(or_(Parts.PO.like('%'+keyword+'%'),
+		available_parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project
+							).filter(or_(Parts.PO.like('%'+keyword+'%'),
 										Parts.PR.like('%'+keyword+'%'),
 										Parts.part.like('%'+keyword+'%'),
 										Parts.project_name.like('%'+keyword+'%'),
@@ -1653,7 +1702,7 @@ def part_search(keyword):
 										Parts.current_project
 								).all()
 		
-		available_parts = [dict(id=part.id, 
+		available_parts = [dict(id=part[0], 
 						PR=part.PR, 
 						PO=part.PO, 
 						part=part.part, 
@@ -1705,7 +1754,29 @@ def part_search(keyword):
 			i['qty'] = qty 
 
 				#retrieve parts where part=type and status=Available
-		unavailable_parts = Parts.query.filter(or_(Parts.PO.like('%'+keyword+'%'),
+		unavailable_parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project
+							).filter(or_(Parts.PO.like('%'+keyword+'%'),
 										Parts.PR.like('%'+keyword+'%'),
 										Parts.part.like('%'+keyword+'%'),
 										Parts.project_name.like('%'+keyword+'%'),
@@ -1747,7 +1818,7 @@ def part_search(keyword):
 										Parts.current_project
 								).all()
 		
-		unavailable_parts = [dict(id=part.id, 
+		unavailable_parts = [dict(id=part[0], 
 						PR=part.PR, 
 						PO=part.PO, 
 						part=part.part, 
@@ -1799,8 +1870,6 @@ def part_search(keyword):
 			i['qty'] = qty 
 	
 	return render_template('part_search.html', keyword=keyword, part_available=available_parts, part_unavailable=unavailable_parts)
-
-
 
 
 @app.route('/checkout_part/confirm/<part_id>', methods=['GET', 'POST'])
@@ -1867,14 +1936,49 @@ def send_request(part_id):
 	if request.method == 'POST' and form.validate():
 		date = time.strftime("%m/%d/%Y")
 		checkout_id = [int(request.form.get('checkout_id'))]
-		quantities = [int(i) for i in request.form.getlist('qty')]
+		quantity = [int(i) for i in request.form.getlist('qty')]
 
 		Part = Parts.query.get(checkout_id[0])
 
+		#changing part status to pending
+		#get ids of rows that match these attributes
+		kwargs = {'PR':Part.PR, 
+				'PO':Part.PO, 
+				'part':Part.part, 
+				'project_name':Part.project_name, 
+				'requestor':Part.requestor, 
+				'supplier':Part.supplier, 
+				'supplier_contact':Part.supplier_contact, 
+				'item_description':Part.item_description, 
+				'CPN':Part.CPN, 'PID':Part.PID, 
+				'manufacturer_part_num':Part.manufacturer_part_num, 
+				'submit_date':Part.submit_date, 
+				'tracking':Part.tracking, 
+				'status':Part.status, 
+				'location':Part.location, 
+				'current_user':Part.current_user, 
+				'current_project':Part.current_project, 
+				'checkout_date':Part.checkout_date, 
+				'return_date':Part.return_date, 
+				'times_used':Part.times_used, 
+				'SN':Part.SN
+			}
+		
+		ids = sorted([j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()]) 
+
+		#   Update part info
+		iterator=len(ids)-quantity[0]
+		while iterator<len(ids):
+			db.engine.execute('update parts set status = :s, checkout_date =:d, return_date =:r\
+							 where id=:i', s='Pending', d=time.strftime("%m/%d/%Y"), r=form.return_date.raw_data[0], i=ids[iterator])	
+			iterator += 1
+		db.session.commit()
+
+		#creating request
 		Request = Requests(
-			    part_id = Part.id,
+			    part_id = ids[len(ids)-quantity[0]],
 			    part = Part.part,
-			    qty = quantities[0],
+			    qty = quantity[0],
 				current_user=('admin' if not Part.current_user else Part.current_user),
 				requestor=current_user.name,
 				request_date=date,
@@ -1885,17 +1989,80 @@ def send_request(part_id):
 				)
 		db.session.add(Request)
 		db.session.commit()
+
+		# add prev history
+		# retrive history data from first id
+		prev_history = History.query.filter_by(Part_SN=ids[0]).all()
+		for row in prev_history:	
+			history = History(
+			serial= ids[len(ids)-quantity[0]],
+			project= row.project,
+			user=row.user,
+			checkout_date=row.checkout_date,
+			return_date= row.return_date,
+			detail= row.detail
+			)
+			db.session.add(history)
+		db.session.commit()
+
 		flash('The request was sent to %s!'%Request.current_user)
 		return redirect(url_for('checkout_part'))
 	return render_template('confirm_checkout.html', part=part, part_id=part_id, form=form, project_names=project_names, location=location,
 							current_user=part['current_user'])
 
 
-
-
 @app.route('/requests/')
+@app.route('/requests/<part_id>',methods=['GET','POST'])
 @login_required
-def show_requests():
+def show_requests(part_id=None):
+	if part_id:
+		#delete request
+		Requests.query.filter_by(part_id=part_id).delete()
+		db.session.commit()
+		
+		#update part
+		Part = Parts.query.get(part_id)
+		#get ids of rows that match these attributes
+		kwargs = {'PR':Part.PR, 
+				'PO':Part.PO, 
+				'part':Part.part, 
+				'project_name':Part.project_name, 
+				'requestor':Part.requestor, 
+				'supplier':Part.supplier, 
+				'supplier_contact':Part.supplier_contact, 
+				'item_description':Part.item_description, 
+				'CPN':Part.CPN, 'PID':Part.PID, 
+				'manufacturer_part_num':Part.manufacturer_part_num, 
+				'submit_date':Part.submit_date, 
+				'tracking':Part.tracking, 
+				'status':Part.status, 
+				'location':Part.location, 
+				'current_user':Part.current_user, 
+				'current_project':Part.current_project, 
+				'checkout_date':Part.checkout_date, 
+				'return_date':Part.return_date, 
+				'times_used':Part.times_used, 
+				'SN':Part.SN
+			}
+		
+		ids = sorted([j[0] for j in db.session.query(Parts.id).filter_by(**kwargs).all()]) 
+
+		#   Update part info
+		iterator=0
+		while iterator<len(ids):
+			db.engine.execute('update parts set status = :s, checkout_date =:d, return_date =:r where id=:i', s='Available', d=None, r=None, i=ids[iterator])	
+			iterator += 1
+		db.session.commit()
+
+		#remove prev history
+		prev_history = History.query.filter_by(Part_SN=part_id).all()
+		for row in prev_history:
+			db.session.delete(row)
+		db.session.commit()
+
+		flash('The request has been canceled')
+		redirect(url_for('return_part'))
+
 	requests = Requests.query.filter_by(current_user=current_user.name)
 	requests = [dict(
 				id=request.id,
@@ -1910,9 +2077,10 @@ def show_requests():
 				location = request.location,
 				use_detail = request.use_detail
 			) for request in requests]
-	return render_template('requests.html', requests=requests, user=current_user.name)
 
-
+	#retrieve any parts requested by user
+	requested_parts = Requests.query.filter(Requests.requestor==current_user.name)
+	return render_template('requests.html', requests=requests, user=current_user.name, requested_parts=requested_parts)
 
 
 @app.route('/confirm_request/<request_id>', methods=['GET', 'POST'])
@@ -2011,15 +2179,33 @@ def confirm_request(request_id):
 	return render_template('requests.html', requests=requests, user=current_user.name)
 
 
-
-
 @app.route('/list_checkedout_parts/')
 @login_required
 @allowed_users('admin')
 def list_checkedout_parts():
-	#parts = Parts.query.filter(or_(current_user!=current_user.name, current_user!=None))
-#	retrieve data where current_user=currentuser and status=unavailable
-	checkedout_parts = Parts.query.filter(or_(Parts.current_user!=current_user.name, Parts.current_user!=None)
+	#retrieve data where current_user=currentuser and status=unavailable
+	checkedout_parts = db.session.query(func.min(Parts.id),
+										Parts.PR, 
+										Parts.PO,
+										Parts.part,
+										Parts.project_name, 
+										Parts.requestor, 
+										Parts.supplier, 
+										Parts.supplier_contact,
+										Parts.item_description,
+										Parts.CPN, 
+										Parts.PID,
+										Parts.manufacturer_part_num, 
+										Parts.SN, 
+										Parts.submit_date, 
+										Parts.tracking, 
+										Parts.status,
+										Parts.location, 
+										Parts.checkout_date, 
+										Parts.return_date, 
+										Parts.times_used, 
+										Parts.current_user, 
+										Parts.current_project).filter(or_(Parts.current_user!=current_user.name, Parts.current_user!=None)
 							).group_by(Parts.PR, 
 										Parts.PO,
 										Parts.part,
@@ -2043,7 +2229,12 @@ def list_checkedout_parts():
 										Parts.current_project
 								).all()
 
-	checkedout_parts = [dict(id=part.id, 
+	for i in checkedout_parts:
+		print i
+
+
+
+	checkedout_parts = [dict(id=part[0], 
 					PR=part.PR, 
 					PO=part.PO, 
 					part=part.part, 

@@ -48,30 +48,7 @@
       <div class="metanav3"><em> Currently you don't have any parts checked out</em></div><br>
     {% endif %}
     
-    {% if requested_parts %}
-      <em>These are the parts that have been requested and still waiting on confirmation:</em><br><br>
-      <div class="metanav2">
-        <table class="table table-striped">
-            <th>Part</th>
-            <th>Qty</th>
-            <th>Requested to</th>
-            <th>Requested on</th>
-            <th>Cancel</th>
-
-            {% for part in requested_parts %}
-            <tr>
-              <td><a href="{{ url_for('show_part_info', id=part.part_id) }}">{{part.part}}</a></td>
-              <td> {{part.qty}} </td>
-              <td> {{part.current_user}} </td>
-              <td> {{part.request_date}} </td>
-              <td>
-                <a href="{{ url_for('return_part', part_id=part.id) }}" class="btn btn-default">Cancel</a>
-              </td>
-            </tr>
-            {% endfor %}
-        </table>
-      </div>
-    {% endif %}
+    
       <div class="metanav2">
         <input action='action' type="button" class='btn btn-primary' value='Go Back' onclick="window.history.go(-1); return false;"/> 
       </div>
