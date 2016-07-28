@@ -36,7 +36,7 @@ def allowed_users(*users):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if current_user.name not in users:
-            	flash('Sorry, You Don\'t Currently Have Permission to Access this Page')
+            	flash('Sorry, You Currently you Don\'t Have Permission to Access this Page')
                 return redirect(url_for('home'))
             return f(*args, **kwargs)
         return wrapped

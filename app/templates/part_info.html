@@ -108,7 +108,7 @@
       {%elif user != part.current_user %}
         {%if part.status == 'Available' %}
           <a href="{{ url_for('send_request', part_id=part.id) }}" class="btn btn-primary">Check out</a>
-        {%elif part.status != 'Pending' and Part.current_user != user %}
+        {%elif part.status != 'Pending' and part.current_user != user %}
           <a href="{{ url_for('send_request', part_id=part.id) }}" class="btn btn-danger">Request part</a>
         {%endif%}
       {%endif%}

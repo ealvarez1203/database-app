@@ -1,5 +1,33 @@
 {% extends "layout.html" %}
 {% block body %}
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-dataTables.js') }}"></script>
+    <script>
+
+    $(document).ready(function() {
+        // Setup - add a text input to each footer cell
+        $('#example tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" style="min-width: 50px; max-width: 90px" placeholder="Search '+title+'" />' );
+        } );
+ 
+        // DataTable
+        var table = $('#example').DataTable();
+ 
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+ 
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    } );
+    </script>
 
    <h2>My Parts</h2><br>
    <div class=metanav>
@@ -11,20 +39,40 @@
     </div>
     <br><br>
    {% if parts %}
-      <em>Parts you have checked out: </em><br><br>
-        <table class="table table-striped">
-             <th>part</th>
-             <th>Supplier</th>
-             <th>Item Description</th>
-             <th>CPN</th>
-             <th>PID</th>
-             <th>MFG Part#</th>
-             <th>Project</th>
-             <th>Qty</th>
-             <th>Checked out on</th>
-             <th>Return Date</th>
-             <th>Return</th>
-               
+   <em>Parts you have checked out: </em><br><br>
+
+      <table id="example" class="display" cellspacing="0" width="100%">
+      <thead> 
+        <tr>
+          <th>Part</th>
+          <th>Supplier</th>
+          <th>Item Description</th>
+          <th>CPN</th>
+          <th>PID</th>
+          <th>MFG Part#</th>
+          <th>Project</th>
+          <th>Qty</th>
+          <th>Checked out on</th>
+          <th>Return Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tfoot> 
+        <tr>
+          <th>Part</th>
+          <th>Supplier</th>
+          <th>Item Description</th>
+          <th>CPN</th>
+          <th>PID</th>
+          <th>MFG Part#</th>
+          <th>Project</th>
+          <th>Qty</th>
+          <th>Checked Out</th>
+          <th>Return Date</th>
+          <th></th>
+        </tr>
+      </tfoot>
+      <tbody>    
            {% for part in parts %}
             <tr>
               <td><a href="{{ url_for('show_part_info', id=part.id) }}">{{part.part}}</a></td>
